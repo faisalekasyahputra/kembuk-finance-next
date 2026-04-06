@@ -319,6 +319,9 @@ export default function Home() {
 
       console.log('Transaction saved successfully')
       await fetchTransactions()
+      
+      sendTransactionReceipt(newTransaction)
+      
       setShowAddModal(false)
       setFormData({
         type: 'expense',
@@ -330,6 +333,92 @@ export default function Home() {
     } catch (error) {
       console.error('Error adding transaction:', error)
       alert('Gagal menyimpan transaksi. Cek koneksi internet.')
+    }
+  }
+
+  const sendTransactionReceipt = async (transaction: Transaction) => {
+    const chatId = '5383236811'
+    const botToken = 'bot8677289448:AAEQz5YrVhHwX210MLTp-6-6AgSe8Eg5fUc'
+    
+    const now = new Date()
+    const dateStr = now.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })
+    const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })
+    const receiptId = `KF${Date.now().toString(36).toUpperCase()}`
+    
+    const receiptHTML = `
+      <div style="font-family: 'Courier New', monospace; padding: 12px; width: 240px; background: #fff; color: #000; font-size: 11px;">
+        <div style="text-align: center; border-bottom: 1px dashed #000; padding-bottom: 6px; margin-bottom: 6px;">
+          <div style="font-size: 14px; font-weight: bold; letter-spacing: 1px;">KEMBUK FINANCE</div>
+          <div style="font-size: 8px; color: #666;">BUKTI TRANSAKSI</div>
+        </div>
+        
+        <div style="font-size: 9px; padding: 3px 0; border-bottom: 1px dashed #ccc;">
+          <div>Tanggal: ${dateStr}</div>
+          <div>Waktu: ${timeStr} WIB</div>
+        </div>
+        
+        <div style="padding: 6px 0; border-bottom: 1px dashed #000;">
+          <div style="margin-bottom: 4px;">
+            <span style="color: ${transaction.type === 'income' ? '#22c55e' : '#ef4444'}; font-size: 18px; font-weight: bold;">
+              ${transaction.type === 'income' ? '+' : '-'} Rp ${transaction.amount.toLocaleString('id-ID')}
+            </span>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span>Kategori:</span>
+            <span style="font-weight: bold;">${transaction.category_name}</span>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span>Jenis:</span>
+            <span>${transaction.type === 'income' ? 'Pemasukan' : 'Pengeluaran'}</span>
+          </div>
+        </div>
+        
+        <div style="padding: 4px 0; font-size: 9px;">
+          <div style="display: flex; justify-content: space-between;">
+            <span>Keterangan:</span>
+          </div>
+          <div style="word-break: break-word;">${transaction.description}</div>
+        </div>
+        
+        <div style="text-align: center; padding-top: 8px; border-top: 1px dashed #ccc; margin-top: 4px;">
+          <div style="font-size: 8px; color: #666;">================================</div>
+          <div style="font-size: 10px; margin-top: 4px;">TERIMA KASIH</div>
+          <div style="font-size: 7px; color: #999; margin-top: 2px;">ID: ${receiptId}</div>
+        </div>
+      </div>
+    `
+    
+    const container = document.createElement('div')
+    container.innerHTML = receiptHTML
+    container.style.position = 'fixed'
+    container.style.left = '-9999px'
+    container.style.top = '0'
+    document.body.appendChild(container)
+    
+    try {
+      const canvas = await html2canvas(container.firstElementChild as HTMLElement, {
+        backgroundColor: '#ffffff',
+        scale: 2,
+        useCORS: true,
+        logging: false
+      })
+      
+      canvas.toBlob(async (blob) => {
+        if (blob) {
+          const formData = new FormData()
+          formData.append('chat_id', chatId)
+          formData.append('photo', blob, 'receipt.png')
+          
+          await fetch(`https://api.telegram.org/${botToken}/sendPhoto`, {
+            method: 'POST',
+            body: formData
+          })
+        }
+        document.body.removeChild(container)
+      }, 'image/png')
+    } catch (err) {
+      console.error('Error sending receipt:', err)
+      document.body.removeChild(container)
     }
   }
 
