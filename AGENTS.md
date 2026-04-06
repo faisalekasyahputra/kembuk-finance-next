@@ -26,10 +26,9 @@ PAT: github_pat_xxx (ask Kembuk)
 ### Vercel
 ```
 Project: kembuk-finance-next
-Token: vcp_xxx (ask Kembuk)
 Project ID: prj_wgcZsCMuMMXQSTxmVX6jG9mB1UQ0
-Scope: faisalekasyahputras-projects
 URL: https://kembuk-finance-next.vercel.app
+Git: Connected to GitHub (auto-deploy on push)
 ```
 
 ### Supabase
@@ -153,12 +152,13 @@ git push origin main
 ```
 
 ### 8. Deploy to Vercel
-```bash
-# MUST pull first
-git pull origin main
+**Vercel is connected to GitHub - Auto-deploy on push!**
 
-# Deploy production
-npx vercel --token YOUR_VERCEL_TOKEN --prod --yes --scope faisalekasyahputras-projects
+Push to GitHub → Vercel auto-deploys → https://kembuk-finance-next.vercel.app
+
+**Manual deploy (if needed):**
+```bash
+npx vercel --prod --yes --scope faisalekasyahputras-projects
 ```
 
 ### 9. Update GitHub Issue
