@@ -346,87 +346,91 @@ export default function Home() {
       <div className="lg:ml-60">
         <header className="sticky top-0 bg-black/95 backdrop-blur-xl border-b border-zinc-800 px-4 py-4 z-30 lg:hidden">
           <div className="flex items-center justify-between">
-            <h1 className="text-white font-bold">Beranda</h1>
-            <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="p-2">
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </button>
+            <h1 className="text-white font-bold">
+              {activeTab === 'home' && 'Beranda'}
+              {activeTab === 'transactions' && 'Transaksi'}
+              {activeTab === 'savings' && 'Tabungan'}
+              {activeTab === 'account' && 'Akun'}
+            </h1>
           </div>
         </header>
 
         <main className="p-4 lg:p-6 max-w-3xl lg:mx-auto">
-          <div className="space-y-3">
-            <div className="bg-gradient-to-br from-zinc-800 to-zinc-900 rounded-2xl p-5 border border-zinc-700">
-              <p className="text-zinc-400 text-sm mb-1">Saldo</p>
-              <h2 className="text-4xl font-bold font-mono text-white">
-                {formatCurrency(balance)}
-              </h2>
-            </div>
-
-            <button
-              onClick={() => setActiveTab('transactions')}
-              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl p-4 flex items-center justify-between hover:opacity-90 transition-opacity"
-            >
-              <div className="flex items-center gap-3">
-                <TrendingUp className="w-6 h-6 text-white" />
-                <span className="text-white font-bold">Lihat Ringkasan</span>
+          {activeTab === 'home' && (
+            <div className="space-y-3">
+              <div className="bg-gradient-to-br from-zinc-800 to-zinc-900 rounded-2xl p-5 border border-zinc-700">
+                <p className="text-zinc-400 text-sm mb-1">Saldo</p>
+                <h2 className="text-4xl font-bold font-mono text-white">
+                  {formatCurrency(balance)}
+                </h2>
               </div>
-              <span className="text-white/70">→</span>
-            </button>
 
-            <div className="grid grid-cols-2 gap-3">
-              <div className="bg-zinc-900 rounded-xl p-4 border border-zinc-800">
-                <div className="flex items-center gap-2 mb-2">
-                  <ArrowUpRight className="w-4 h-4 text-green-500" />
-                  <span className="text-zinc-400 text-xs">Masuk</span>
+              <button
+                onClick={() => setActiveTab('transactions')}
+                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl p-4 flex items-center justify-between hover:opacity-90 transition-opacity"
+              >
+                <div className="flex items-center gap-3">
+                  <TrendingUp className="w-6 h-6 text-white" />
+                  <span className="text-white font-bold">Lihat Ringkasan</span>
                 </div>
-                <p className="text-green-500 font-bold font-mono">
-                  {formatCurrency(totalIncome)}
-                </p>
-              </div>
+                <span className="text-white/70">→</span>
+              </button>
 
-              <div className="bg-zinc-900 rounded-xl p-4 border border-zinc-800">
-                <div className="flex items-center gap-2 mb-2">
-                  <ArrowDownRight className="w-4 h-4 text-red-500" />
-                  <span className="text-zinc-400 text-xs">Keluar</span>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="bg-zinc-900 rounded-xl p-4 border border-zinc-800">
+                  <div className="flex items-center gap-2 mb-2">
+                    <ArrowUpRight className="w-4 h-4 text-green-500" />
+                    <span className="text-zinc-400 text-xs">Masuk</span>
+                  </div>
+                  <p className="text-green-500 font-bold font-mono">
+                    {formatCurrency(totalIncome)}
+                  </p>
                 </div>
-                <p className="text-red-500 font-bold font-mono">
-                  {formatCurrency(totalExpense)}
-                </p>
-              </div>
-            </div>
 
-            <div className="bg-zinc-900 rounded-xl border border-zinc-800 overflow-hidden">
-              <div className="flex items-center justify-between px-4 py-3 bg-zinc-950 border-b border-zinc-800">
-                <span className="text-zinc-400 text-sm">Transaksi Hari Ini</span>
-                <span className="text-zinc-600 text-xs">{todayTransactions.length} item</span>
+                <div className="bg-zinc-900 rounded-xl p-4 border border-zinc-800">
+                  <div className="flex items-center gap-2 mb-2">
+                    <ArrowDownRight className="w-4 h-4 text-red-500" />
+                    <span className="text-zinc-400 text-xs">Keluar</span>
+                  </div>
+                  <p className="text-red-500 font-bold font-mono">
+                    {formatCurrency(totalExpense)}
+                  </p>
+                </div>
               </div>
-              {todayTransactions.length === 0 ? (
-                <p className="text-zinc-600 text-sm text-center py-6">Belum ada transaksi</p>
-              ) : (
-                <div className="divide-y divide-zinc-800">
-                  {todayTransactions.slice(0, 5).map((t) => (
-                    <div key={t.id} className="px-4 py-3 flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <span className="text-lg">
-                          {t.type === 'income' ? '💰' : '💸'}
-                        </span>
-                        <div>
-                          <p className="text-white text-sm">{t.description}</p>
-                          <p className="text-zinc-500 text-xs">{t.category_name}</p>
+
+              <div className="bg-zinc-900 rounded-xl border border-zinc-800 overflow-hidden">
+                <div className="flex items-center justify-between px-4 py-3 bg-zinc-950 border-b border-zinc-800">
+                  <span className="text-zinc-400 text-sm">Transaksi Hari Ini</span>
+                  <span className="text-zinc-600 text-xs">{todayTransactions.length} item</span>
+                </div>
+                {todayTransactions.length === 0 ? (
+                  <p className="text-zinc-600 text-sm text-center py-6">Belum ada transaksi</p>
+                ) : (
+                  <div className="divide-y divide-zinc-800">
+                    {todayTransactions.slice(0, 5).map((t) => (
+                      <div key={t.id} className="px-4 py-3 flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <span className="text-lg">
+                            {t.type === 'income' ? '💰' : '💸'}
+                          </span>
+                          <div>
+                            <p className="text-white text-sm">{t.description}</p>
+                            <p className="text-zinc-500 text-xs">{t.category_name}</p>
+                          </div>
                         </div>
+                        <span className={`font-mono text-sm ${
+                          t.type === 'income' ? 'text-green-500' : 'text-red-500'
+                        }`}>
+                          {t.type === 'income' ? '+' : '-'}
+                          {formatCurrency(t.amount)}
+                        </span>
                       </div>
-                      <span className={`font-mono text-sm ${
-                        t.type === 'income' ? 'text-green-500' : 'text-red-500'
-                      }`}>
-                        {t.type === 'income' ? '+' : '-'}
-                        {formatCurrency(t.amount)}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              )}
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
+          )}
 
           {activeTab === 'transactions' && (
             <div className="space-y-3">
