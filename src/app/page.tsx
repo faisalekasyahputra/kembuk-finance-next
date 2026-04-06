@@ -1,7 +1,16 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { Wallet, Receipt, Printer, PiggyBank, User, Plus, ArrowUpRight, ArrowDownRight, TrendingUp, Menu, X, MessageCircle, Camera, Upload, Loader2 } from 'lucide-react'
+import { 
+  Wallet, Receipt, Printer, PiggyBank, User, Plus, ArrowUpRight, ArrowDownRight, 
+  TrendingUp, Menu, X, MessageCircle, Camera, Upload, Loader2, Fuel, Cigarette, 
+  Zap, Wifi, Wrench, CreditCard, Smartphone, HardDrive, Cloud, Film, Shirt, 
+  Sparkles, Bird, Briefcase, Package, Utensils, Car, Heart, Tv, ShoppingBag,
+  ArrowLeftRight, Building2, Plane, Gift, Home, Gamepad2, GraduationCap, Baby,
+  TrendingDown, DollarSign, Percent, Calendar, Search, Bell, Settings, LogOut,
+  ChevronRight, ChevronDown, MoreVertical, Edit3, Trash2, Download, Share2,
+  Send, Image, Moon, Sun
+} from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { formatCurrency } from '@/lib/formatters'
 import html2canvas from 'html2canvas'
@@ -26,26 +35,33 @@ type Category = {
 }
 
 const defaultCategories: Category[] = [
-  { id: '1316db21-8b3e-4b16-9ac3-d7ad008f63ff', name: 'Bensin', icon: '⛽', group: 'expense' },
-  { id: '1d235330-090a-447f-b3db-2aa47e01db67', name: 'Rokok', icon: '🚬', group: 'expense' },
-  { id: 'ced99f4f-a3c1-4434-9496-edf78ed28d8f', name: 'Listrik', icon: '⚡', group: 'expense' },
-  { id: '95593a08-6e21-4260-9064-d728a0b42813', name: 'Wifi', icon: '📶', group: 'expense' },
-  { id: 'cbc83d63-0c37-4326-8038-df1ee127fb86', name: 'Service Motor', icon: '🔧', group: 'expense' },
-  { id: '58728828-ee06-4d19-8f8e-c0bf8120057c', name: 'Cicilan Seserahan', icon: '💳', group: 'expense' },
-  { id: '34b1475a-1bd6-4239-9e70-c8316b159b5f', name: 'Kuota Internet', icon: '📱', group: 'expense' },
-  { id: '2a43d9f5-165a-46a6-a30f-0f6f683c2d7f', name: 'Google Drive', icon: '💾', group: 'expense' },
-  { id: '48c948ff-f155-46b7-8b6e-c0d58cc117dc', name: 'iCloud', icon: '☁️', group: 'expense' },
-  { id: 'cd2bf5ca-115d-4e94-8c0e-2df65206e5ea', name: 'CapCut', icon: '🎬', group: 'expense' },
-  { id: '7a32aefb-2f84-459c-856e-b656e77666af', name: 'Laundry', icon: '👕', group: 'expense' },
-  { id: '5606a0f2-8e20-44f8-9938-1b382f33fb68', name: 'Gemini AI', icon: '✨', group: 'expense' },
-  { id: '4a1d493c-9faf-4823-8ac4-2d1668d92463', name: 'Twitter', icon: '🐦', group: 'expense' },
-  { id: '7b317b60-3011-4205-8465-bd8f09cd88e0', name: 'SIR ANGKI', icon: '💼', group: 'income' },
-  { id: '57a4fd47-8bc9-4113-ad02-ec0f822ea7a1', name: 'MELLY', icon: '💼', group: 'income' },
-  { id: '1bdc4fab-9691-4822-870e-62d398b686ec', name: 'RAPID', icon: '💼', group: 'income' },
-  { id: 'c7951d88-72f5-4261-bbac-50719a5342ad', name: 'ADHI', icon: '💼', group: 'income' },
-  { id: 'ac0e5853-f9da-4ad9-aa4b-97304529550c', name: 'FLATYFOOS', icon: '💼', group: 'income' },
-  { id: 'a1b2c3d4-e5f6-7890-abcd-ef1234567899', name: 'Lainnya', icon: '📦', group: 'expense' },
+  { id: '1316db21-8b3e-4b16-9ac3-d7ad008f63ff', name: 'Bensin', icon: 'Fuel', group: 'expense' },
+  { id: '1d235330-090a-447f-b3db-2aa47e01db67', name: 'Rokok', icon: 'Cigarette', group: 'expense' },
+  { id: 'ced99f4f-a3c1-4434-9496-edf78ed28d8f', name: 'Listrik', icon: 'Zap', group: 'expense' },
+  { id: '95593a08-6e21-4260-9064-d728a0b42813', name: 'Wifi', icon: 'Wifi', group: 'expense' },
+  { id: 'cbc83d63-0c37-4326-8038-df1ee127fb86', name: 'Service Motor', icon: 'Wrench', group: 'expense' },
+  { id: '58728828-ee06-4d19-8f8e-c0bf8120057c', name: 'Cicilan', icon: 'CreditCard', group: 'expense' },
+  { id: '34b1475a-1bd6-4239-9e70-c8316b159b5f', name: 'Kuota', icon: 'Smartphone', group: 'expense' },
+  { id: '2a43d9f5-165a-46a6-a30f-0f6f683c2d7f', name: 'Google Drive', icon: 'HardDrive', group: 'expense' },
+  { id: '48c948ff-f155-46b7-8b6e-c0d58cc117dc', name: 'iCloud', icon: 'Cloud', group: 'expense' },
+  { id: 'cd2bf5ca-115d-4e94-8c0e-2df65206e5ea', name: 'Streaming', icon: 'Tv', group: 'expense' },
+  { id: '7a32aefb-2f84-459c-856e-b656e77666af', name: 'Laundry', icon: 'Shirt', group: 'expense' },
+  { id: '5606a0f2-8e20-44f8-9938-1b382f33fb68', name: 'Gemini AI', icon: 'Sparkles', group: 'expense' },
+  { id: '4a1d493c-9faf-4823-8ac4-2d1668d92463', name: 'Twitter', icon: 'Bird', group: 'expense' },
+  { id: 'a1b2c3d4-e5f6-7890-abcd-ef1234567899', name: 'Lainnya', icon: 'Package', group: 'expense' },
+  { id: '7b317b60-3011-4205-8465-bd8f09cd88e0', name: 'SIR ANGKI', icon: 'Briefcase', group: 'income' },
+  { id: '57a4fd47-8bc9-4113-ad02-ec0f822ea7a1', name: 'MELLY', icon: 'DollarSign', group: 'income' },
+  { id: '1bdc4fab-9691-4822-870e-62d398b686ec', name: 'RAPID', icon: 'Plane', group: 'income' },
+  { id: 'c7951d88-72f5-4261-bbac-50719a5342ad', name: 'ADHI', icon: 'Building2', group: 'income' },
+  { id: 'ac0e5853-f9da-4ad9-aa4b-97304529550c', name: 'FLATYFOOS', icon: 'Gift', group: 'income' },
 ]
+
+const iconMap: Record<string, React.ComponentType<{className?: string, size?: number}>> = {
+  Fuel, Cigarette, Zap, Wifi, Wrench, CreditCard, Smartphone, HardDrive, Cloud,
+  Tv, Shirt, Sparkles, Bird, Package, Briefcase, DollarSign, Plane, Building2, Gift,
+  Utensils, Car, Heart, ShoppingBag, Gamepad2, GraduationCap, Baby, TrendingDown,
+  ArrowLeftRight, Home, TrendingUp, Wallet
+}
 
 function ReceiptExportView({ transactions, balance, totalIncome, totalExpense, onClose }: {
   transactions: Transaction[]
@@ -526,14 +542,14 @@ export default function Home() {
   )
 
   return (
-    <div className="min-h-screen bg-black text-white pb-24 lg:pb-0">
+    <div className="min-h-screen bg-gradient-to-br from-zinc-950 via-zinc-900 to-zinc-950 text-white pb-24 lg:pb-0">
       {toast && (
-        <div className={`fixed top-4 left-1/2 -translate-x-1/2 z-[100] px-4 py-3 rounded-xl shadow-lg flex items-center gap-2 animate-pulse ${
-          toast.type === 'success' ? 'bg-green-600' : toast.type === 'error' ? 'bg-red-600' : 'bg-blue-600'
+        <div className={`fixed top-4 left-1/2 -translate-x-1/2 z-[100] px-4 py-3 rounded-xl shadow-lg backdrop-blur-xl flex items-center gap-3 animate-pulse ${
+          toast.type === 'success' ? 'bg-green-600/90 border border-green-500/30' : toast.type === 'error' ? 'bg-red-600/90 border border-red-500/30' : 'bg-blue-600/90 border border-blue-500/30'
         }`}>
-          {toast.type === 'success' && <span>✅</span>}
-          {toast.type === 'error' && <span>❌</span>}
-          {toast.type === 'info' && <span>ℹ️</span>}
+          {toast.type === 'success' && <TrendingUp className="w-5 h-5 text-green-200" />}
+          {toast.type === 'error' && <X className="w-5 h-5 text-red-200" />}
+          {toast.type === 'info' && <Bell className="w-5 h-5 text-blue-200" />}
           <span className="text-white text-sm font-medium">{toast.message}</span>
         </div>
       )}
@@ -546,15 +562,18 @@ export default function Home() {
           </div>
         </div>
       )}
-      <aside className="hidden lg:flex fixed left-0 top-0 h-full w-60 bg-black border-r border-zinc-800 flex-col p-4 z-40">
-        <div className="flex items-center gap-3 mb-8 px-2">
-          <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center">
-            <Wallet className="w-5 h-5 text-white" />
+      <aside className="hidden lg:flex fixed left-0 top-0 h-full w-64 bg-zinc-950/80 backdrop-blur-xl border-r border-zinc-800/50 flex-col p-5 z-40 shadow-2xl">
+        <div className="flex items-center gap-3 mb-10 px-3">
+          <div className="w-12 h-12 bg-gradient-to-br from-blue-500 via-blue-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/30">
+            <Wallet className="w-6 h-6 text-white" />
           </div>
-          <span className="text-white font-bold text-lg">Kembuk</span>
+          <div>
+            <span className="text-white font-bold text-xl tracking-tight">Kembuk</span>
+            <p className="text-zinc-500 text-xs">Finance Manager</p>
+          </div>
         </div>
 
-        <nav className="flex-1 space-y-1">
+        <nav className="flex-1 space-y-2">
           {navItems.map((item) => (
             <button
               key={item.id}
@@ -562,17 +581,31 @@ export default function Home() {
                 setActiveTab(item.id)
                 if (item.id === 'receipt') setShowReceiptExport(true)
               }}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
+              className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl transition-all duration-200 ${
                 activeTab === item.id
-                  ? 'bg-blue-600 text-white'
-                  : 'text-zinc-400 hover:bg-zinc-900 hover:text-white'
+                  ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg shadow-blue-500/25'
+                  : 'text-zinc-400 hover:bg-zinc-800/50 hover:text-white hover:translate-x-1'
               }`}
             >
               <item.icon className="w-5 h-5" />
               <span className="font-medium">{item.label}</span>
+              {activeTab === item.id && <ChevronRight className="w-4 h-4 ml-auto" />}
             </button>
           ))}
         </nav>
+
+        <div className="pt-4 border-t border-zinc-800/50 mt-4">
+          <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-zinc-900/50">
+            <div className="w-9 h-9 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center">
+              <User className="w-4 h-4 text-white" />
+            </div>
+            <div className="flex-1">
+              <p className="text-white text-sm font-medium">Kembuk</p>
+              <p className="text-zinc-500 text-xs">Premium</p>
+            </div>
+            <Settings className="w-4 h-4 text-zinc-500" />
+          </div>
+        </div>
       </aside>
 
       <div className="lg:ml-60">
@@ -589,75 +622,106 @@ export default function Home() {
 
         <main className="p-4 lg:p-6 max-w-3xl lg:mx-auto">
           {activeTab === 'home' && (
-            <div className="space-y-3">
-              <div className="bg-gradient-to-br from-zinc-800 to-zinc-900 rounded-2xl p-5 border border-zinc-700">
-                <p className="text-zinc-400 text-sm mb-1">Saldo</p>
-                <h2 className="text-4xl font-bold font-mono text-white">
-                  {formatCurrency(balance)}
-                </h2>
+            <div className="space-y-4">
+              <div className="relative bg-gradient-to-br from-zinc-800 via-zinc-900 to-zinc-950 rounded-3xl p-6 border border-zinc-700/50 shadow-2xl overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10" />
+                <div className="absolute -top-20 -right-20 w-40 h-40 bg-blue-500/20 rounded-full blur-3xl" />
+                <div className="relative">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Wallet className="w-5 h-5 text-zinc-400" />
+                    <p className="text-zinc-400 text-sm font-medium">Total Balance</p>
+                  </div>
+                  <h2 className="text-4xl font-bold font-mono text-white tracking-tight">
+                    {formatCurrency(balance)}
+                  </h2>
+                </div>
               </div>
 
               <button
                 onClick={() => setActiveTab('transactions')}
-                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl p-4 flex items-center justify-between hover:opacity-90 transition-opacity"
+                className="w-full relative bg-gradient-to-r from-blue-600 via-blue-700 to-purple-700 rounded-2xl p-5 flex items-center justify-between hover:opacity-90 transition-all duration-300 shadow-xl shadow-blue-500/25 overflow-hidden group"
               >
-                <div className="flex items-center gap-3">
-                  <TrendingUp className="w-6 h-6 text-white" />
-                  <span className="text-white font-bold">Lihat Ringkasan</span>
+                <div className="absolute inset-0 bg-gradient-to-r from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="relative flex items-center gap-4">
+                  <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm">
+                    <TrendingUp className="w-6 h-6 text-white" />
+                  </div>
+                  <div className="text-left">
+                    <span className="text-white font-bold text-lg block">View Summary</span>
+                    <span className="text-white/60 text-sm">View all transactions</span>
+                  </div>
                 </div>
-                <span className="text-white/70">→</span>
+                <ChevronRight className="w-6 h-6 text-white/70 group-hover:translate-x-1 transition-transform" />
               </button>
 
-              <div className="grid grid-cols-2 gap-3">
-                <div className="bg-zinc-900 rounded-xl p-4 border border-zinc-800">
-                  <div className="flex items-center gap-2 mb-2">
-                    <ArrowUpRight className="w-4 h-4 text-green-500" />
-                    <span className="text-zinc-400 text-xs">Masuk</span>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="relative bg-gradient-to-br from-zinc-900 to-zinc-950 rounded-2xl p-5 border border-zinc-800/50 shadow-xl overflow-hidden">
+                  <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-green-500 to-emerald-500" />
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-10 h-10 bg-green-500/20 rounded-xl flex items-center justify-center">
+                      <ArrowUpRight className="w-5 h-5 text-green-500" />
+                    </div>
+                    <span className="text-zinc-400 text-sm font-medium">Income</span>
                   </div>
-                  <p className="text-green-500 font-bold font-mono">
+                  <p className="text-green-500 font-bold font-mono text-xl">
                     {formatCurrency(totalIncome)}
                   </p>
                 </div>
 
-                <div className="bg-zinc-900 rounded-xl p-4 border border-zinc-800">
-                  <div className="flex items-center gap-2 mb-2">
-                    <ArrowDownRight className="w-4 h-4 text-red-500" />
-                    <span className="text-zinc-400 text-xs">Keluar</span>
+                <div className="relative bg-gradient-to-br from-zinc-900 to-zinc-950 rounded-2xl p-5 border border-zinc-800/50 shadow-xl overflow-hidden">
+                  <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-500 to-rose-500" />
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-10 h-10 bg-red-500/20 rounded-xl flex items-center justify-center">
+                      <ArrowDownRight className="w-5 h-5 text-red-500" />
+                    </div>
+                    <span className="text-zinc-400 text-sm font-medium">Expense</span>
                   </div>
-                  <p className="text-red-500 font-bold font-mono">
+                  <p className="text-red-500 font-bold font-mono text-xl">
                     {formatCurrency(totalExpense)}
                   </p>
                 </div>
               </div>
 
-              <div className="bg-zinc-900 rounded-xl border border-zinc-800 overflow-hidden">
-                <div className="flex items-center justify-between px-4 py-3 bg-zinc-950 border-b border-zinc-800">
-                  <span className="text-zinc-400 text-sm">Transaksi Hari Ini</span>
-                  <span className="text-zinc-600 text-xs">{todayTransactions.length} item</span>
+              <div className="relative bg-gradient-to-br from-zinc-900 to-zinc-950 rounded-2xl border border-zinc-800/50 shadow-xl overflow-hidden">
+                <div className="flex items-center justify-between px-5 py-4 border-b border-zinc-800/50">
+                  <div className="flex items-center gap-3">
+                    <Receipt className="w-5 h-5 text-zinc-400" />
+                    <span className="text-white text-sm font-medium">Today Transactions</span>
+                  </div>
+                  <span className="text-zinc-500 text-xs font-medium px-2 py-1 bg-zinc-800/50 rounded-lg">{todayTransactions.length} items</span>
                 </div>
                 {todayTransactions.length === 0 ? (
-                  <p className="text-zinc-600 text-sm text-center py-6">Belum ada transaksi</p>
+                  <div className="flex flex-col items-center justify-center py-12">
+                    <Receipt className="w-12 h-12 text-zinc-700 mb-3" />
+                    <p className="text-zinc-600 text-sm">No transactions yet</p>
+                  </div>
                 ) : (
-                  <div className="divide-y divide-zinc-800">
-                    {todayTransactions.slice(0, 5).map((t) => (
-                      <div key={t.id} className="px-4 py-3 flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <span className="text-lg">
-                            {t.type === 'income' ? '💰' : '💸'}
-                          </span>
-                          <div>
-                            <p className="text-white text-sm">{t.description}</p>
-                            <p className="text-zinc-500 text-xs">{t.category_name}</p>
+                  <div className="divide-y divide-zinc-800/30">
+                    {todayTransactions.slice(0, 5).map((t) => {
+                      const category = defaultCategories.find(c => c.id === t.category_id)
+                      const IconComponent = iconMap[category?.icon || 'Package'] || Package
+                      return (
+                        <div key={t.id} className="px-5 py-4 flex items-center justify-between hover:bg-zinc-800/30 transition-colors">
+                          <div className="flex items-center gap-4">
+                            <div className={`w-11 h-11 rounded-xl flex items-center justify-center ${
+                              t.type === 'income' ? 'bg-green-500/20' : 'bg-red-500/20'
+                            }`}>
+                              <IconComponent className={`w-5 h-5 ${t.type === 'income' ? 'text-green-500' : 'text-red-500'}`} />
+                            </div>
+                            <div>
+                              <p className="text-white text-sm font-medium">{t.description}</p>
+                              <p className="text-zinc-500 text-xs">{t.category_name}</p>
+                            </div>
                           </div>
+                          <span className={`font-mono text-sm font-semibold ${
+                            t.type === 'income' ? 'text-green-500' : 'text-red-500'
+                          }`}>
+                            {t.type === 'income' ? '+' : '-'}
+                            {formatCurrency(t.amount)}
+                          </span>
                         </div>
-                        <span className={`font-mono text-sm ${
-                          t.type === 'income' ? 'text-green-500' : 'text-red-500'
-                        }`}>
-                          {t.type === 'income' ? '+' : '-'}
-                          {formatCurrency(t.amount)}
-                        </span>
-                      </div>
-                    ))}
+                      )
+                    })}
                   </div>
                 )}
               </div>
@@ -773,15 +837,16 @@ export default function Home() {
         </main>
       </div>
 
-      <nav className="fixed bottom-0 left-0 right-0 bg-black/95 backdrop-blur-xl border-t border-zinc-800 flex items-center justify-around py-2 pb-5 z-50 lg:hidden">
-        {navItems.map((item, index) => (
+      <nav className="fixed bottom-0 left-0 right-0 bg-zinc-950/95 backdrop-blur-xl border-t border-zinc-800/50 flex items-center justify-around py-2 pb-6 z-50 lg:hidden">
+        <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-32 h-6 bg-zinc-900 rounded-b-3xl" />
+        {navItems.map((item) => (
           item.id === 'receipt' ? (
             <button
               key={item.id}
               onClick={() => setShowAddOptions(true)}
-              className="flex flex-col items-center -mt-6"
+              className="flex flex-col items-center -mt-8 relative"
             >
-              <div className="w-14 h-14 bg-blue-600 rounded-full flex items-center justify-center shadow-lg shadow-blue-600/30">
+              <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center shadow-xl shadow-blue-500/40 border-4 border-zinc-950">
                 <Plus className="w-7 h-7 text-white" />
               </div>
             </button>
@@ -789,12 +854,12 @@ export default function Home() {
             <button
               key={item.id}
               onClick={() => setActiveTab(item.id)}
-              className={`flex flex-col items-center gap-1 p-2 ${
-                activeTab === item.id ? 'text-blue-400' : 'text-zinc-500'
+              className={`flex flex-col items-center gap-1.5 p-2 transition-all ${
+                activeTab === item.id ? 'text-blue-400 scale-110' : 'text-zinc-500'
               }`}
             >
-              <item.icon className="w-5 h-5" />
-              <span className="text-[10px]">{item.label}</span>
+              <item.icon className="w-6 h-6" />
+              <span className="text-[10px] font-medium">{item.label}</span>
             </button>
           )
         ))}
