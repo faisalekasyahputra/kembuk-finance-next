@@ -1,9 +1,10 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { Wallet, Receipt, Printer, PiggyBank, User, Plus, ArrowUpRight, ArrowDownRight, TrendingUp, Menu, X, MessageCircle, Camera, Upload } from 'lucide-react'
+import { Wallet, Receipt, Printer, PiggyBank, User, Plus, ArrowUpRight, ArrowDownRight, TrendingUp, Menu, X, MessageCircle, Camera, Upload, Loader2 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { formatCurrency } from '@/lib/formatters'
+import Tesseract from 'tesseract.js'
 
 type Transaction = {
   id: string
@@ -267,36 +268,50 @@ export default function Home() {
     setAnalyzing(true)
     
     try {
-      const formDataUpload = new FormData()
-      formDataUpload.append('image', file)
-
-      const response = await fetch('/api/analyze-receipt', {
-        method: 'POST',
-        body: formDataUpload,
+      const result = await Tesseract.recognize(file, 'eng+ind', {
+        logger: m => console.log(m)
       })
-
-      const result = await response.json()
-
-      if (result.success) {
-        const category = defaultCategories.find(c => 
-          c.name.toLowerCase().includes(result.data.category.toLowerCase())
-        ) || defaultCategories[9]
-
-        setFormData({
-          type: 'expense',
-          amount: result.data.amount.toString(),
-          category_id: category.id,
-          description: result.data.description,
-          date: result.data.date,
-        })
-        setShowReceiptModal(false)
-        setShowAddModal(true)
-      } else {
-        alert('Gagal menganalisis struk: ' + result.error)
+      
+      const text = result.data.text
+      console.log('OCR Result:', text)
+      
+      const amountMatch = text.match(/[\d.]+/g)
+      let amount = 0
+      if (amountMatch) {
+        const amounts = amountMatch.map(n => parseFloat(n.replace(/\./g, '').replace(',', '.')))
+        amount = Math.max(...amounts.filter(n => n > 1000 && n < 100000000))
       }
+      
+      const categoryNames = ['makanan', 'makan', 'transport', 'bensin', 'belanja', 'hiburan', 'kesehatan', 'tagihan', ' pulsa', 'listrik', 'air']
+      let detectedCategory = 'Lainnya'
+      for (const cat of categoryNames) {
+        if (text.toLowerCase().includes(cat)) {
+          if (cat.includes('makan') || cat.includes('makanan')) detectedCategory = 'Makanan'
+          else if (cat.includes('transport') || cat.includes('bensin')) detectedCategory = 'Transport'
+          else if (cat.includes('belanja')) detectedCategory = 'Belanja'
+          else if (cat.includes('hiburan')) detectedCategory = 'Hiburan'
+          else if (cat.includes('kesehatan')) detectedCategory = 'Kesehatan'
+          else if (cat.includes('tagihan') || cat.includes('listrik') || cat.includes('air')) detectedCategory = 'Tagihan'
+          break
+        }
+      }
+      
+      const category = defaultCategories.find(c => c.name.toLowerCase().includes(detectedCategory.toLowerCase())) || defaultCategories[9]
+      
+      const description = text.split('\n').find(line => line.length > 5 && line.length < 50) || 'Transaksi'
+      
+      setFormData({
+        type: 'expense',
+        amount: amount.toString(),
+        category_id: category.id,
+        description: description.trim(),
+        date: new Date().toISOString().split('T')[0],
+      })
+      setShowReceiptModal(false)
+      setShowAddModal(true)
     } catch (error) {
       console.error('Error analyzing receipt:', error)
-      alert('Terjadi kesalahan saat menganalisis struk')
+      alert('Gagal menganalisis struk. Coba lagi.')
     } finally {
       setAnalyzing(false)
     }
@@ -485,7 +500,14 @@ export default function Home() {
               </div>
               <div className="bg-zinc-900 rounded-xl p-6 border border-zinc-800 text-center">
                 <PiggyBank className="w-12 h-12 text-zinc-700 mx-auto mb-3" />
-                <p className="text-zinc-400">Fitur tabungan dalam pengembangan</p>
+                <p className="text-white font-medium">Fitur Tabungan</p>
+                <p className="text-zinc-400 text-sm mt-1">Coming soon!</p>
+                <p className="text-zinc-500 text-xs mt-3">Akan hadir:</p>
+                <ul className="text-zinc-500 text-xs mt-2 space-y-1 text-left max-w-xs mx-auto">
+                  <li className="flex items-center gap-2"><span className="w-2 h-2 bg-yellow-500 rounded-full"></span> Target tabungan bulanan</li>
+                  <li className="flex items-center gap-2"><span className="w-2 h-2 bg-yellow-500 rounded-full"></span> Progress pencapaian</li>
+                  <li className="flex items-center gap-2"><span className="w-2 h-2 bg-yellow-500 rounded-full"></span> Reminder tabungan</li>
+                </ul>
               </div>
             </div>
           )}
@@ -502,10 +524,32 @@ export default function Home() {
                     <p className="text-zinc-500 text-sm">Kembuk Finance</p>
                   </div>
                 </div>
-                <div className="space-y-2">
-                  <div className="p-3 bg-zinc-800 rounded-xl text-zinc-300">
+                <div className="space-y-3">
+                  <div className="p-3 bg-zinc-800 rounded-xl">
                     <span className="text-zinc-500 text-sm">Total Transaksi</span>
                     <p className="text-white font-bold">{transactions.length}</p>
+                  </div>
+                  <div className="p-3 bg-zinc-800 rounded-xl">
+                    <span className="text-zinc-500 text-sm">Total Pemasukan</span>
+                    <p className="text-green-400 font-bold">{formatCurrency(totalIncome)}</p>
+                  </div>
+                  <div className="p-3 bg-zinc-800 rounded-xl">
+                    <span className="text-zinc-500 text-sm">Total Pengeluaran</span>
+                    <p className="text-red-400 font-bold">{formatCurrency(totalExpense)}</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="bg-zinc-900 rounded-xl p-5 border border-zinc-800">
+                <h4 className="text-white font-medium mb-3">Statistik</h4>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="p-3 bg-zinc-800 rounded-xl text-center">
+                    <p className="text-2xl font-bold text-white">{transactions.filter(t => t.type === 'income').length}</p>
+                    <p className="text-zinc-500 text-xs">Pemasukan</p>
+                  </div>
+                  <div className="p-3 bg-zinc-800 rounded-xl text-center">
+                    <p className="text-2xl font-bold text-white">{transactions.filter(t => t.type === 'expense').length}</p>
+                    <p className="text-zinc-500 text-xs">Pengeluaran</p>
                   </div>
                 </div>
               </div>
@@ -661,8 +705,9 @@ export default function Home() {
               <div className="border-2 border-dashed border-zinc-700 rounded-2xl p-8 text-center hover:border-zinc-600 transition-colors cursor-pointer">
                 {analyzing ? (
                   <div className="space-y-3">
-                    <div className="w-12 h-12 mx-auto border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
+                    <Loader2 className="w-12 h-12 mx-auto text-blue-500 animate-spin" />
                     <p className="text-zinc-400">Menganalisis struk...</p>
+                    <p className="text-zinc-500 text-xs">Menggunakan OCR lokal</p>
                   </div>
                 ) : (
                   <>
