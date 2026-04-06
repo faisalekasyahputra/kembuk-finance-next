@@ -26,16 +26,16 @@ type Category = {
 }
 
 const defaultCategories: Category[] = [
-  { id: '1', name: 'Gaji', icon: '💰', group: 'income' },
-  { id: '2', name: 'Freelance', icon: '💻', group: 'income' },
-  { id: '3', name: 'Investasi', icon: '📈', group: 'income' },
-  { id: '4', name: 'Makanan', icon: '🍔', group: 'expense' },
-  { id: '5', name: 'Transport', icon: '🚗', group: 'expense' },
-  { id: '6', name: 'Belanja', icon: '🛒', group: 'expense' },
-  { id: '7', name: 'Hiburan', icon: '🎬', group: 'expense' },
-  { id: '8', name: 'Kesehatan', icon: '🏥', group: 'expense' },
-  { id: '9', name: 'Tagihan', icon: '📄', group: 'expense' },
-  { id: '10', name: 'Lainnya', icon: '📦', group: 'expense' },
+  { id: 'a1b2c3d4-e5f6-7890-abcd-ef1234567801', name: 'Gaji', icon: '💰', group: 'income' },
+  { id: 'a1b2c3d4-e5f6-7890-abcd-ef1234567802', name: 'Freelance', icon: '💻', group: 'income' },
+  { id: 'a1b2c3d4-e5f6-7890-abcd-ef1234567803', name: 'Investasi', icon: '📈', group: 'income' },
+  { id: 'a1b2c3d4-e5f6-7890-abcd-ef1234567804', name: 'Makanan', icon: '🍔', group: 'expense' },
+  { id: 'a1b2c3d4-e5f6-7890-abcd-ef1234567805', name: 'Transport', icon: '🚗', group: 'expense' },
+  { id: 'a1b2c3d4-e5f6-7890-abcd-ef1234567806', name: 'Belanja', icon: '🛒', group: 'expense' },
+  { id: 'a1b2c3d4-e5f6-7890-abcd-ef1234567807', name: 'Hiburan', icon: '🎬', group: 'expense' },
+  { id: 'a1b2c3d4-e5f6-7890-abcd-ef1234567808', name: 'Kesehatan', icon: '🏥', group: 'expense' },
+  { id: 'a1b2c3d4-e5f6-7890-abcd-ef1234567809', name: 'Tagihan', icon: '📄', group: 'expense' },
+  { id: 'a1b2c3d4-e5f6-7890-abcd-ef1234567810', name: 'Lainnya', icon: '📦', group: 'expense' },
 ]
 
 function ReceiptExportView({ transactions, balance, totalIncome, totalExpense, onClose }: {
@@ -186,12 +186,18 @@ export default function Home() {
         .select('*')
         .order('date', { ascending: false })
 
-      if (error) throw error
+      if (error) {
+        console.error('Supabase error:', error)
+        alert('Gagal mengambil data: ' + error.message)
+        return
+      }
 
+      console.log('Fetched transactions:', data?.length || 0)
       setTransactions(data || [])
       calculateStats(data || [])
     } catch (error) {
       console.error('Error fetching transactions:', error)
+      alert('Gagal mengambil data dari database. Cek koneksi internet.')
       setTransactions([])
       calculateStats([])
     }
@@ -228,8 +234,13 @@ export default function Home() {
         .from('kf_transactions')
         .insert([newTransaction])
 
-      if (error) throw error
+      if (error) {
+        console.error('Supabase insert error:', error)
+        alert('Gagal menyimpan: ' + error.message)
+        return
+      }
 
+      console.log('Transaction saved successfully')
       await fetchTransactions()
       setShowAddModal(false)
       setFormData({
@@ -241,9 +252,7 @@ export default function Home() {
       })
     } catch (error) {
       console.error('Error adding transaction:', error)
-      setTransactions([newTransaction, ...transactions])
-      calculateStats([newTransaction, ...transactions])
-      setShowAddModal(false)
+      alert('Gagal menyimpan transaksi. Cek koneksi internet.')
     }
   }
 
