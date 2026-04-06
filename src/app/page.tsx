@@ -245,7 +245,7 @@ function ReceiptExportView({ transactions, balance, totalIncome, totalExpense, o
   )
 }
 
-export default function Home() {
+export default function Dashboard() {
   const [activeTab, setActiveTab] = useState('home')
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [transactions, setTransactions] = useState<Transaction[]>([])
