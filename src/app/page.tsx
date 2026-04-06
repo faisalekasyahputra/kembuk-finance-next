@@ -4,7 +4,6 @@ import { useState, useEffect, useRef } from 'react'
 import { Wallet, Receipt, Printer, PiggyBank, User, Plus, ArrowUpRight, ArrowDownRight, TrendingUp, Menu, X, MessageCircle, Camera, Upload, Loader2 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { formatCurrency } from '@/lib/formatters'
-import Tesseract from 'tesseract.js'
 import html2canvas from 'html2canvas'
 
 type Transaction = {
@@ -462,47 +461,34 @@ export default function Home() {
     setAnalyzing(true)
     
     try {
-      const result = await Tesseract.recognize(file, 'eng+ind', {
-        logger: m => console.log(m)
+      const formDataUpload = new FormData()
+      formDataUpload.append('image', file)
+
+      const response = await fetch('/api/analyze-receipt', {
+        method: 'POST',
+        body: formDataUpload,
       })
-      
-      const text = result.data.text
-      console.log('OCR Result:', text)
-      
-      const amountMatch = text.match(/[\d.]+/g)
-      let amount = 0
-      if (amountMatch) {
-        const amounts = amountMatch.map(n => parseFloat(n.replace(/\./g, '').replace(',', '.')))
-        amount = Math.max(...amounts.filter(n => n > 1000 && n < 100000000))
+
+      const result = await response.json()
+
+      if (result.success) {
+        const category = defaultCategories.find(c => 
+          c.name.toLowerCase().includes(result.data.category?.toLowerCase() || '')
+        ) || defaultCategories[9]
+
+        setFormData({
+          type: 'expense',
+          amount: result.data.amount?.toString() || '0',
+          category_id: category.id,
+          description: result.data.description || 'Transaksi',
+          date: result.data.date || new Date().toISOString().split('T')[0],
+        })
+        setShowReceiptModal(false)
+        setShowAddModal(true)
+      } else {
+        alert('Gagal menganalisis struk: ' + (result.error || result.details || 'Unknown error'))
+        console.error('Gemini error:', result)
       }
-      
-      const categoryNames = ['makanan', 'makan', 'transport', 'bensin', 'belanja', 'hiburan', 'kesehatan', 'tagihan', ' pulsa', 'listrik', 'air']
-      let detectedCategory = 'Lainnya'
-      for (const cat of categoryNames) {
-        if (text.toLowerCase().includes(cat)) {
-          if (cat.includes('makan') || cat.includes('makanan')) detectedCategory = 'Makanan'
-          else if (cat.includes('transport') || cat.includes('bensin')) detectedCategory = 'Transport'
-          else if (cat.includes('belanja')) detectedCategory = 'Belanja'
-          else if (cat.includes('hiburan')) detectedCategory = 'Hiburan'
-          else if (cat.includes('kesehatan')) detectedCategory = 'Kesehatan'
-          else if (cat.includes('tagihan') || cat.includes('listrik') || cat.includes('air')) detectedCategory = 'Tagihan'
-          break
-        }
-      }
-      
-      const category = defaultCategories.find(c => c.name.toLowerCase().includes(detectedCategory.toLowerCase())) || defaultCategories[9]
-      
-      const description = text.split('\n').find(line => line.length > 5 && line.length < 50) || 'Transaksi'
-      
-      setFormData({
-        type: 'expense',
-        amount: amount.toString(),
-        category_id: category.id,
-        description: description.trim(),
-        date: new Date().toISOString().split('T')[0],
-      })
-      setShowReceiptModal(false)
-      setShowAddModal(true)
     } catch (error) {
       console.error('Error analyzing receipt:', error)
       alert('Gagal menganalisis struk. Coba lagi.')
