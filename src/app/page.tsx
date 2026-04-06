@@ -71,8 +71,8 @@ function ReceiptExportView({ transactions, balance, totalIncome, totalExpense, o
       })
 
       canvas.toBlob(async (blob) => {
-        const chatId = '5383236811'
-        const botToken = 'bot8677289448:AAEQz5YrVhHwX210MLTp-6-6AgSe8Eg5fUc'
+        const chatId = process.env.NEXT_PUBLIC_TELEGRAM_CHAT_ID || '5383236811'
+        const botToken = process.env.NEXT_PUBLIC_TELEGRAM_BOT_TOKEN || ''
         
         if (blob) {
           const formData = new FormData()
@@ -337,15 +337,15 @@ export default function Home() {
   }
 
   const sendTransactionReceipt = async (transaction: Transaction) => {
-    const chatId = '5383236811'
-    const botToken = 'bot8677289448:AAEQz5YrVhHwX210MLTp-6-6AgSe8Eg5fUc'
+    const chatId = process.env.NEXT_PUBLIC_TELEGRAM_CHAT_ID || '5383236811'
+    const botToken = process.env.NEXT_PUBLIC_TELEGRAM_BOT_TOKEN || ''
     
     const now = new Date()
     const dateStr = now.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })
     const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })
     const receiptId = `KF${Date.now().toString(36).toUpperCase()}`
     
-    const whatsappNumber = '6289639052639'
+    const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '6289639052639'
     const whatsappMessage = `🧾 *BUKTI TRANSAKSI*
 
 📅 ${dateStr} | ${timeStr} WIB
