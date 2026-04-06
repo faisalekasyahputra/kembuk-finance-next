@@ -42,27 +42,40 @@ Anon Key: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 
 ## Collaboration Rules (WAJIB DIIKUTI)
 
-### 1. Task Coordination
-**EFORE working on any task:**
-- Check GitHub Issues: https://github.com/faisalekasyahputra/kembuk-finance-next/issues
-- Comment on the issue: "Ndrogrok: I'll work on this"
-- Wait for acknowledgment or work on a different task
-
-### 2. DON'T Edit Same File at Same Time
-If another agent is working on a file, DON'T touch it until they push.
-
-### 3. Always Pull Before Edit
-```bash
-git pull origin main
+### 1. STRICT SEQUENCE (WAJIB)
+```
+BEFORE ANY WORK:
+1. git pull origin main
+2. Check git log: git log --oneline -5
+3. Check what files were recently changed
+4. Only then claim & work
 ```
 
-### 4. Test Before Push
+### 2. File Locking System
+**EFORE editing ANY file:**
+1. Check GitHub Issues: https://github.com/faisalekasyahputra/kembuk-finance-next/issues
+2. If task exists, comment: "[AgentName]: Working on [file.tsx]"
+3. If task doesn't exist, CREATE ISSUE first
+4. Only then edit
+
+### 3. DON'T Edit Same File at Same Time (HARD RULE)
+- If another agent claimed a file in last 24h, DON'T touch it
+- Check: `git log --oneline --author=[AgentName] -3`
+- Wait for the agent to push and deploy
+
+### 4. Always Pull Before Edit
+```bash
+git pull origin main
+git log --oneline -5  # Check recent changes
+```
+
+### 5. Test Before Push
 ```bash
 npm run build  # Must pass
 npm run lint   # Must pass
 ```
 
-### 5. Deploy After Push
+### 6. Deploy After Push
 After pushing, deploy immediately so other agents can see changes.
 
 ---
@@ -318,6 +331,15 @@ created_at     TIMESTAMP
 3. **NO SECRETS** - Never push API keys or tokens to GitHub
 4. **ALWAYS PULL** - Before editing anything
 5. **TEST FIRST** - Build must pass before push
+
+---
+
+## File Lock Status
+**Current file locks (DO NOT edit if locked by another agent):**
+
+| File | Locked By | Status | Since |
+|------|-----------|--------|-------|
+| src/app/page.tsx | - | UNLOCKED | - |
 
 ---
 
