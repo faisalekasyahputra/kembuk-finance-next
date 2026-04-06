@@ -61,7 +61,7 @@ function ReceiptExportView({ transactions, balance, totalIncome, totalExpense, o
     try {
       const canvas = document.createElement('canvas')
       const ctx = canvas.getContext('2d')
-      const scale = 2
+      const scale = 3
       
       canvas.width = receiptEl.offsetWidth * scale
       canvas.height = receiptEl.offsetHeight * scale
@@ -72,7 +72,7 @@ function ReceiptExportView({ transactions, balance, totalIncome, totalExpense, o
       img.onload = async () => {
         if (ctx) {
           ctx.scale(scale, scale)
-          ctx.fillStyle = 'white'
+          ctx.fillStyle = '#ffffff'
           ctx.fillRect(0, 0, canvas.width, canvas.height)
           ctx.drawImage(img, 0, 0)
           
@@ -81,7 +81,7 @@ function ReceiptExportView({ transactions, balance, totalIncome, totalExpense, o
               const formData = new FormData()
               formData.append('chat_id', '5383236811')
               formData.append('photo', blob, 'receipt.png')
-              formData.append('caption', '🧾 Struk Kembuk Finance')
+              formData.append('caption', '🧾 Kembuk Finance Report')
               
               await fetch('https://api.telegram.org/bot8677289448:AAEQz5YrVhHwX210MLTp-6-6AgSe8Eg5fUc/sendPhoto', {
                 method: 'POST',
@@ -101,58 +101,108 @@ function ReceiptExportView({ transactions, balance, totalIncome, totalExpense, o
     }
   }
 
+  const formatDate = (date: Date) => {
+    const options: Intl.DateTimeFormatOptions = { 
+      weekday: 'long', 
+      day: 'numeric', 
+      month: 'long', 
+      year: 'numeric' 
+    }
+    return date.toLocaleDateString('id-ID', options)
+  }
+
+  const groupedByCategory = transactions.reduce((acc, t) => {
+    const key = t.category_name
+    if (!acc[key]) acc[key] = { count: 0, total: 0 }
+    acc[key].count++
+    acc[key].total += t.amount
+    return acc
+  }, {} as Record<string, { count: number; total: number }>)
+
+  const topExpenses = Object.entries(groupedByCategory)
+    .filter(([key]) => transactions.find(t => t.category_name === key)?.type === 'expense')
+    .sort((a, b) => b[1].total - a[1].total)
+    .slice(0, 5)
+
   return (
     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={onClose}>
       <div className="w-full max-w-sm" onClick={e => e.stopPropagation()}>
-        <div id="receipt-export" className="bg-white text-black rounded-lg overflow-hidden shadow-2xl">
-          <div className="bg-blue-600 text-white p-4 text-center">
-            <h2 className="font-bold text-lg">KEMBUK FINANCE</h2>
-            <p className="text-blue-100 text-xs">Struk Transaksi</p>
+        <div id="receipt-export" className="bg-white text-black rounded-2xl overflow-hidden shadow-2xl">
+          <div className="bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 text-white p-6 text-center">
+            <div className="w-16 h-16 bg-white/20 rounded-2xl mx-auto mb-3 flex items-center justify-center">
+              <span className="text-3xl">💰</span>
+            </div>
+            <h2 className="font-bold text-xl tracking-wide">KEMBUK FINANCE</h2>
+            <p className="text-blue-100 text-sm mt-1">Laporan Keuangan</p>
           </div>
           
-          <div className="p-4 space-y-3 text-sm">
-            <div className="text-center border-b border-dashed border-gray-300 pb-2">
-              <p className="text-gray-500 text-xs">
-                {new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
+          <div className="p-5 space-y-4">
+            <div className="bg-gray-50 rounded-xl p-4 text-center">
+              <p className="text-gray-500 text-xs uppercase tracking-wider mb-1">Periode</p>
+              <p className="text-gray-800 font-semibold text-sm">{formatDate(new Date())}</p>
+              <p className="text-gray-500 text-xs">{new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })} WIB</p>
+            </div>
+            
+            <div className="border-t border-b border-dashed border-gray-200 py-4">
+              <div className="grid grid-cols-2 gap-3">
+                <div className="bg-green-50 rounded-xl p-3 text-center">
+                  <p className="text-green-600 text-xs uppercase tracking-wide mb-1">📈 Masuk</p>
+                  <p className="text-green-700 font-bold font-mono text-lg">
+                    Rp {totalIncome.toLocaleString('id-ID')}
+                  </p>
+                  <p className="text-green-500 text-xs">{transactions.filter(t => t.type === 'income').length} transaksi</p>
+                </div>
+                <div className="bg-red-50 rounded-xl p-3 text-center">
+                  <p className="text-red-600 text-xs uppercase tracking-wide mb-1">📉 Keluar</p>
+                  <p className="text-red-700 font-bold font-mono text-lg">
+                    Rp {totalExpense.toLocaleString('id-ID')}
+                  </p>
+                  <p className="text-red-500 text-xs">{transactions.filter(t => t.type === 'expense').length} transaksi</p>
+                </div>
+              </div>
+            </div>
+
+            {topExpenses.length > 0 && (
+              <div className="bg-gray-50 rounded-xl p-4">
+                <p className="text-gray-500 text-xs uppercase tracking-wider mb-3">💸 Pengeluaran Terbesar</p>
+                <div className="space-y-2">
+                  {topExpenses.map(([name, data]) => (
+                    <div key={name} className="flex justify-between items-center">
+                      <span className="text-gray-700 text-sm">{name}</span>
+                      <span className="text-red-600 font-mono font-semibold text-sm">
+                        -Rp {data.total.toLocaleString('id-ID')}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            
+            <div className="bg-gradient-to-r from-blue-600 to-indigo-700 rounded-xl p-5 text-center text-white">
+              <p className="text-blue-100 text-xs uppercase tracking-wider mb-1">SALDO AKHIR</p>
+              <p className={`font-bold font-mono text-2xl ${balance >= 0 ? 'text-white' : 'text-red-200'}`}>
+                Rp {balance.toLocaleString('id-ID')}
               </p>
-              <p className="text-gray-500 text-xs">
-                {new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}
-              </p>
             </div>
             
-            <div className="space-y-2">
-              <div className="flex justify-between">
-                <span className="text-gray-600">Pemasukan</span>
-                <span className="text-green-600 font-mono font-semibold">+ Rp {totalIncome.toLocaleString('id-ID')}</span>
+            <div className="text-center text-gray-400 text-xs pt-2">
+              <div className="flex items-center justify-center gap-2 mb-2">
+                <span className="w-8 h-px bg-gray-300"></span>
+                <span className="text-gray-400">✦</span>
+                <span className="w-8 h-px bg-gray-300"></span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">Pengeluaran</span>
-                <span className="text-red-600 font-mono font-semibold">- Rp {totalExpense.toLocaleString('id-ID')}</span>
-              </div>
-            </div>
-            
-            <div className="border-t border-dashed border-gray-300 pt-2">
-              <div className="flex justify-between items-center">
-                <span className="font-bold">SALDO</span>
-                <span className={`font-bold font-mono text-lg ${balance >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                  Rp {balance.toLocaleString('id-ID')}
-                </span>
-              </div>
-            </div>
-            
-            <div className="text-center text-gray-400 text-xs border-t border-dashed border-gray-300 pt-2">
-              <p>Total {transactions.length} transaksi</p>
-              <p className="mt-1">_ _ _ _ _ _ _ _ _ _ _ _ _ _ _</p>
-              <p className="mt-1">Generated by Kembuk Finance</p>
+              <p className="font-medium">Total {transactions.length} Transaksi</p>
+              <p className="mt-1 text-gray-400">Generated by Kembuk Finance</p>
+              <p className="text-gray-300 mt-2">kembuk-finance-next.vercel.app</p>
             </div>
           </div>
         </div>
         
-        <div className="mt-4 flex gap-2">
-          <button onClick={onClose} className="flex-1 py-3 bg-zinc-700 hover:bg-zinc-600 rounded-xl text-white font-medium transition-colors">
+        <div className="mt-4 flex gap-3">
+          <button onClick={onClose} className="flex-1 py-3.5 bg-zinc-700 hover:bg-zinc-600 rounded-xl text-white font-medium transition-colors">
             Tutup
           </button>
-          <button onClick={handleSendToTelegram} className="flex-1 py-3 bg-blue-600 hover:bg-blue-700 rounded-xl text-white font-bold flex items-center justify-center gap-2 transition-colors">
+          <button onClick={handleSendToTelegram} className="flex-1 py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 rounded-xl text-white font-bold flex items-center justify-center gap-2 transition-all shadow-lg shadow-blue-500/25">
             <MessageCircle className="w-5 h-5" />
             Kirim Telegram
           </button>
