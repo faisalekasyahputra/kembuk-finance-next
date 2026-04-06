@@ -62,39 +62,6 @@ function ReceiptExportView({ transactions, balance, totalIncome, totalExpense, o
     if (!receiptRef.current || sending) return
     setSending(true)
 
-    const groupedByCategory = transactions.reduce((acc, t) => {
-      const key = t.category_name
-      if (!acc[key]) acc[key] = { count: 0, total: 0, type: t.type, descriptions: [] as string[] }
-      acc[key].count++
-      acc[key].total += t.amount
-      acc[key].descriptions.push(t.description)
-      return acc
-    }, {} as Record<string, { count: number; total: number; type: string; descriptions: string[] }>)
-
-    const now = new Date()
-    const dateStr = now.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })
-    const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })
-    const receiptId = `KF${Date.now().toString(36).toUpperCase()}`
-
-    const textMessage = `🧾 *LAPORAN KEUANGAN*
-
-📅 ${dateStr} | 🕐 ${timeStr} WIB
-━━━━━━━━━━━━━━━━━
-
-💰 *PEMASUKAN:* Rp ${totalIncome.toLocaleString('id-ID')}
-💸 *PENGELUARAN:* Rp ${totalExpense.toLocaleString('id-ID')}
-━━━━━━━━━━━━━━━━━
-
-💎 *SALDO AKHIR:* Rp ${balance.toLocaleString('id-ID')}
-
-━━━━━━━━━━━━━━━━━
-
-📝 *Total:* ${transactions.length} transaksi
-🆔 *ID:* ${receiptId}
-
-━━━━━━━━━━━━━━━━━
-✨ _Kembuk Finance_`
-
     try {
       const canvas = await html2canvas(receiptRef.current, {
         backgroundColor: '#ffffff',
@@ -111,8 +78,6 @@ function ReceiptExportView({ transactions, balance, totalIncome, totalExpense, o
           const formData = new FormData()
           formData.append('chat_id', chatId)
           formData.append('photo', blob, 'receipt.png')
-          formData.append('caption', textMessage)
-          formData.append('parse_mode', 'Markdown')
           
           await fetch(`https://api.telegram.org/${botToken}/sendPhoto`, {
             method: 'POST',
