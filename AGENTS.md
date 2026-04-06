@@ -1,114 +1,25 @@
 # Kembuk Finance - Agent Collaboration Guide
 
-## Project Overview
-Next.js financial management app with Supabase backend and Gemini AI for receipt scanning.
+## Universal Workflow (Works for ALL Projects)
+
+```
+Agent push → GitHub → Vercel Git Integration → Auto Deploy
+```
 
 ---
 
 ## Team Members
-| Identity | Role | Can Edit | Can Push | Can Deploy |
-|----------|------|----------|----------|------------|
-| Ndrogrok | AI Agent | ✅ | ✅ | ✅ |
-| Kembukbot | AI Agent | ✅ | ✅ | ✅ |
-| Faisal Eka Syahputra (Kembuk) | Owner | ✅ | ✅ | ✅ |
+
+| Identity | Role | Git Name | Email |
+|----------|------|---------|-------|
+| Ndrogrok | AI Agent | Ndrogrok | opencode@kembuk.com |
+| Kembukbot | AI Agent | Kembukbot | kembukbot@kembuk.com |
+| Faisal Eka Syahputra | Owner | Faisal Eka Syahputra | faisalekasyahputra@gmail.com |
 
 ---
 
-## Access Credentials
+## Setup Git Identity
 
-### GitHub
-```
-Owner: faisalekasyahputra
-Repo: https://github.com/faisalekasyahputra/kembuk-finance-next
-PAT: github_pat_xxx (ask Kembuk)
-```
-
-### Vercel
-```
-Project: kembuk-finance-next
-Project ID: prj_wgcZsCMuMMXQSTxmVX6jG9mB1UQ0
-URL: https://kembuk-finance-next.vercel.app
-Git: Connected to GitHub (auto-deploy on push)
-```
-
-### Supabase
-```
-URL: https://pdvvjfydlucotahmqagf.supabase.co
-Anon Key: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-```
-
----
-
-## Collaboration Rules (WAJIB DIIKUTI)
-
-### 1. STRICT SEQUENCE (WAJIB)
-```
-BEFORE ANY WORK:
-1. git pull origin main
-2. Check git log: git log --oneline -5
-3. Check what files were recently changed
-4. Only then claim & work
-```
-
-### 2. File Locking System
-**EFORE editing ANY file:**
-1. Check GitHub Issues: https://github.com/faisalekasyahputra/kembuk-finance-next/issues
-2. If task exists, comment: "[AgentName]: Working on [file.tsx]"
-3. If task doesn't exist, CREATE ISSUE first
-4. Only then edit
-
-### 3. DON'T Edit Same File at Same Time (HARD RULE)
-- If another agent claimed a file in last 24h, DON'T touch it
-- Check: `git log --oneline --author=[AgentName] -3`
-- Wait for the agent to push and deploy
-
-### 4. Always Pull Before Edit
-```bash
-git pull origin main
-git log --oneline -5  # Check recent changes
-```
-
-### 5. Test Before Push
-```bash
-npm run build  # Must pass
-npm run lint   # Must pass
-```
-
-### 6. Deploy After Push
-After pushing, deploy immediately so other agents can see changes.
-
----
-
-## Commit Message Format (WAJIB)
-
-Every commit MUST include identity prefix:
-```
-[AgentName]: [Action] [What was changed]
-```
-
-Format rules:
-- Action: Add, Fix, Update, Refactor, Remove, Improve
-- What: Brief description in English
-- End with period (.)
-
-Examples:
-```
-Ndrogrok: Add transaction list component with CRUD operations.
-Kembukbot: Fix CSS dark theme for mobile navigation.
-Faisal Eka Syahputra: Update dashboard with weekly summary charts.
-```
-
----
-
-## Complete Workflow
-
-### 1. Clone Repository
-```bash
-git clone https://github.com/faisalekasyahputra/kembuk-finance-next.git
-cd kembuk-finance-next
-```
-
-### 2. Setup Git Identity
 ```bash
 # Ndrogrok
 git config user.name "Ndrogrok"
@@ -118,228 +29,120 @@ git config user.email "opencode@kembuk.com"
 git config user.name "Kembukbot"
 git config user.email "kembukbot@kembuk.com"
 
-# Kembuk
+# Kembuk (Owner)
 git config user.name "Faisal Eka Syahputra"
 git config user.email "faisalekasyahputra@gmail.com"
 ```
 
-### 3. Pull Latest Changes (MANDATORY)
+---
+
+## Complete Workflow
+
+### 1. Clone
+```bash
+git clone https://github.com/faisalekasyahputra/kembuk-finance-next.git
+cd kembuk-finance-next
+```
+
+### 2. Pull (ALWAYS BEFORE EDIT)
 ```bash
 git pull origin main
+git log --oneline -5
 ```
 
-### 4. Create/Check GitHub Issue for Your Task
+### 3. Edit
+Edit only your assigned files.
+
+### 4. Test
 ```bash
-# If task not listed, create issue:
-# Title: "[Feature/Bug]: Brief description"
-# Body: "Agent: [who will work] | Status: [TODO/IN PROGRESS/DONE]"
+npm run build  # Must pass
+npm run lint   # No errors
 ```
 
-### 5. Edit Code
-Edit only your assigned files/tasks.
-
-### 6. Test Locally
-```bash
-npm run build      # Build must succeed
-npm run lint       # No lint errors
-```
-
-### 7. Push to GitHub
+### 5. Commit
 ```bash
 git add .
-git commit -m "[AgentName]: [Action] [What was changed]."
-git push origin main
+git commit -m "[AgentName]: [Action] [What changed]."
 ```
 
-### 8. Deploy to Vercel
-**Vercel is connected to GitHub - Auto-deploy on push!**
+**Format:** `[AgentName]: [Action] [What changed].`
 
-Push to GitHub → Vercel auto-deploys → https://kembuk-finance-next.vercel.app
+**Examples:**
+```
+Ndrogrok: Add transaction list component with CRUD operations.
+Kembukbot: Fix CSS dark theme for mobile navigation.
+Faisal Eka Syahputra: Update dashboard with weekly summary charts.
+```
 
-**Manual deploy (if needed):**
+### 6. Push
 ```bash
-npx vercel --prod --yes --scope faisalekasyahputras-projects
+git push origin main
+# AUTO-DEPLOY TRIGGERS!
 ```
 
-### 9. Update GitHub Issue
-Comment: "Agent: DONE - Deployed to https://kembuk-finance-next.vercel.app"
+### 7. Verify
+Check: https://kembuk-finance-next.vercel.app
 
 ---
 
 ## Conflict Resolution
 
-### If git pull shows conflicts:
+### If Conflict
 ```bash
-# See conflicted files
-git status
-
-# Resolve conflicts manually, then:
-git add .
-git commit -m "Ndrogrok: Resolve merge conflicts."
-git push origin main
-```
-
-### If another agent pushed while you were working:
-```bash
-# Option A: Stash your changes
 git stash
 git pull origin main
 git stash pop
-# Fix any conflicts, then push
-
-# Option B: Fetch and rebase
-git fetch origin
-git rebase origin/main
-# Fix conflicts during rebase, then push
+# Fix conflicts, then push
 ```
 
 ---
 
-## Branching Strategy
+## Important Rules
 
-For small fixes: Direct push to `main`
-
-For large features: Create feature branch
-```bash
-git checkout -b feature/receipt-scanner
-# Work on feature...
-git push origin feature/receipt-scanner
-# Create PR or merge after testing
-git checkout main
-git merge feature/receipt-scanner
-git push origin main
-```
+1. **ALWAYS pull before edit**
+2. **Commit message MUST include agent identity**
+3. **Test before push** (build must pass)
+4. **Don't edit same file simultaneously** - coordinate first
+5. **NO SECRETS** - Never push API keys to GitHub
 
 ---
 
-## Issue Status Workflow
+## Project-Specific Info
 
-| Status | Meaning | Action |
-|--------|---------|--------|
-| TODO | Not started | Agent can claim |
-| IN_PROGRESS | Being worked on | Only assigned agent edits |
-| REVIEW | Work done, needs check | Other agent reviews |
-| DONE | Deployed & verified | Close issue |
+### Access
+- **GitHub**: https://github.com/faisalekasyahputra/kembuk-finance-next
+- **Vercel**: https://kembuk-finance-next.vercel.app (auto-deploy on push)
+- **Supabase**: pdvvjfydlucotahmqagf.supabase.co
 
----
+### Tech Stack
+- Next.js 15 (App Router)
+- Tailwind CSS
+- Supabase
+- Gemini AI (receipt OCR)
+- Vercel
 
-## Testing Checklist (Before Deploy)
-
-- [ ] `npm run build` passes
-- [ ] `npm run lint` passes
-- [ ] No console errors
-- [ ] Mobile responsive
-- [ ] Database connection works
-- [ ] New features work as expected
-
----
-
-## Rollback Procedure
-
-If deployed version has issues:
-
-```bash
-# Find last working commit
-git log --oneline
-
-# Revert problematic commit
-git revert HEAD
-git push origin main
-
-# Deploy again
-npx vercel --token YOUR_VERCEL_TOKEN --prod --yes --scope faisalekasyahputras-projects
-```
-
----
-
-## Communication Protocol
-
-### Before Starting Work:
-1. Check GitHub Issues for current tasks
-2. Claim task by commenting: "AgentName: Working on this"
-3. Pull latest changes
-
-### During Work:
-1. Work on ONLY your assigned task
-2. Don't touch files other agents are working on
-3. Push early and often
-
-### After Completing:
-1. Test thoroughly
-2. Push code
-3. Deploy to Vercel
-4. Update GitHub Issue status
-5. Comment what was done
-
----
-
-## Database Schema
-
-### Table: kf_transactions
-```sql
-id          UUID PRIMARY KEY
-user_id     TEXT (use 'shared' for all users)
-type        TEXT ('income' or 'expense')
-category_id TEXT
-category_name TEXT
-category_group TEXT
-amount      NUMERIC
-description TEXT
-date        DATE
-created_at  TIMESTAMP
-```
-
-### Table: p2p_users
-```sql
-id              UUID PRIMARY KEY
-email           TEXT
-full_name      TEXT
-avatar_url     TEXT
-role           TEXT
-balance        NUMERIC
-referral_code  TEXT
-bank_name      TEXT
-bank_account   TEXT
-status         TEXT
-created_at     TIMESTAMP
-```
-
----
-
-## Tech Stack
-- **Frontend**: Next.js 15 (App Router), Tailwind CSS, Lucide Icons
-- **Backend**: Supabase (PostgreSQL)
-- **AI**: Google Gemini for receipt OCR
-- **Deployment**: Vercel
-
----
-
-## Key Files
+### Key Files
 | File | Purpose |
 |------|---------|
 | `src/app/page.tsx` | Main app UI |
 | `src/lib/supabase.ts` | Supabase client |
-| `src/lib/formatters.ts` | Currency/date formatters |
-| `src/app/api/analyze-receipt/route.ts` | Receipt OCR API |
+| `src/app/api/analyze-receipt/route.ts` | Gemini OCR API |
+
+### Notes
+- No Auth - Kembuk & pacar share data (user_id: 'shared')
+- All transactions use `user_id: 'shared'`
 
 ---
 
-## Important Notes
+## For New Projects
 
-1. **NO AUTH** - This app is shared between Kembuk and girlfriend (1 user)
-2. **Shared Data** - All transactions use `user_id: 'shared'`
-3. **NO SECRETS** - Never push API keys or tokens to GitHub
-4. **ALWAYS PULL** - Before editing anything
-5. **TEST FIRST** - Build must pass before push
+See: Universal Multi-Agent Collaboration Template
 
----
-
-## File Lock Status
-**Current file locks (DO NOT edit if locked by another agent):**
-
-| File | Locked By | Status | Since |
-|------|-----------|--------|-------|
-| src/app/page.tsx | - | UNLOCKED | - |
+1. Create GitHub repo
+2. Connect Vercel to GitHub (Settings → Git → Connect)
+3. Clone locally
+4. Setup git identity
+5. Push → Auto deploy!
 
 ---
 
