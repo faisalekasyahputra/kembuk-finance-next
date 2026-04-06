@@ -619,7 +619,10 @@ export default function Home() {
                   type="date"
                   value={formData.date}
                   onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                  className="w-full mt-1 px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white focus:outline-none focus:border-blue-500"
+                  className="w-full mt-1 px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 [&::-webkit-calendar-picker-indicator]:invert-100 [&::-webkit-calendar-picker-indicator]:cursor-pointer"
+                  style={{
+                    colorScheme: 'dark',
+                  }}
                 />
               </div>
 
@@ -790,7 +793,8 @@ export default function Home() {
                   type="date"
                   value={editingTransaction.date}
                   onChange={(e) => setEditingTransaction({ ...editingTransaction, date: e.target.value })}
-                  className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-3 text-white mt-1"
+                  className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-3 text-white mt-1 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 [&::-webkit-calendar-picker-indicator]:invert-100 [&::-webkit-calendar-picker-indicator]:cursor-pointer"
+                  style={{ colorScheme: 'dark' }}
                 />
               </div>
               <button
