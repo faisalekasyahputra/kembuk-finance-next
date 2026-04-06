@@ -3,94 +3,176 @@
 ## Project Overview
 Next.js financial management app with Supabase backend and Gemini AI for receipt scanning.
 
-## Access Credentials (Ask Paesol/Kembuk for latest tokens)
+## Team Members
+| Identity | Role | Can Edit | Can Push | Can Deploy |
+|----------|------|----------|----------|------------|
+| Ndrogrok | AI Agent | ✅ | ✅ | ✅ |
+| Kembukbot | AI Agent | ✅ | ✅ | ✅ |
+| Faisal Eka Syahputra (Kembuk) | Owner | ✅ | ✅ | ✅ |
 
-### Supabase
-- URL: `https://pdvvjfydlucotahmqagf.supabase.co`
-- Anon Key: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBkdnZqZnlkbHVjb3RhaG1xYWdmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQwNDU4MzAsImV4cCI6MjA3OTYyMTgzMH0.dy1QDbPU2JyMgv9cmf5oIH76nFavzgaO_-a2MMUZijw`
-
-### Vercel
-- Project: `kembuk-finance-next`
-- Token: Ask Paesol for token
-- Project ID: `prj_wgcZsCMuMMXQSTxmVX6jG9mB1UQ0`
+## Access Credentials
 
 ### GitHub
-- Owner: `faisalekasyahputra`
-- Repo: `kembuk-finance-next`
-- PAT: Ask Paesol for token
+```
+Owner: faisalekasyahputra
+Repo: https://github.com/faisalekasyahputra/kembuk-finance-next
+PAT: github_pat_xxx (ask Kembuk)
+```
 
-## Database Tables
-- `kf_transactions` - Transaction records (user_id, type, amount, category, date, etc.)
-- `p2p_users` - User accounts (email, balance, role)
-- `p2p_devices` - Device tracking
-- `p2p_contacts` - Contact management
-- `melly_projects` - Projects management
+### Vercel
+```
+Project: kembuk-finance-next
+Token: vcp_xxx (ask Kembuk)
+Project ID: prj_wgcZsCMuMMXQSTxmVX6jG9mB1UQ0
+Scope: faisalekasyahputras-projects
+URL: https://kembuk-finance-next.vercel.app
+```
 
-## Commit Message Format
+### Supabase
+```
+URL: https://pdvvjfydlucotahmqagf.supabase.co
+Anon Key: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+```
 
-**IMPORTANT:** Setiap commit HARUS include identity agent:
+## Commit Message Format (WAJIB)
+
+Every commit MUST include identity prefix:
 ```
 [AgentName]: Explain what was changed in English
 ```
 
-Example:
+Examples:
 ```
 Ndrogrok: Fix shared data query to show all transactions from kf_transactions table
-Opencode: Add delete transaction functionality
-Agent-Lio: Implement chart visualization for dashboard
+Kembukbot: Add delete transaction functionality
+Faisal Eka Syahputra: Update dashboard UI design
 ```
 
-## Workflow
+---
 
-### 1. Before Starting
+## Complete Workflow
+
+### 1. Clone Repository
 ```bash
-# Clone the repo
 git clone https://github.com/faisalekasyahputra/kembuk-finance-next.git
 cd kembuk-finance-next
+```
 
-# Install dependencies
+### 2. Setup Git Identity
+```bash
+# Choose one identity:
+git config user.name "Ndrogrok"
+git config user.email "opencode@kembuk.com"
+
+# OR
+git config user.name "Kembukbot"
+git config user.email "kembukbot@kembuk.com"
+
+# OR
+git config user.name "Faisal Eka Syahputra"
+git config user.email "faisalekasyahputra@gmail.com"
+```
+
+### 3. Install Dependencies
+```bash
 npm install
-
-# Create .env.local with credentials
 ```
 
-### 2. Development
+### 4. Create .env.local (for local dev)
 ```bash
-npm run dev  # Start local dev server
-npm run build  # Build for production
+touch .env.local
 ```
 
-### 3. Deploy to Vercel
-```bash
-# Push to GitHub first
-git add .
-git commit -m "feat: your changes"
-git push origin main
-
-# Then deploy via Vercel API
-curl -X POST "https://api.vercel.com/v13/deployments" \
-  -H "Authorization: Bearer <VERCEL_TOKEN>" \
-  -H "Content-Type: application/json" \
-  -d '{"gitSource":{"type":"github","repo":"faisalekasyahputra/kembuk-finance-next","ref":"main"},"project":"prj_wgcZsCMuMMXQSTxmVX6jG9mB1UQ0"}'
-```
-
-### 4. Environment Variables
+Add these variables:
 ```
 NEXT_PUBLIC_SUPABASE_URL=https://pdvvjfydlucotahmqagf.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=<key>
-GEMINI_API_KEY=<gemini-key>
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
+GEMINI_API_KEY=your_gemini_key
 ```
 
+### 5. Development
+```bash
+npm run dev        # Start dev server at localhost:3000
+npm run build      # Build for production
+npm run lint        # Check code style
+```
+
+### 6. Edit Code
+- Edit files in `src/` directory
+- Main UI: `src/app/page.tsx`
+- Database: `src/lib/supabase.ts`
+- API routes: `src/app/api/`
+
+### 7. Push Changes to GitHub
+```bash
+# Stage changes
+git add .
+
+# Commit with identity prefix
+git commit -m "[AgentName]: [Explain what was changed in English]"
+
+# Push to GitHub
+git push origin main
+```
+
+### 8. Deploy to Vercel
+```bash
+# Pull latest from GitHub (recommended)
+git pull origin main
+
+# Deploy to production
+npx vercel --token YOUR_VERCEL_TOKEN --prod --yes --scope faisalekasyahputras-projects
+
+# Or deploy preview
+npx vercel --token YOUR_VERCEL_TOKEN --yes --scope faisalekasyahputras-projects
+```
+
+---
+
+## Database Schema
+
+### Table: kf_transactions
+```sql
+id          UUID PRIMARY KEY
+user_id     TEXT
+type        TEXT ('income' or 'expense')
+category_id TEXT
+category_name TEXT
+category_group TEXT
+amount      NUMERIC
+description TEXT
+date        DATE
+created_at  TIMESTAMP
+```
+
+### Table: p2p_users
+```sql
+id              UUID PRIMARY KEY
+email           TEXT
+full_name      TEXT
+avatar_url     TEXT
+role           TEXT
+balance        NUMERIC
+referral_code  TEXT
+bank_name      TEXT
+bank_account   TEXT
+status         TEXT
+created_at     TIMESTAMP
+```
+
+---
+
 ## Tech Stack
-- **Frontend**: Next.js 14+ (App Router), Tailwind CSS, Lucide Icons
-- **Backend**: Supabase (PostgreSQL, Auth)
-- **AI**: Google Gemini for receipt analysis
+- **Frontend**: Next.js 15 (App Router), Tailwind CSS, Lucide Icons
+- **Backend**: Supabase (PostgreSQL)
+- **AI**: Google Gemini for receipt OCR
 - **Deployment**: Vercel
 
 ## Key Files
 - `src/app/page.tsx` - Main app UI
 - `src/lib/supabase.ts` - Supabase client
+- `src/lib/formatters.ts` - Currency/date formatters
 - `src/app/api/analyze-receipt/route.ts` - Receipt OCR API
 
 ## Contact
-Owner: faisalekasyahputra / paisaleee@gmail.com
+- Owner: Faisal Eka Syahputra (paisaleee@gmail.com)
