@@ -345,6 +345,25 @@ export default function Home() {
     const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })
     const receiptId = `KF${Date.now().toString(36).toUpperCase()}`
     
+    const whatsappNumber = '6289639052639'
+    const whatsappMessage = `🧾 *BUKTI TRANSAKSI*
+
+📅 ${dateStr} | ${timeStr} WIB
+━━━━━━━━━━━━━━━━━
+
+💰 *Jumlah:* ${transaction.type === 'income' ? '+' : '-'} Rp ${transaction.amount.toLocaleString('id-ID')}
+
+📂 *Kategori:* ${transaction.category_name}
+📝 *Jenis:* ${transaction.type === 'income' ? 'Pemasukan' : 'Pengeluaran'}
+📌 *Keterangan:* ${transaction.description}
+
+━━━━━━━━━━━━━━━━━
+🆔 ID: ${receiptId}
+*Kembuk Finance*`
+    
+    const whatsappURL = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`
+    window.open(whatsappURL, '_blank')
+    
     const receiptHTML = `
       <div style="font-family: 'Courier New', monospace; padding: 12px; width: 240px; background: #fff; color: #000; font-size: 11px;">
         <div style="text-align: center; border-bottom: 1px dashed #000; padding-bottom: 6px; margin-bottom: 6px;">
