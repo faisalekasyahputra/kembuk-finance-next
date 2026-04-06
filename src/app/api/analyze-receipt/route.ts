@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
 
 export async function POST(request: NextRequest) {
   try {
@@ -14,11 +13,13 @@ export async function POST(request: NextRequest) {
     const buffer = Buffer.from(bytes)
     const base64Image = buffer.toString('base64')
     const mimeType = image.type || 'image/jpeg'
-    const dataUri = `data:${mimeType};base64,${base64Image}`
 
     const geminiApiKey = process.env.GEMINI_API_KEY
     if (!geminiApiKey) {
-      return NextResponse.json({ error: 'GEMINI_API_KEY not configured' }, { status: 500 })
+      return NextResponse.json({ 
+        error: 'GEMINI_API_KEY not configured',
+        debug: 'Check Vercel environment variables'
+      }, { status: 500 })
     }
 
     const prompt = `Analyze this receipt/invoice image. Extract the following information and return ONLY a valid JSON object with this exact structure (no markdown, no explanation):
@@ -30,7 +31,7 @@ export async function POST(request: NextRequest) {
 }`
 
     const geminiResponse = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiApiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${geminiApiKey}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -55,15 +56,29 @@ export async function POST(request: NextRequest) {
 
     if (!geminiResponse.ok) {
       const errorText = await geminiResponse.text()
-      console.error('Gemini API error:', errorText)
-      return NextResponse.json({ error: 'Failed to analyze receipt' }, { status: 500 })
+      return NextResponse.json({ 
+        error: 'Gemini API error',
+        details: errorText,
+        status: geminiResponse.status
+      }, { status: 500 })
     }
 
     const geminiData = await geminiResponse.json()
+    
+    if (geminiData.error) {
+      return NextResponse.json({
+        error: 'Gemini API returned error',
+        details: geminiData.error
+      }, { status: 500 })
+    }
+
     const generatedText = geminiData.candidates?.[0]?.content?.parts?.[0]?.text
 
     if (!generatedText) {
-      return NextResponse.json({ error: 'No analysis result from Gemini' }, { status: 500 })
+      return NextResponse.json({ 
+        error: 'No analysis result from Gemini',
+        debug: geminiData
+      }, { status: 500 })
     }
 
     let parsedResult
@@ -71,8 +86,11 @@ export async function POST(request: NextRequest) {
       const cleanedText = generatedText.replace(/```json\n?|```\n?/g, '').trim()
       parsedResult = JSON.parse(cleanedText)
     } catch (parseError) {
-      console.error('Parse error:', parseError, 'Raw text:', generatedText)
-      return NextResponse.json({ error: 'Failed to parse Gemini response' }, { status: 500 })
+      return NextResponse.json({ 
+        error: 'Failed to parse Gemini response',
+        raw: generatedText,
+        parseError: String(parseError)
+      }, { status: 500 })
     }
 
     return NextResponse.json({
@@ -85,7 +103,9 @@ export async function POST(request: NextRequest) {
       }
     })
   } catch (error) {
-    console.error('Receipt analysis error:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    return NextResponse.json({ 
+      error: 'Internal server error',
+      details: String(error)
+    }, { status: 500 })
   }
 }
