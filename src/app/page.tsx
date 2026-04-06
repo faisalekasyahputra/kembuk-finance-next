@@ -242,6 +242,8 @@ export default function Home() {
   const [showReceiptExport, setShowReceiptExport] = useState(false)
   const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null)
   const [analyzing, setAnalyzing] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [formData, setFormData] = useState({
     type: 'expense' as 'income' | 'expense',
@@ -251,8 +253,19 @@ export default function Home() {
     date: new Date().toISOString().split('T')[0],
   })
 
+  const showToast = (message: string, type: 'success' | 'error' | 'info' = 'info') => {
+    setToast({ message, type })
+    setTimeout(() => setToast(null), 3000)
+  }
+
   useEffect(() => {
     fetchTransactions()
+  }, [])
+
+  useEffect(() => {
+    const handleFocus = () => fetchTransactions()
+    window.addEventListener('focus', handleFocus)
+    return () => window.removeEventListener('focus', handleFocus)
   }, [])
 
   const fetchTransactions = async () => {
@@ -264,7 +277,7 @@ export default function Home() {
 
       if (error) {
         console.error('Supabase error:', error)
-        alert('Gagal mengambil data: ' + error.message)
+        showToast('Gagal mengambil data', 'error')
         return
       }
 
@@ -273,9 +286,11 @@ export default function Home() {
       calculateStats(data || [])
     } catch (error) {
       console.error('Error fetching transactions:', error)
-      alert('Gagal mengambil data dari database. Cek koneksi internet.')
+      showToast('Gagal mengambil data dari database', 'error')
       setTransactions([])
       calculateStats([])
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -312,7 +327,7 @@ export default function Home() {
 
       if (error) {
         console.error('Supabase insert error:', error)
-        alert('Gagal menyimpan: ' + error.message)
+        showToast('Gagal menyimpan transaksi', 'error')
         return
       }
 
@@ -321,6 +336,7 @@ export default function Home() {
       
       sendTransactionReceipt(newTransaction)
       
+      showToast('Transaksi berhasil disimpan!', 'success')
       setShowAddModal(false)
       setFormData({
         type: 'expense',
@@ -331,7 +347,7 @@ export default function Home() {
       })
     } catch (error) {
       console.error('Error adding transaction:', error)
-      alert('Gagal menyimpan transaksi. Cek koneksi internet.')
+      showToast('Gagal menyimpan transaksi', 'error')
     }
   }
 
@@ -511,6 +527,25 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-black text-white pb-24 lg:pb-0">
+      {toast && (
+        <div className={`fixed top-4 left-1/2 -translate-x-1/2 z-[100] px-4 py-3 rounded-xl shadow-lg flex items-center gap-2 animate-pulse ${
+          toast.type === 'success' ? 'bg-green-600' : toast.type === 'error' ? 'bg-red-600' : 'bg-blue-600'
+        }`}>
+          {toast.type === 'success' && <span>✅</span>}
+          {toast.type === 'error' && <span>❌</span>}
+          {toast.type === 'info' && <span>ℹ️</span>}
+          <span className="text-white text-sm font-medium">{toast.message}</span>
+        </div>
+      )}
+
+      {isLoading && (
+        <div className="fixed inset-0 bg-black/80 z-[90] flex items-center justify-center">
+          <div className="flex flex-col items-center gap-3">
+            <Loader2 className="w-10 h-10 text-blue-500 animate-spin" />
+            <span className="text-white text-sm">Memuat data...</span>
+          </div>
+        </div>
+      )}
       <aside className="hidden lg:flex fixed left-0 top-0 h-full w-60 bg-black border-r border-zinc-800 flex-col p-4 z-40">
         <div className="flex items-center gap-3 mb-8 px-2">
           <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center">
