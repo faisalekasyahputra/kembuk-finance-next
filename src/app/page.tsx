@@ -615,19 +615,15 @@ export default function Home() {
 
               <div>
                 <label className="text-zinc-400 text-sm">Tanggal</label>
-                <div className="relative mt-1">
-                  <input
-                    type="date"
-                    value={formData.date}
-                    onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                    className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 appearance-none [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-3 [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-100 [&::-webkit-calendar-picker-indicator]:invert"
-                    style={{
-                      colorScheme: 'dark',
-                    }}
-                  />
-                </div>
+                <input
+                  type="date"
+                  value={formData.date}
+                  onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                  className="w-full max-w-full mt-1 px-3 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white text-sm focus:outline-none focus:border-blue-500 appearance-none [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-2 [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-100 [&::-webkit-calendar-picker-indicator]:invert"
+                  style={{ colorScheme: 'dark' }}
+                />
                 <p className="text-zinc-500 text-xs mt-1">
-                  {new Date(formData.date).toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
+                  {new Date(formData.date + 'T00:00:00').toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
                 </p>
               </div>
 
@@ -794,17 +790,15 @@ export default function Home() {
               </div>
               <div>
                 <label className="text-zinc-400 text-sm">Tanggal</label>
-                <div className="relative mt-1">
-                  <input
-                    type="date"
-                    value={editingTransaction.date}
-                    onChange={(e) => setEditingTransaction({ ...editingTransaction, date: e.target.value })}
-                    className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 appearance-none [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-3 [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-100 [&::-webkit-calendar-picker-indicator]:invert"
-                    style={{ colorScheme: 'dark' }}
-                  />
-                </div>
+                <input
+                  type="date"
+                  value={editingTransaction.date}
+                  onChange={(e) => setEditingTransaction({ ...editingTransaction, date: e.target.value })}
+                  className="w-full max-w-full mt-1 px-3 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white text-sm focus:outline-none focus:border-blue-500 appearance-none [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-2 [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-100 [&::-webkit-calendar-picker-indicator]:invert"
+                  style={{ colorScheme: 'dark' }}
+                />
                 <p className="text-zinc-500 text-xs mt-1">
-                  {new Date(editingTransaction.date).toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
+                  {new Date(editingTransaction.date + 'T00:00:00').toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
                 </p>
               </div>
               <button
