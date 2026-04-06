@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Kembuk Finance",
+  title: "Kembuk Finance v2",
   description: "Aplikasi manajemen keuangan pribadi",
 };
 
