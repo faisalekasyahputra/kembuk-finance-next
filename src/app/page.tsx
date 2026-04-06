@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { Wallet, Receipt, Printer, PiggyBank, User, Plus, ArrowUpRight, ArrowDownRight, TrendingUp, Menu, X, MessageCircle } from 'lucide-react'
+import { useState, useEffect, useRef } from 'react'
+import { Wallet, Receipt, Printer, PiggyBank, User, Plus, ArrowUpRight, ArrowDownRight, TrendingUp, Menu, X, MessageCircle, Camera, Upload } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { formatCurrency } from '@/lib/formatters'
 
@@ -160,10 +160,12 @@ export default function Home() {
   const [totalIncome, setTotalIncome] = useState(0)
   const [totalExpense, setTotalExpense] = useState(0)
   const [showAddModal, setShowAddModal] = useState(false)
+  const [showAddOptions, setShowAddOptions] = useState(false)
   const [showReceiptModal, setShowReceiptModal] = useState(false)
   const [showReceiptExport, setShowReceiptExport] = useState(false)
   const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null)
   const [analyzing, setAnalyzing] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
   const [formData, setFormData] = useState({
     type: 'expense' as 'income' | 'expense',
     amount: '',
@@ -517,7 +519,7 @@ export default function Home() {
           item.id === 'receipt' ? (
             <button
               key={item.id}
-              onClick={() => setShowReceiptModal(true)}
+              onClick={() => setShowAddOptions(true)}
               className="flex flex-col items-center -mt-6"
             >
               <div className="w-14 h-14 bg-blue-600 rounded-full flex items-center justify-center shadow-lg shadow-blue-600/30">
@@ -679,6 +681,79 @@ export default function Home() {
           totalExpense={totalExpense}
           onClose={() => setShowReceiptExport(false)}
         />
+      )}
+
+      {/* Hidden file input for receipt scanning */}
+      <input
+        type="file"
+        accept="image/*"
+        ref={fileInputRef}
+        onChange={handleReceiptUpload}
+        className="hidden"
+      />
+
+      {/* Add Options Modal */}
+      {showAddOptions && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-end lg:items-center justify-center p-4" onClick={() => setShowAddOptions(false)}>
+          <div className="bg-zinc-900 rounded-2xl w-full max-w-md border border-zinc-800 overflow-hidden" onClick={e => e.stopPropagation()}>
+            <div className="p-4 border-b border-zinc-800 flex items-center justify-between">
+              <h3 className="text-white font-bold">Tambah Transaksi</h3>
+              <button onClick={() => setShowAddOptions(false)} className="text-zinc-400">
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            
+            <div className="p-4 space-y-2">
+              <button
+                onClick={() => {
+                  setShowAddOptions(false)
+                  setShowAddModal(true)
+                }}
+                className="w-full flex items-center gap-4 p-4 bg-zinc-800 hover:bg-zinc-700 rounded-xl transition-colors"
+              >
+                <div className="w-12 h-12 bg-blue-600/20 rounded-xl flex items-center justify-center">
+                  <Plus className="w-6 h-6 text-blue-400" />
+                </div>
+                <div className="text-left">
+                  <p className="text-white font-medium">Input Manual</p>
+                  <p className="text-zinc-400 text-sm">Masukkan transaksi secara manual</p>
+                </div>
+              </button>
+
+              <button
+                onClick={() => {
+                  setShowAddOptions(false)
+                  setShowReceiptModal(true)
+                }}
+                className="w-full flex items-center gap-4 p-4 bg-zinc-800 hover:bg-zinc-700 rounded-xl transition-colors"
+              >
+                <div className="w-12 h-12 bg-green-600/20 rounded-xl flex items-center justify-center">
+                  <Camera className="w-6 h-6 text-green-400" />
+                </div>
+                <div className="text-left">
+                  <p className="text-white font-medium">Scan Struk</p>
+                  <p className="text-zinc-400 text-sm">Ambil foto struk dari kamera</p>
+                </div>
+              </button>
+
+              <button
+                onClick={() => {
+                  setShowAddOptions(false)
+                  fileInputRef.current?.click()
+                }}
+                className="w-full flex items-center gap-4 p-4 bg-zinc-800 hover:bg-zinc-700 rounded-xl transition-colors"
+              >
+                <div className="w-12 h-12 bg-purple-600/20 rounded-xl flex items-center justify-center">
+                  <Upload className="w-6 h-6 text-purple-400" />
+                </div>
+                <div className="text-left">
+                  <p className="text-white font-medium">Pilih dari Galeri</p>
+                  <p className="text-zinc-400 text-sm">Upload gambar struk dari galeri</p>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
       )}
 
       {editingTransaction && (
