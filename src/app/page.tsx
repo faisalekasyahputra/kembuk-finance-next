@@ -26,16 +26,25 @@ type Category = {
 }
 
 const defaultCategories: Category[] = [
-  { id: 'a1b2c3d4-e5f6-7890-abcd-ef1234567801', name: 'Gaji', icon: '💰', group: 'income' },
-  { id: 'a1b2c3d4-e5f6-7890-abcd-ef1234567802', name: 'Freelance', icon: '💻', group: 'income' },
-  { id: 'a1b2c3d4-e5f6-7890-abcd-ef1234567803', name: 'Investasi', icon: '📈', group: 'income' },
-  { id: 'a1b2c3d4-e5f6-7890-abcd-ef1234567804', name: 'Makanan', icon: '🍔', group: 'expense' },
-  { id: 'a1b2c3d4-e5f6-7890-abcd-ef1234567805', name: 'Transport', icon: '🚗', group: 'expense' },
-  { id: 'a1b2c3d4-e5f6-7890-abcd-ef1234567806', name: 'Belanja', icon: '🛒', group: 'expense' },
-  { id: 'a1b2c3d4-e5f6-7890-abcd-ef1234567807', name: 'Hiburan', icon: '🎬', group: 'expense' },
-  { id: 'a1b2c3d4-e5f6-7890-abcd-ef1234567808', name: 'Kesehatan', icon: '🏥', group: 'expense' },
-  { id: 'a1b2c3d4-e5f6-7890-abcd-ef1234567809', name: 'Tagihan', icon: '📄', group: 'expense' },
-  { id: 'a1b2c3d4-e5f6-7890-abcd-ef1234567810', name: 'Lainnya', icon: '📦', group: 'expense' },
+  { id: '1316db21-8b3e-4b16-9ac3-d7ad008f63ff', name: 'Bensin', icon: '⛽', group: 'expense' },
+  { id: '1d235330-090a-447f-b3db-2aa47e01db67', name: 'Rokok', icon: '🚬', group: 'expense' },
+  { id: 'ced99f4f-a3c1-4434-9496-edf78ed28d8f', name: 'Listrik', icon: '⚡', group: 'expense' },
+  { id: '95593a08-6e21-4260-9064-d728a0b42813', name: 'Wifi', icon: '📶', group: 'expense' },
+  { id: 'cbc83d63-0c37-4326-8038-df1ee127fb86', name: 'Service Motor', icon: '🔧', group: 'expense' },
+  { id: '58728828-ee06-4d19-8f8e-c0bf8120057c', name: 'Cicilan Seserahan', icon: '💳', group: 'expense' },
+  { id: '34b1475a-1bd6-4239-9e70-c8316b159b5f', name: 'Kuota Internet', icon: '📱', group: 'expense' },
+  { id: '2a43d9f5-165a-46a6-a30f-0f6f683c2d7f', name: 'Google Drive', icon: '💾', group: 'expense' },
+  { id: '48c948ff-f155-46b7-8b6e-c0d58cc117dc', name: 'iCloud', icon: '☁️', group: 'expense' },
+  { id: 'cd2bf5ca-115d-4e94-8c0e-2df65206e5ea', name: 'CapCut', icon: '🎬', group: 'expense' },
+  { id: '7a32aefb-2f84-459c-856e-b656e77666af', name: 'Laundry', icon: '👕', group: 'expense' },
+  { id: '5606a0f2-8e20-44f8-9938-1b382f33fb68', name: 'Gemini AI', icon: '✨', group: 'expense' },
+  { id: '4a1d493c-9faf-4823-8ac4-2d1668d92463', name: 'Twitter', icon: '🐦', group: 'expense' },
+  { id: '7b317b60-3011-4205-8465-bd8f09cd88e0', name: 'SIR ANGKI', icon: '💼', group: 'income' },
+  { id: '57a4fd47-8bc9-4113-ad02-ec0f822ea7a1', name: 'MELLY', icon: '💼', group: 'income' },
+  { id: '1bdc4fab-9691-4822-870e-62d398b686ec', name: 'RAPID', icon: '💼', group: 'income' },
+  { id: 'c7951d88-72f5-4261-bbac-50719a5342ad', name: 'ADHI', icon: '💼', group: 'income' },
+  { id: 'ac0e5853-f9da-4ad9-aa4b-97304529550c', name: 'FLATYFOOS', icon: '💼', group: 'income' },
+  { id: 'a1b2c3d4-e5f6-7890-abcd-ef1234567899', name: 'Lainnya', icon: '📦', group: 'expense' },
 ]
 
 function ReceiptExportView({ transactions, balance, totalIncome, totalExpense, onClose }: {
