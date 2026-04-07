@@ -562,10 +562,11 @@ export default function Dashboard() {
           </div>
         </div>
       )}
-      <aside className="hidden lg:flex fixed left-0 top-0 h-full w-64 bg-zinc-950/80 backdrop-blur-xl border-r border-zinc-800/50 flex-col p-5 z-40 shadow-2xl">
+      <aside className="hidden lg:flex fixed left-0 top-0 h-full w-64 bg-gradient-to-b from-zinc-950/90 via-zinc-950/95 to-zinc-950/95 backdrop-blur-xl border-r border-zinc-800/50 flex-col p-5 z-40 shadow-2xl">
         <div className="flex items-center gap-3 mb-10 px-3">
-          <div className="w-12 h-12 bg-gradient-to-br from-blue-500 via-blue-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/30">
-            <Wallet className="w-6 h-6 text-white" />
+          <div className="w-12 h-12 bg-gradient-to-br from-blue-500 via-blue-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/30 relative">
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-400/20 to-purple-400/20 rounded-2xl animate-pulse" />
+            <Wallet className="w-6 h-6 text-white relative z-10" />
           </div>
           <div>
             <span className="text-white font-bold text-xl tracking-tight">Kembuk</span>
@@ -574,36 +575,43 @@ export default function Dashboard() {
         </div>
 
         <nav className="flex-1 space-y-2">
-          {navItems.map((item) => (
+          {navItems.filter(item => item.id !== 'receipt').map((item) => (
             <button
               key={item.id}
               onClick={() => {
                 setActiveTab(item.id)
-                if (item.id === 'receipt') setShowReceiptExport(true)
               }}
-              className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl transition-all duration-200 ${
+              className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl transition-all duration-200 relative overflow-hidden group ${
                 activeTab === item.id
                   ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg shadow-blue-500/25'
                   : 'text-zinc-400 hover:bg-zinc-800/50 hover:text-white hover:translate-x-1'
               }`}
             >
-              <item.icon className="w-5 h-5" />
-              <span className="font-medium">{item.label}</span>
-              {activeTab === item.id && <ChevronRight className="w-4 h-4 ml-auto" />}
+              {activeTab === item.id && (
+                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-blue-400 rounded-r-full shadow-[0_0_15px_rgba(59,130,246,0.8)]" />
+              )}
+              <item.icon className="w-5 h-5 relative z-10" />
+              <span className="font-medium relative z-10">{item.label}</span>
+              {activeTab === item.id && <ChevronRight className="w-4 h-4 ml-auto relative z-10" />}
             </button>
           ))}
         </nav>
 
         <div className="pt-4 border-t border-zinc-800/50 mt-4">
-          <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-zinc-900/50">
-            <div className="w-9 h-9 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center">
-              <User className="w-4 h-4 text-white" />
+          <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-gradient-to-br from-zinc-900/80 to-zinc-950/80 border border-zinc-800/50 shadow-[inset_0_1px_2px_rgba(0,0,0,0.3)]">
+            <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-500/20 border border-emerald-500/30">
+              <User className="w-5 h-5 text-white" />
             </div>
             <div className="flex-1">
               <p className="text-white text-sm font-medium">Kembuk</p>
-              <p className="text-zinc-500 text-xs">Premium</p>
+              <p className="text-emerald-400 text-xs flex items-center gap-1">
+                <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></span>
+                Premium
+              </p>
             </div>
-            <Settings className="w-4 h-4 text-zinc-500" />
+            <button className="p-2 bg-zinc-800/60 rounded-lg border border-zinc-700/40 hover:bg-zinc-700/60 transition-colors">
+              <Settings className="w-4 h-4 text-zinc-400" />
+            </button>
           </div>
         </div>
       </aside>
@@ -1298,40 +1306,76 @@ export default function Dashboard() {
       )}
 
       {showReceiptModal && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-zinc-900 rounded-2xl w-full max-w-md border border-zinc-800 p-6">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-white font-bold text-lg">Scan Struk</h3>
-              <button onClick={() => setShowReceiptModal(false)} className="text-zinc-400">
-                <X className="w-6 h-6" />
-              </button>
-            </div>
-
-            <label className="block">
-              <input
-                type="file"
-                accept="image/*"
-                capture="environment"
-                onChange={handleReceiptUpload}
-                disabled={analyzing}
-                className="hidden"
-              />
-              <div className="border-2 border-dashed border-zinc-700 rounded-2xl p-8 text-center hover:border-zinc-600 transition-colors cursor-pointer">
-                {analyzing ? (
-                  <div className="space-y-3">
-                    <Loader2 className="w-12 h-12 mx-auto text-blue-500 animate-spin" />
-                    <p className="text-zinc-400">Menganalisis struk...</p>
-                    <p className="text-zinc-500 text-xs">Menggunakan OCR lokal</p>
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-xl z-50 flex items-center justify-center p-4">
+          <div className="w-full max-w-md">
+            <div className="relative bg-gradient-to-br from-zinc-800/95 via-zinc-900/95 to-zinc-950/95 rounded-3xl border border-zinc-700/50 shadow-2xl shadow-black/50 overflow-hidden backdrop-blur-xl">
+              <div className="absolute inset-[1px] rounded-[22px] bg-gradient-to-br from-white/[0.03] to-transparent pointer-events-none" />
+              <div className="relative">
+                <div className="p-5 border-b border-zinc-800/60 flex items-center justify-between bg-gradient-to-r from-zinc-900/50 to-transparent">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-gradient-to-br from-green-600/30 to-green-800/30 rounded-xl border border-green-500/30 shadow-[inset_0_1px_2px_rgba(255,255,255,0.1)]">
+                      <Camera className="w-5 h-5 text-green-400" />
+                    </div>
+                    <div>
+                      <h3 className="text-white font-bold text-lg">Scan Struk</h3>
+                      <p className="text-zinc-500 text-xs">AI akan membaca struk kamu</p>
+                    </div>
                   </div>
-                ) : (
-                  <>
-                    <Printer className="w-12 h-12 mx-auto text-zinc-500 mb-3" />
-                    <p className="text-zinc-400">Klik untuk foto struk</p>
-                    <p className="text-zinc-600 text-sm mt-1">ATAU pilih dari galeri</p>
-                  </>
-                )}
+                  <button onClick={() => setShowReceiptModal(false)} className="p-2 bg-zinc-800/60 rounded-xl border border-zinc-700/40 hover:bg-zinc-700/60 transition-colors">
+                    <X className="w-5 h-5 text-zinc-400" />
+                  </button>
+                </div>
+
+                <div className="p-5">
+                  <label className="block">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      capture="environment"
+                      onChange={handleReceiptUpload}
+                      disabled={analyzing}
+                      className="hidden"
+                    />
+                    <div className="relative border-2 border-dashed border-zinc-600 rounded-2xl p-8 text-center hover:border-green-500/50 hover:bg-green-500/5 transition-all cursor-pointer group">
+                      <div className="absolute inset-[1px] rounded-[14px] bg-gradient-to-br from-zinc-800/20 to-transparent pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity" />
+                      {analyzing ? (
+                        <div className="relative space-y-4">
+                          <div className="w-16 h-16 mx-auto bg-gradient-to-br from-green-600/20 to-green-800/20 rounded-2xl flex items-center justify-center border border-green-500/30 animate-pulse">
+                            <Sparkles className="w-8 h-8 text-green-400" />
+                          </div>
+                          <div>
+                            <p className="text-green-400 font-medium">Menganalisis struk...</p>
+                            <p className="text-zinc-500 text-xs mt-1">Menggunakan Gemini AI</p>
+                          </div>
+                          <div className="flex items-center justify-center gap-1">
+                            <div className="w-2 h-2 bg-green-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                            <div className="w-2 h-2 bg-green-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                            <div className="w-2 h-2 bg-green-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="relative space-y-4">
+                          <div className="w-16 h-16 mx-auto bg-gradient-to-br from-green-600/20 to-green-800/20 rounded-2xl flex items-center justify-center border border-green-500/30 group-hover:border-green-400/50 transition-colors">
+                            <Printer className="w-8 h-8 text-green-400" />
+                          </div>
+                          <div>
+                            <p className="text-zinc-300 font-medium">Ambil foto struk</p>
+                            <p className="text-zinc-500 text-xs mt-1">ATAU pilih dari galeri</p>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </label>
+
+                  <div className="mt-4 flex items-center gap-3 p-3 bg-zinc-800/40 rounded-xl border border-zinc-700/30">
+                    <div className="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <Sparkles className="w-4 h-4 text-blue-400" />
+                    </div>
+                    <p className="text-zinc-400 text-xs">AI akan otomatis mengisi jumlah, kategori, dan tanggal dari foto struk</p>
+                  </div>
+                </div>
               </div>
-            </label>
+            </div>
           </div>
         </div>
       )}
