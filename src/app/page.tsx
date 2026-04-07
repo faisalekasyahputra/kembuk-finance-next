@@ -626,14 +626,20 @@ export default function Dashboard() {
               <div className="relative bg-gradient-to-br from-zinc-800 via-zinc-900 to-zinc-950 rounded-3xl p-6 border border-zinc-700/50 shadow-2xl overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10" />
                 <div className="absolute -top-20 -right-20 w-40 h-40 bg-blue-500/20 rounded-full blur-3xl" />
+                <div className="absolute inset-[1px] rounded-[22px] bg-gradient-to-br from-white/[0.03] to-transparent pointer-events-none" />
+                <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
                 <div className="relative">
                   <div className="flex items-center gap-2 mb-3">
-                    <Wallet className="w-5 h-5 text-zinc-400" />
+                    <div className="p-1.5 bg-gradient-to-br from-zinc-700 to-zinc-800 rounded-lg shadow-inner">
+                      <Wallet className="w-4 h-4 text-zinc-400" />
+                    </div>
                     <p className="text-zinc-400 text-sm font-medium">Total Balance</p>
                   </div>
-                  <h2 className="text-4xl font-bold font-mono text-white tracking-tight">
-                    {formatCurrency(balance)}
-                  </h2>
+                  <div className="bg-gradient-to-br from-zinc-950 via-zinc-900 to-zinc-950 rounded-2xl p-4 border border-zinc-800/80 shadow-[inset_0_2px_4px_rgba(0,0,0,0.5),inset_0_-1px_1px_rgba(255,255,255,0.05)]">
+                    <h2 className="text-4xl font-bold font-mono text-white tracking-tight drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]">
+                      {formatCurrency(balance)}
+                    </h2>
+                  </div>
                 </div>
               </div>
 
@@ -655,70 +661,89 @@ export default function Dashboard() {
               </button>
 
               <div className="grid grid-cols-2 gap-4">
-                <div className="relative bg-gradient-to-br from-zinc-900 to-zinc-950 rounded-2xl p-5 border border-zinc-800/50 shadow-xl overflow-hidden">
-                  <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-green-500 to-emerald-500" />
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="w-10 h-10 bg-green-500/20 rounded-xl flex items-center justify-center">
-                      <ArrowUpRight className="w-5 h-5 text-green-500" />
+                <div className="relative bg-gradient-to-br from-zinc-800 via-zinc-900 to-zinc-950 rounded-2xl p-5 border border-zinc-700/50 shadow-xl overflow-hidden group hover:shadow-2xl transition-shadow duration-300">
+                  <div className="absolute inset-[1px] rounded-[14px] bg-gradient-to-br from-white/[0.02] to-transparent pointer-events-none" />
+                  <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-green-500 to-emerald-500 shadow-[0_0_15px_rgba(34,197,94,0.5)]" />
+                  <div className="relative">
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="w-11 h-11 bg-gradient-to-br from-green-600/30 to-green-800/30 rounded-xl flex items-center justify-center shadow-[inset_0_1px_2px_rgba(255,255,255,0.1)] border border-green-500/20">
+                        <ArrowUpRight className="w-5 h-5 text-green-400" />
+                      </div>
+                      <span className="text-zinc-400 text-sm font-medium">Pemasukan</span>
                     </div>
-                    <span className="text-zinc-400 text-sm font-medium">Income</span>
+                    <div className="bg-gradient-to-br from-zinc-950/80 via-zinc-900/80 to-zinc-950/80 rounded-xl p-3 border border-zinc-800/60 shadow-[inset_0_1px_3px_rgba(0,0,0,0.5)]">
+                      <p className="text-green-500 font-bold font-mono text-lg drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">
+                        {formatCurrency(totalIncome)}
+                      </p>
+                    </div>
                   </div>
-                  <p className="text-green-500 font-bold font-mono text-xl">
-                    {formatCurrency(totalIncome)}
-                  </p>
                 </div>
 
-                <div className="relative bg-gradient-to-br from-zinc-900 to-zinc-950 rounded-2xl p-5 border border-zinc-800/50 shadow-xl overflow-hidden">
-                  <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-500 to-rose-500" />
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="w-10 h-10 bg-red-500/20 rounded-xl flex items-center justify-center">
-                      <ArrowDownRight className="w-5 h-5 text-red-500" />
+                <div className="relative bg-gradient-to-br from-zinc-800 via-zinc-900 to-zinc-950 rounded-2xl p-5 border border-zinc-700/50 shadow-xl overflow-hidden group hover:shadow-2xl transition-shadow duration-300">
+                  <div className="absolute inset-[1px] rounded-[14px] bg-gradient-to-br from-white/[0.02] to-transparent pointer-events-none" />
+                  <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-red-500 to-rose-500 shadow-[0_0_15px_rgba(239,68,68,0.5)]" />
+                  <div className="relative">
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="w-11 h-11 bg-gradient-to-br from-red-600/30 to-red-800/30 rounded-xl flex items-center justify-center shadow-[inset_0_1px_2px_rgba(255,255,255,0.1)] border border-red-500/20">
+                        <ArrowDownRight className="w-5 h-5 text-red-400" />
+                      </div>
+                      <span className="text-zinc-400 text-sm font-medium">Pengeluaran</span>
                     </div>
-                    <span className="text-zinc-400 text-sm font-medium">Expense</span>
+                    <div className="bg-gradient-to-br from-zinc-950/80 via-zinc-900/80 to-zinc-950/80 rounded-xl p-3 border border-zinc-800/60 shadow-[inset_0_1px_3px_rgba(0,0,0,0.5)]">
+                      <p className="text-red-500 font-bold font-mono text-lg drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">
+                        {formatCurrency(totalExpense)}
+                      </p>
+                    </div>
                   </div>
-                  <p className="text-red-500 font-bold font-mono text-xl">
-                    {formatCurrency(totalExpense)}
-                  </p>
                 </div>
               </div>
 
-              <div className="relative bg-gradient-to-br from-zinc-900 to-zinc-950 rounded-2xl border border-zinc-800/50 shadow-xl overflow-hidden">
-                <div className="flex items-center justify-between px-5 py-4 border-b border-zinc-800/50">
+              <div className="relative bg-gradient-to-br from-zinc-800 via-zinc-900 to-zinc-950 rounded-2xl border border-zinc-700/50 shadow-xl overflow-hidden">
+                <div className="absolute inset-[1px] rounded-[14px] bg-gradient-to-br from-white/[0.02] to-transparent pointer-events-none" />
+                <div className="flex items-center justify-between px-5 py-4 border-b border-zinc-800/50 bg-gradient-to-r from-zinc-900/50 to-transparent">
                   <div className="flex items-center gap-3">
-                    <Receipt className="w-5 h-5 text-zinc-400" />
-                    <span className="text-white text-sm font-medium">Today Transactions</span>
+                    <div className="p-2 bg-zinc-800/60 rounded-lg border border-zinc-700/40 shadow-[inset_0_1px_2px_rgba(0,0,0,0.3)]">
+                      <Receipt className="w-4 h-4 text-zinc-400" />
+                    </div>
+                    <span className="text-white text-sm font-medium">Transaksi Hari Ini</span>
                   </div>
-                  <span className="text-zinc-500 text-xs font-medium px-2 py-1 bg-zinc-800/50 rounded-lg">{todayTransactions.length} items</span>
+                  <span className="text-zinc-400 text-xs font-medium px-2.5 py-1 bg-zinc-800/60 rounded-lg border border-zinc-700/40 shadow-[inset_0_1px_2px_rgba(0,0,0,0.3)]">{todayTransactions.length} items</span>
                 </div>
                 {todayTransactions.length === 0 ? (
                   <div className="flex flex-col items-center justify-center py-12">
-                    <Receipt className="w-12 h-12 text-zinc-700 mb-3" />
-                    <p className="text-zinc-600 text-sm">No transactions yet</p>
+                    <div className="w-16 h-16 bg-zinc-800/40 rounded-2xl flex items-center justify-center mb-3 border border-zinc-700/30">
+                      <Receipt className="w-8 h-8 text-zinc-700" />
+                    </div>
+                    <p className="text-zinc-500 text-sm">Belum ada transaksi hari ini</p>
                   </div>
                 ) : (
-                  <div className="divide-y divide-zinc-800/30">
+                  <div className="divide-y divide-zinc-800/40">
                     {todayTransactions.slice(0, 5).map((t) => {
                       const category = defaultCategories.find(c => c.id === t.category_id)
                       const IconComponent = iconMap[category?.icon || 'Package'] || Package
                       return (
-                        <div key={t.id} className="px-5 py-4 flex items-center justify-between hover:bg-zinc-800/30 transition-colors">
+                        <div key={t.id} className="px-5 py-3.5 flex items-center justify-between hover:bg-zinc-800/30 transition-colors group">
                           <div className="flex items-center gap-4">
-                            <div className={`w-11 h-11 rounded-xl flex items-center justify-center ${
-                              t.type === 'income' ? 'bg-green-500/20' : 'bg-red-500/20'
+                            <div className={`w-11 h-11 rounded-xl flex items-center justify-center border shadow-[inset_0_1px_2px_rgba(255,255,255,0.05),0_2px_4px_rgba(0,0,0,0.3)] ${
+                              t.type === 'income' 
+                                ? 'bg-gradient-to-br from-green-600/30 to-green-800/30 border-green-500/20' 
+                                : 'bg-gradient-to-br from-red-600/30 to-red-800/30 border-red-500/20'
                             }`}>
-                              <IconComponent className={`w-5 h-5 ${t.type === 'income' ? 'text-green-500' : 'text-red-500'}`} />
+                              <IconComponent className={`w-5 h-5 ${t.type === 'income' ? 'text-green-400' : 'text-red-400'}`} />
                             </div>
                             <div>
-                              <p className="text-white text-sm font-medium">{t.description}</p>
+                              <p className="text-white text-sm font-medium group-hover:text-zinc-100 transition-colors">{t.description}</p>
                               <p className="text-zinc-500 text-xs">{t.category_name}</p>
                             </div>
                           </div>
-                          <span className={`font-mono text-sm font-semibold ${
-                            t.type === 'income' ? 'text-green-500' : 'text-red-500'
-                          }`}>
-                            {t.type === 'income' ? '+' : '-'}
-                            {formatCurrency(t.amount)}
-                          </span>
+                          <div className="bg-zinc-900/60 px-3 py-2 rounded-xl border border-zinc-800/60 shadow-[inset_0_1px_2px_rgba(0,0,0,0.3)]">
+                            <span className={`font-mono text-sm font-semibold ${
+                              t.type === 'income' ? 'text-green-400' : 'text-red-400'
+                            }`}>
+                              {t.type === 'income' ? '+' : '-'}
+                              {formatCurrency(t.amount)}
+                            </span>
+                          </div>
                         </div>
                       )
                     })}
@@ -866,98 +891,117 @@ export default function Dashboard() {
       </nav>
 
       {showAddModal && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-end lg:items-center justify-center p-4">
-          <div className="bg-zinc-900 rounded-2xl w-full max-w-md border border-zinc-800">
-            <div className="p-4 border-b border-zinc-800 flex items-center justify-between">
-              <h3 className="text-white font-bold">Tambah Transaksi</h3>
-              <button onClick={() => setShowAddModal(false)} className="text-zinc-400">
-                <X className="w-6 h-6" />
-              </button>
-            </div>
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-xl z-50 flex items-end lg:items-center justify-center p-4">
+          <div className="w-full max-w-md">
+            <div className="relative bg-gradient-to-br from-zinc-800/95 via-zinc-900/95 to-zinc-950/95 rounded-3xl border border-zinc-700/50 shadow-2xl shadow-black/50 overflow-hidden backdrop-blur-xl">
+              <div className="absolute inset-[1px] rounded-[22px] bg-gradient-to-br from-white/[0.03] via-transparent to-transparent pointer-events-none" />
+              <div className="relative">
+                <div className="p-5 border-b border-zinc-800/60 flex items-center justify-between bg-gradient-to-r from-zinc-900/50 to-transparent">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-gradient-to-br from-blue-600/30 to-blue-800/30 rounded-xl border border-blue-500/30 shadow-[inset_0_1px_2px_rgba(255,255,255,0.1)]">
+                      <Plus className="w-5 h-5 text-blue-400" />
+                    </div>
+                    <h3 className="text-white font-bold text-lg">Tambah Transaksi</h3>
+                  </div>
+                  <button onClick={() => setShowAddModal(false)} className="p-2 bg-zinc-800/60 rounded-xl border border-zinc-700/40 hover:bg-zinc-700/60 transition-colors">
+                    <X className="w-5 h-5 text-zinc-400" />
+                  </button>
+                </div>
 
-            <div className="p-4 space-y-4">
-              <div className="grid grid-cols-2 gap-2">
-                <button
-                  onClick={() => setFormData({ ...formData, type: 'income' })}
-                  className={`py-3 px-4 rounded-xl border transition-all ${
-                    formData.type === 'income'
-                      ? 'bg-green-600/20 border-green-600 text-green-500'
-                      : 'border-zinc-700 text-zinc-400'
-                  }`}
-                >
-                  Masuk
-                </button>
-                <button
-                  onClick={() => setFormData({ ...formData, type: 'expense' })}
-                  className={`py-3 px-4 rounded-xl border transition-all ${
-                    formData.type === 'expense'
-                      ? 'bg-red-600/20 border-red-600 text-red-500'
-                      : 'border-zinc-700 text-zinc-400'
-                  }`}
-                >
-                  Keluar
-                </button>
+                <div className="p-5 space-y-5">
+                  <div className="grid grid-cols-2 gap-3">
+                    <button
+                      onClick={() => setFormData({ ...formData, type: 'income' })}
+                      className={`py-3.5 px-4 rounded-xl border transition-all shadow-[inset_0_1px_2px_rgba(255,255,255,0.05)] ${
+                        formData.type === 'income'
+                          ? 'bg-gradient-to-br from-green-600/30 to-green-800/30 border-green-500 text-green-400 shadow-[inset_0_1px_2px_rgba(255,255,255,0.1),0_0_15px_rgba(34,197,94,0.3)]'
+                          : 'bg-gradient-to-br from-zinc-800/60 to-zinc-900/60 border-zinc-700/50 text-zinc-400 hover:border-zinc-600 hover:from-zinc-800 hover:to-zinc-900'
+                      }`}
+                    >
+                      <div className="flex items-center justify-center gap-2">
+                        <ArrowUpRight className="w-4 h-4" />
+                        <span className="font-medium">Masuk</span>
+                      </div>
+                    </button>
+                    <button
+                      onClick={() => setFormData({ ...formData, type: 'expense' })}
+                      className={`py-3.5 px-4 rounded-xl border transition-all shadow-[inset_0_1px_2px_rgba(255,255,255,0.05)] ${
+                        formData.type === 'expense'
+                          ? 'bg-gradient-to-br from-red-600/30 to-red-800/30 border-red-500 text-red-400 shadow-[inset_0_1px_2px_rgba(255,255,255,0.1),0_0_15px_rgba(239,68,68,0.3)]'
+                          : 'bg-gradient-to-br from-zinc-800/60 to-zinc-900/60 border-zinc-700/50 text-zinc-400 hover:border-zinc-600 hover:from-zinc-800 hover:to-zinc-900'
+                      }`}
+                    >
+                      <div className="flex items-center justify-center gap-2">
+                        <ArrowDownRight className="w-4 h-4" />
+                        <span className="font-medium">Keluar</span>
+                      </div>
+                    </button>
+                  </div>
+
+                  <div>
+                    <label className="text-zinc-400 text-sm font-medium mb-2 block">Jumlah</label>
+                    <div className="relative">
+                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 font-mono">Rp</span>
+                      <input
+                        type="number"
+                        value={formData.amount}
+                        onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
+                        placeholder="0"
+                        className="w-full pl-12 pr-4 py-4 bg-gradient-to-br from-zinc-950/80 to-zinc-900/80 border border-zinc-700/60 rounded-xl text-white text-lg font-mono placeholder-zinc-600 focus:outline-none focus:border-blue-500/50 focus:shadow-[0_0_15px_rgba(59,130,246,0.3)] transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)]"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="text-zinc-400 text-sm font-medium mb-2 block">Kategori</label>
+                    <select
+                      value={formData.category_id}
+                      onChange={(e) => setFormData({ ...formData, category_id: e.target.value })}
+                      className="w-full px-4 py-4 bg-gradient-to-br from-zinc-950/80 to-zinc-900/80 border border-zinc-700/60 rounded-xl text-white focus:outline-none focus:border-blue-500/50 focus:shadow-[0_0_15px_rgba(59,130,246,0.3)] transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)]"
+                    >
+                      <option value="">Pilih kategori</option>
+                      {defaultCategories
+                        .filter(c => formData.type === 'income' ? c.group === 'income' : c.group === 'expense')
+                        .map(c => (
+                          <option key={c.id} value={c.id}>{c.name}</option>
+                        ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="text-zinc-400 text-sm font-medium mb-2 block">Keterangan</label>
+                    <input
+                      type="text"
+                      value={formData.description}
+                      onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                      placeholder="Deskripsi transaksi"
+                      className="w-full px-4 py-4 bg-gradient-to-br from-zinc-950/80 to-zinc-900/80 border border-zinc-700/60 rounded-xl text-white placeholder-zinc-600 focus:outline-none focus:border-blue-500/50 focus:shadow-[0_0_15px_rgba(59,130,246,0.3)] transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)]"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-zinc-400 text-sm font-medium mb-2 block">Tanggal</label>
+                    <input
+                      type="date"
+                      value={formData.date}
+                      onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                      className="w-full px-4 py-4 bg-gradient-to-br from-zinc-950/80 to-zinc-900/80 border border-zinc-700/60 rounded-xl text-white text-sm focus:outline-none focus:border-blue-500/50 focus:shadow-[0_0_15px_rgba(59,130,246,0.3)] transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] appearance-none [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-4 [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-100 [&::-webkit-calendar-picker-indicator]:invert"
+                      style={{ colorScheme: 'dark' }}
+                    />
+                    <p className="text-zinc-500 text-xs mt-2">
+                      {new Date(formData.date + 'T00:00:00').toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
+                    </p>
+                  </div>
+
+                  <button
+                    onClick={handleAddTransaction}
+                    disabled={!formData.amount || !formData.category_id}
+                    className="w-full py-4 bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl text-white font-bold disabled:opacity-50 disabled:cursor-not-allowed hover:from-blue-700 hover:to-blue-800 transition-all shadow-lg shadow-blue-600/30 border border-blue-500/30"
+                  >
+                    Simpan Transaksi
+                  </button>
+                </div>
               </div>
-
-              <div>
-                <label className="text-zinc-400 text-sm">Jumlah</label>
-                <input
-                  type="number"
-                  value={formData.amount}
-                  onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
-                  placeholder="0"
-                  className="w-full mt-1 px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-blue-500"
-                />
-              </div>
-
-              <div>
-                <label className="text-zinc-400 text-sm">Kategori</label>
-                <select
-                  value={formData.category_id}
-                  onChange={(e) => setFormData({ ...formData, category_id: e.target.value })}
-                  className="w-full mt-1 px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white focus:outline-none focus:border-blue-500"
-                >
-                  <option value="">Pilih kategori</option>
-                  {defaultCategories
-                    .filter(c => formData.type === 'income' ? c.group === 'income' : c.group === 'expense')
-                    .map(c => (
-                      <option key={c.id} value={c.id}>{c.icon} {c.name}</option>
-                    ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="text-zinc-400 text-sm">Keterangan</label>
-                <input
-                  type="text"
-                  value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  placeholder="Deskripsi transaksi"
-                  className="w-full mt-1 px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-blue-500"
-                />
-              </div>
-
-              <div>
-                <label className="text-zinc-400 text-sm">Tanggal</label>
-                <input
-                  type="date"
-                  value={formData.date}
-                  onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                  className="w-full max-w-full mt-1 px-3 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white text-sm focus:outline-none focus:border-blue-500 appearance-none [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-2 [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-100 [&::-webkit-calendar-picker-indicator]:invert"
-                  style={{ colorScheme: 'dark' }}
-                />
-                <p className="text-zinc-500 text-xs mt-1">
-                  {new Date(formData.date + 'T00:00:00').toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
-                </p>
-              </div>
-
-              <button
-                onClick={handleAddTransaction}
-                disabled={!formData.amount || !formData.category_id}
-                className="w-full py-4 bg-blue-600 rounded-xl text-white font-bold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-blue-700 transition-colors"
-              >
-                Simpan
-              </button>
             </div>
           </div>
         </div>
@@ -1023,63 +1067,73 @@ export default function Dashboard() {
 
       {/* Add Options Modal */}
       {showAddOptions && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-end lg:items-center justify-center p-4" onClick={() => setShowAddOptions(false)}>
-          <div className="bg-zinc-900 rounded-2xl w-full max-w-md border border-zinc-800 overflow-hidden" onClick={e => e.stopPropagation()}>
-            <div className="p-4 border-b border-zinc-800 flex items-center justify-between">
-              <h3 className="text-white font-bold">Tambah Transaksi</h3>
-              <button onClick={() => setShowAddOptions(false)} className="text-zinc-400">
-                <X className="w-6 h-6" />
-              </button>
-            </div>
-            
-            <div className="p-4 space-y-2">
-              <button
-                onClick={() => {
-                  setShowAddOptions(false)
-                  setShowAddModal(true)
-                }}
-                className="w-full flex items-center gap-4 p-4 bg-zinc-800 hover:bg-zinc-700 rounded-xl transition-colors"
-              >
-                <div className="w-12 h-12 bg-blue-600/20 rounded-xl flex items-center justify-center">
-                  <Plus className="w-6 h-6 text-blue-400" />
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-xl z-50 flex items-end lg:items-center justify-center p-4" onClick={() => setShowAddOptions(false)}>
+          <div className="w-full max-w-md" onClick={e => e.stopPropagation()}>
+            <div className="relative bg-gradient-to-br from-zinc-800/95 via-zinc-900/95 to-zinc-950/95 rounded-3xl border border-zinc-700/50 shadow-2xl shadow-black/50 overflow-hidden backdrop-blur-xl">
+              <div className="absolute inset-[1px] rounded-[22px] bg-gradient-to-br from-white/[0.03] to-transparent pointer-events-none" />
+              <div className="relative">
+                <div className="p-5 border-b border-zinc-800/60 flex items-center justify-between bg-gradient-to-r from-zinc-900/50 to-transparent">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-gradient-to-br from-blue-600/30 to-blue-800/30 rounded-xl border border-blue-500/30 shadow-[inset_0_1px_2px_rgba(255,255,255,0.1)]">
+                      <Plus className="w-5 h-5 text-blue-400" />
+                    </div>
+                    <h3 className="text-white font-bold text-lg">Tambah Transaksi</h3>
+                  </div>
+                  <button onClick={() => setShowAddOptions(false)} className="p-2 bg-zinc-800/60 rounded-xl border border-zinc-700/40 hover:bg-zinc-700/60 transition-colors">
+                    <X className="w-5 h-5 text-zinc-400" />
+                  </button>
                 </div>
-                <div className="text-left">
-                  <p className="text-white font-medium">Input Manual</p>
-                  <p className="text-zinc-400 text-sm">Masukkan transaksi secara manual</p>
-                </div>
-              </button>
+                
+                <div className="p-5 space-y-3">
+                  <button
+                    onClick={() => {
+                      setShowAddOptions(false)
+                      setShowAddModal(true)
+                    }}
+                    className="w-full flex items-center gap-4 p-4 bg-gradient-to-br from-zinc-800/60 to-zinc-900/60 hover:from-zinc-800 hover:to-zinc-900 rounded-xl transition-all border border-zinc-700/40 shadow-[inset_0_1px_2px_rgba(255,255,255,0.05)]"
+                  >
+                    <div className="w-12 h-12 bg-gradient-to-br from-blue-600/30 to-blue-800/30 rounded-xl flex items-center justify-center border border-blue-500/30 shadow-[inset_0_1px_2px_rgba(255,255,255,0.1)]">
+                      <Plus className="w-6 h-6 text-blue-400" />
+                    </div>
+                    <div className="text-left">
+                      <p className="text-white font-medium">Input Manual</p>
+                      <p className="text-zinc-400 text-sm">Masukkan transaksi secara manual</p>
+                    </div>
+                  </button>
 
-              <button
-                onClick={() => {
-                  setShowAddOptions(false)
-                  setShowReceiptModal(true)
-                }}
-                className="w-full flex items-center gap-4 p-4 bg-zinc-800 hover:bg-zinc-700 rounded-xl transition-colors"
-              >
-                <div className="w-12 h-12 bg-green-600/20 rounded-xl flex items-center justify-center">
-                  <Camera className="w-6 h-6 text-green-400" />
-                </div>
-                <div className="text-left">
-                  <p className="text-white font-medium">Scan Struk</p>
-                  <p className="text-zinc-400 text-sm">Ambil foto struk dari kamera</p>
-                </div>
-              </button>
+                  <button
+                    onClick={() => {
+                      setShowAddOptions(false)
+                      setShowReceiptModal(true)
+                    }}
+                    className="w-full flex items-center gap-4 p-4 bg-gradient-to-br from-zinc-800/60 to-zinc-900/60 hover:from-zinc-800 hover:to-zinc-900 rounded-xl transition-all border border-zinc-700/40 shadow-[inset_0_1px_2px_rgba(255,255,255,0.05)]"
+                  >
+                    <div className="w-12 h-12 bg-gradient-to-br from-green-600/30 to-green-800/30 rounded-xl flex items-center justify-center border border-green-500/30 shadow-[inset_0_1px_2px_rgba(255,255,255,0.1)]">
+                      <Camera className="w-6 h-6 text-green-400" />
+                    </div>
+                    <div className="text-left">
+                      <p className="text-white font-medium">Scan Struk</p>
+                      <p className="text-zinc-400 text-sm">Ambil foto struk dari kamera</p>
+                    </div>
+                  </button>
 
-              <button
-                onClick={() => {
-                  setShowAddOptions(false)
-                  fileInputRef.current?.click()
-                }}
-                className="w-full flex items-center gap-4 p-4 bg-zinc-800 hover:bg-zinc-700 rounded-xl transition-colors"
-              >
-                <div className="w-12 h-12 bg-purple-600/20 rounded-xl flex items-center justify-center">
-                  <Upload className="w-6 h-6 text-purple-400" />
+                  <button
+                    onClick={() => {
+                      setShowAddOptions(false)
+                      fileInputRef.current?.click()
+                    }}
+                    className="w-full flex items-center gap-4 p-4 bg-gradient-to-br from-zinc-800/60 to-zinc-900/60 hover:from-zinc-800 hover:to-zinc-900 rounded-xl transition-all border border-zinc-700/40 shadow-[inset_0_1px_2px_rgba(255,255,255,0.05)]"
+                  >
+                    <div className="w-12 h-12 bg-gradient-to-br from-purple-600/30 to-purple-800/30 rounded-xl flex items-center justify-center border border-purple-500/30 shadow-[inset_0_1px_2px_rgba(255,255,255,0.1)]">
+                      <Upload className="w-6 h-6 text-purple-400" />
+                    </div>
+                    <div className="text-left">
+                      <p className="text-white font-medium">Pilih dari Galeri</p>
+                      <p className="text-zinc-400 text-sm">Upload gambar struk dari galeri</p>
+                    </div>
+                  </button>
                 </div>
-                <div className="text-left">
-                  <p className="text-white font-medium">Pilih dari Galeri</p>
-                  <p className="text-zinc-400 text-sm">Upload gambar struk dari galeri</p>
-                </div>
-              </button>
+              </div>
             </div>
           </div>
         </div>
