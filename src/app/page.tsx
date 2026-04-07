@@ -9,7 +9,7 @@ import {
   ArrowLeftRight, Building2, Plane, Gift, Home, Gamepad2, GraduationCap, Baby,
   TrendingDown, DollarSign, Percent, Calendar, Search, Bell, Settings, LogOut,
   ChevronRight, ChevronDown, MoreVertical, Edit3, Trash2, Download, Share2,
-  Send, Image, Moon, Sun
+  Send, Image, Moon, Sun, PieChart
 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { formatCurrency } from '@/lib/formatters'
@@ -698,6 +698,105 @@ export default function Dashboard() {
                 </div>
               </div>
 
+              <div className="grid grid-cols-3 gap-3">
+                <button 
+                  onClick={() => {
+                    setShowAddOptions(false)
+                    setShowAddModal(true)
+                  }}
+                  className="relative bg-gradient-to-br from-green-700/50 via-green-800/50 to-green-900/50 rounded-2xl p-4 border border-green-600/30 shadow-lg hover:shadow-green-600/20 hover:scale-[1.02] transition-all group"
+                >
+                  <div className="absolute inset-[1px] rounded-[14px] bg-gradient-to-br from-green-400/[0.05] to-transparent pointer-events-none" />
+                  <div className="relative flex flex-col items-center gap-2">
+                    <div className="w-10 h-10 bg-green-500/30 rounded-xl flex items-center justify-center border border-green-400/30 shadow-[inset_0_1px_2px_rgba(255,255,255,0.1)]">
+                      <ArrowUpRight className="w-5 h-5 text-green-400" />
+                    </div>
+                    <span className="text-green-400 text-xs font-medium">Pemasukan</span>
+                  </div>
+                </button>
+
+                <button 
+                  onClick={() => {
+                    setShowAddOptions(false)
+                    setShowAddModal(true)
+                    setFormData({...formData, type: 'expense'})
+                  }}
+                  className="relative bg-gradient-to-br from-red-700/50 via-red-800/50 to-red-900/50 rounded-2xl p-4 border border-red-600/30 shadow-lg hover:shadow-red-600/20 hover:scale-[1.02] transition-all group"
+                >
+                  <div className="absolute inset-[1px] rounded-[14px] bg-gradient-to-br from-red-400/[0.05] to-transparent pointer-events-none" />
+                  <div className="relative flex flex-col items-center gap-2">
+                    <div className="w-10 h-10 bg-red-500/30 rounded-xl flex items-center justify-center border border-red-400/30 shadow-[inset_0_1px_2px_rgba(255,255,255,0.1)]">
+                      <ArrowDownRight className="w-5 h-5 text-red-400" />
+                    </div>
+                    <span className="text-red-400 text-xs font-medium">Pengeluaran</span>
+                  </div>
+                </button>
+
+                <button 
+                  onClick={() => {
+                    setShowReceiptModal(true)
+                  }}
+                  className="relative bg-gradient-to-br from-blue-700/50 via-blue-800/50 to-blue-900/50 rounded-2xl p-4 border border-blue-600/30 shadow-lg hover:shadow-blue-600/20 hover:scale-[1.02] transition-all group"
+                >
+                  <div className="absolute inset-[1px] rounded-[14px] bg-gradient-to-br from-blue-400/[0.05] to-transparent pointer-events-none" />
+                  <div className="relative flex flex-col items-center gap-2">
+                    <div className="w-10 h-10 bg-blue-500/30 rounded-xl flex items-center justify-center border border-blue-400/30 shadow-[inset_0_1px_2px_rgba(255,255,255,0.1)]">
+                      <Camera className="w-5 h-5 text-blue-400" />
+                    </div>
+                    <span className="text-blue-400 text-xs font-medium">Scan Struk</span>
+                  </div>
+                </button>
+              </div>
+
+              <div className="relative bg-gradient-to-br from-zinc-800/80 via-zinc-900/80 to-zinc-950/80 rounded-2xl border border-zinc-700/50 shadow-xl overflow-hidden">
+                <div className="absolute inset-[1px] rounded-[14px] bg-gradient-to-br from-white/[0.02] to-transparent pointer-events-none" />
+                <div className="flex items-center justify-between px-5 py-4 border-b border-zinc-800/50 bg-gradient-to-r from-zinc-900/50 to-transparent">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-zinc-800/60 rounded-lg border border-zinc-700/40 shadow-[inset_0_1px_2px_rgba(0,0,0,0.3)]">
+                      <Calendar className="w-4 h-4 text-zinc-400" />
+                    </div>
+                    <span className="text-white text-sm font-medium">Ringkasan Minggu Ini</span>
+                  </div>
+                </div>
+                <div className="p-5">
+                  {(() => {
+                    const now = new Date()
+                    const startOfWeek = new Date(now)
+                    startOfWeek.setDate(now.getDate() - now.getDay())
+                    startOfWeek.setHours(0, 0, 0, 0)
+                    
+                    const weekTransactions = transactions.filter(t => {
+                      const txDate = new Date(t.date)
+                      return txDate >= startOfWeek && txDate <= now
+                    })
+                    
+                    const weekIncome = weekTransactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0)
+                    const weekExpense = weekTransactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0)
+                    
+                    return (
+                      <div className="space-y-4">
+                        <div className="flex gap-3">
+                          <div className="flex-1 bg-gradient-to-br from-green-900/40 to-green-950/40 rounded-xl p-3 border border-green-800/30">
+                            <p className="text-green-400/70 text-xs mb-1">Masuk</p>
+                            <p className="text-green-400 font-bold font-mono">{formatCurrency(weekIncome)}</p>
+                          </div>
+                          <div className="flex-1 bg-gradient-to-br from-red-900/40 to-red-950/40 rounded-xl p-3 border border-red-800/30">
+                            <p className="text-red-400/70 text-xs mb-1">Keluar</p>
+                            <p className="text-red-400 font-bold font-mono">{formatCurrency(weekExpense)}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center justify-between text-xs">
+                          <span className="text-zinc-500">{weekTransactions.length} transaksi</span>
+                          <span className={`font-medium ${weekIncome - weekExpense >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                            Sisa: {formatCurrency(weekIncome - weekExpense)}
+                          </span>
+                        </div>
+                      </div>
+                    )
+                  })()}
+                </div>
+              </div>
+
               <div className="relative bg-gradient-to-br from-zinc-800 via-zinc-900 to-zinc-950 rounded-2xl border border-zinc-700/50 shadow-xl overflow-hidden">
                 <div className="absolute inset-[1px] rounded-[14px] bg-gradient-to-br from-white/[0.02] to-transparent pointer-events-none" />
                 <div className="flex items-center justify-between px-5 py-4 border-b border-zinc-800/50 bg-gradient-to-r from-zinc-900/50 to-transparent">
@@ -754,107 +853,298 @@ export default function Dashboard() {
           )}
 
           {activeTab === 'transactions' && (
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <h2 className="text-white font-bold text-lg">Semua Transaksi</h2>
-                <button
-                  onClick={() => setShowAddModal(true)}
-                  className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-xl text-white text-sm font-medium"
-                >
-                  + Tambah
-                </button>
+            <div className="space-y-4">
+              <div className="relative bg-gradient-to-br from-zinc-800/80 via-zinc-900/80 to-zinc-950/80 rounded-2xl border border-zinc-700/50 shadow-xl overflow-hidden">
+                <div className="absolute inset-[1px] rounded-[14px] bg-gradient-to-br from-white/[0.02] to-transparent pointer-events-none" />
+                <div className="relative p-4">
+                  <div className="flex items-center justify-between mb-4">
+                    <h2 className="text-white font-bold text-lg flex items-center gap-2">
+                      <Receipt className="w-5 h-5 text-blue-400" />
+                      Semua Transaksi
+                    </h2>
+                    <button
+                      onClick={() => setShowAddModal(true)}
+                      className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 px-4 py-2 rounded-xl text-white text-sm font-medium shadow-lg shadow-blue-600/30 border border-blue-500/30 transition-all"
+                    >
+                      + Tambah
+                    </button>
+                  </div>
+                  
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+                    <input
+                      type="text"
+                      placeholder="Cari transaksi..."
+                      className="w-full pl-10 pr-4 py-2.5 bg-zinc-950/60 border border-zinc-700/50 rounded-xl text-white text-sm placeholder-zinc-500 focus:outline-none focus:border-blue-500/50 transition-colors shadow-[inset_0_1px_2px_rgba(0,0,0,0.3)]"
+                    />
+                  </div>
+                  
+                  <div className="flex gap-2 mt-3 overflow-x-auto pb-1">
+                    <button className="px-3 py-1.5 bg-blue-600/20 border border-blue-500/40 rounded-lg text-blue-400 text-xs font-medium whitespace-nowrap">
+                      Semua
+                    </button>
+                    <button className="px-3 py-1.5 bg-zinc-800/60 border border-zinc-700/40 rounded-lg text-zinc-400 text-xs font-medium whitespace-nowrap hover:bg-zinc-700/60 transition-colors">
+                      Masuk
+                    </button>
+                    <button className="px-3 py-1.5 bg-zinc-800/60 border border-zinc-700/40 rounded-lg text-zinc-400 text-xs font-medium whitespace-nowrap hover:bg-zinc-700/60 transition-colors">
+                      Keluar
+                    </button>
+                  </div>
+                </div>
               </div>
               
               {transactions.length === 0 ? (
-                <p className="text-zinc-500 text-center py-8">Belum ada transaksi</p>
+                <div className="relative bg-gradient-to-br from-zinc-800/80 via-zinc-900/80 to-zinc-950/80 rounded-2xl border border-zinc-700/50 shadow-xl p-8 text-center">
+                  <div className="absolute inset-[1px] rounded-[14px] bg-gradient-to-br from-white/[0.02] to-transparent pointer-events-none" />
+                  <div className="relative">
+                    <Receipt className="w-12 h-12 text-zinc-700 mx-auto mb-3" />
+                    <p className="text-zinc-500">Belum ada transaksi</p>
+                    <p className="text-zinc-600 text-sm mt-1">Tambah transaksi pertama kamu</p>
+                  </div>
+                </div>
               ) : (
-                <div className="bg-zinc-900 rounded-xl border border-zinc-800 divide-y divide-zinc-800">
-                  {transactions.map((t) => (
-                    <div key={t.id} className="px-4 py-3 flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <span className="text-lg">{t.type === 'income' ? '💰' : '💸'}</span>
-                        <div>
-                          <p className="text-white text-sm">{t.description}</p>
-                          <p className="text-zinc-500 text-xs">{t.category_name} • {t.date}</p>
+                <div className="relative bg-gradient-to-br from-zinc-800/80 via-zinc-900/80 to-zinc-950/80 rounded-2xl border border-zinc-700/50 shadow-xl overflow-hidden">
+                  <div className="absolute inset-[1px] rounded-[14px] bg-gradient-to-br from-white/[0.02] to-transparent pointer-events-none" />
+                  <div className="divide-y divide-zinc-800/40">
+                    {transactions.map((t) => {
+                      const category = defaultCategories.find(c => c.id === t.category_id)
+                      const IconComponent = iconMap[category?.icon || 'Package'] || Package
+                      return (
+                        <div key={t.id} className="px-4 py-3 flex items-center justify-between hover:bg-zinc-800/30 transition-colors group">
+                          <div className="flex items-center gap-3">
+                            <div className={`w-10 h-10 rounded-xl flex items-center justify-center border ${
+                              t.type === 'income' 
+                                ? 'bg-gradient-to-br from-green-600/30 to-green-800/30 border-green-500/20' 
+                                : 'bg-gradient-to-br from-red-600/30 to-red-800/30 border-red-500/20'
+                            }`}>
+                              <IconComponent className={`w-5 h-5 ${t.type === 'income' ? 'text-green-400' : 'text-red-400'}`} />
+                            </div>
+                            <div>
+                              <p className="text-white text-sm font-medium">{t.description}</p>
+                              <p className="text-zinc-500 text-xs">{t.category_name} • {new Date(t.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })}</p>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <span className={`font-mono text-sm font-semibold ${t.type === 'income' ? 'text-green-400' : 'text-red-400'}`}>
+                              {t.type === 'income' ? '+' : '-'}{formatCurrency(t.amount)}
+                            </span>
+                            <button
+                              onClick={() => handleDeleteTransaction(t.id)}
+                              className="text-zinc-600 hover:text-red-500 p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </div>
                         </div>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <span className={`font-mono text-sm ${t.type === 'income' ? 'text-green-500' : 'text-red-500'}`}>
-                          {t.type === 'income' ? '+' : '-'}{formatCurrency(t.amount)}
-                        </span>
-                        <button
-                          onClick={() => handleDeleteTransaction(t.id)}
-                          className="text-zinc-500 hover:text-red-500 p-1"
-                        >
-                          <X className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </div>
-                  ))}
+                      )
+                    })}
+                  </div>
                 </div>
               )}
             </div>
           )}
 
           {activeTab === 'savings' && (
-            <div className="space-y-3">
-              <div className="bg-gradient-to-br from-green-900/30 to-black rounded-2xl p-5 border border-green-800/50">
-                <p className="text-green-400/70 text-sm mb-1">Total Tabungan</p>
-                <h2 className="text-3xl font-bold font-mono text-green-400">{formatCurrency(0)}</h2>
+            <div className="space-y-4">
+              <div className="relative bg-gradient-to-br from-green-800/40 via-green-900/40 to-zinc-950 rounded-3xl p-6 border border-green-700/40 shadow-2xl overflow-hidden">
+                <div className="absolute inset-[1px] rounded-[22px] bg-gradient-to-br from-green-500/[0.05] to-transparent pointer-events-none" />
+                <div className="absolute -top-20 -right-20 w-40 h-40 bg-green-500/20 rounded-full blur-3xl" />
+                <div className="relative">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="p-2.5 bg-gradient-to-br from-green-600/40 to-green-800/40 rounded-xl border border-green-500/30 shadow-[inset_0_1px_2px_rgba(255,255,255,0.1)]">
+                      <PiggyBank className="w-6 h-6 text-green-400" />
+                    </div>
+                    <div>
+                      <p className="text-green-400/80 text-sm font-medium">Total Tabungan</p>
+                      <h2 className="text-3xl font-bold font-mono text-green-400 drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]">{formatCurrency(0)}</h2>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div className="bg-zinc-900 rounded-xl p-6 border border-zinc-800 text-center">
-                <PiggyBank className="w-12 h-12 text-zinc-700 mx-auto mb-3" />
-                <p className="text-white font-medium">Fitur Tabungan</p>
-                <p className="text-zinc-400 text-sm mt-1">Coming soon!</p>
-                <p className="text-zinc-500 text-xs mt-3">Akan hadir:</p>
-                <ul className="text-zinc-500 text-xs mt-2 space-y-1 text-left max-w-xs mx-auto">
-                  <li className="flex items-center gap-2"><span className="w-2 h-2 bg-yellow-500 rounded-full"></span> Target tabungan bulanan</li>
-                  <li className="flex items-center gap-2"><span className="w-2 h-2 bg-yellow-500 rounded-full"></span> Progress pencapaian</li>
-                  <li className="flex items-center gap-2"><span className="w-2 h-2 bg-yellow-500 rounded-full"></span> Reminder tabungan</li>
-                </ul>
+
+              <button className="w-full bg-gradient-to-r from-green-600 to-green-700 rounded-2xl p-4 flex items-center justify-between hover:opacity-90 transition-all shadow-lg shadow-green-600/30 border border-green-500/30">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+                    <Plus className="w-5 h-5 text-white" />
+                  </div>
+                  <span className="text-white font-medium">Tambah Target Tabungan</span>
+                </div>
+                <ChevronRight className="w-5 h-5 text-white/70" />
+              </button>
+
+              <div className="relative bg-gradient-to-br from-zinc-800/80 via-zinc-900/80 to-zinc-950/80 rounded-2xl border border-zinc-700/50 shadow-xl overflow-hidden">
+                <div className="absolute inset-[1px] rounded-[14px] bg-gradient-to-br from-white/[0.02] to-transparent pointer-events-none" />
+                <div className="p-4 border-b border-zinc-800/50 bg-gradient-to-r from-zinc-900/50 to-transparent">
+                  <h3 className="text-white font-semibold flex items-center gap-2">
+                    <div className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse" />
+                    Target Aktif
+                  </h3>
+                </div>
+                <div className="p-6 text-center">
+                  <div className="w-20 h-20 bg-zinc-800/60 rounded-2xl mx-auto mb-4 flex items-center justify-center border border-zinc-700/40 shadow-inner">
+                    <PiggyBank className="w-10 h-10 text-zinc-600" />
+                  </div>
+                  <p className="text-zinc-400 font-medium mb-2">Belum ada target tabungan</p>
+                  <p className="text-zinc-500 text-sm">Buat target untuk mulai menabung</p>
+                </div>
+              </div>
+
+              <div className="relative bg-gradient-to-br from-zinc-800/80 via-zinc-900/80 to-zinc-950/80 rounded-2xl border border-zinc-700/50 shadow-xl overflow-hidden">
+                <div className="absolute inset-[1px] rounded-[14px] bg-gradient-to-br from-white/[0.02] to-transparent pointer-events-none" />
+                <div className="p-4 border-b border-zinc-800/50 bg-gradient-to-r from-zinc-900/50 to-transparent">
+                  <h3 className="text-white font-semibold flex items-center gap-2">
+                    <TrendingUp className="w-4 h-4 text-blue-400" />
+                    Tips Menabung
+                  </h3>
+                </div>
+                <div className="p-4 space-y-3">
+                  <div className="flex items-start gap-3 p-3 bg-green-500/10 rounded-xl border border-green-500/20">
+                    <div className="w-6 h-6 bg-green-500/20 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <span className="text-green-400 text-xs font-bold">1</span>
+                    </div>
+                    <p className="text-zinc-300 text-sm">Catat setiap pengeluaran untuk Awareness</p>
+                  </div>
+                  <div className="flex items-start gap-3 p-3 bg-blue-500/10 rounded-xl border border-blue-500/20">
+                    <div className="w-6 h-6 bg-blue-500/20 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <span className="text-blue-400 text-xs font-bold">2</span>
+                    </div>
+                    <p className="text-zinc-300 text-sm">Pisahkan uang kebutuhan dan keinginan</p>
+                  </div>
+                  <div className="flex items-start gap-3 p-3 bg-purple-500/10 rounded-xl border border-purple-500/20">
+                    <div className="w-6 h-6 bg-purple-500/20 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <span className="text-purple-400 text-xs font-bold">3</span>
+                    </div>
+                    <p className="text-zinc-300 text-sm">Transfer otomatis ke rekening tabungan</p>
+                  </div>
+                </div>
               </div>
             </div>
           )}
 
           {activeTab === 'account' && (
-            <div className="space-y-3">
-              <div className="bg-zinc-900 rounded-xl p-5 border border-zinc-800">
-                <div className="flex items-center gap-4 mb-5">
-                  <div className="w-14 h-14 bg-blue-600 rounded-full flex items-center justify-center">
-                    <span className="text-white text-xl font-bold">FE</span>
+            <div className="space-y-4">
+              <div className="relative bg-gradient-to-br from-zinc-800/80 via-zinc-900/80 to-zinc-950/80 rounded-2xl border border-zinc-700/50 shadow-xl overflow-hidden">
+                <div className="absolute inset-[1px] rounded-[14px] bg-gradient-to-br from-white/[0.02] to-transparent pointer-events-none" />
+                <div className="p-5">
+                  <div className="flex items-center gap-4 mb-5">
+                    <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-blue-700 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-600/30 border border-blue-500/30">
+                      <span className="text-white text-xl font-bold">FE</span>
+                    </div>
+                    <div>
+                      <h3 className="text-white font-bold text-lg">Pengguna</h3>
+                      <p className="text-zinc-500 text-sm">Kembuk Finance</p>
+                      <span className="inline-flex items-center gap-1 mt-1 px-2 py-0.5 bg-blue-500/20 rounded-full border border-blue-500/30">
+                        <span className="w-1.5 h-1.5 bg-blue-400 rounded-full"></span>
+                        <span className="text-blue-400 text-xs font-medium">Premium</span>
+                      </span>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="text-white font-bold">Pengguna</h3>
-                    <p className="text-zinc-500 text-sm">Kembuk Finance</p>
-                  </div>
-                </div>
-                <div className="space-y-3">
-                  <div className="p-3 bg-zinc-800 rounded-xl">
-                    <span className="text-zinc-500 text-sm">Total Transaksi</span>
-                    <p className="text-white font-bold">{transactions.length}</p>
-                  </div>
-                  <div className="p-3 bg-zinc-800 rounded-xl">
-                    <span className="text-zinc-500 text-sm">Total Pemasukan</span>
-                    <p className="text-green-400 font-bold">{formatCurrency(totalIncome)}</p>
-                  </div>
-                  <div className="p-3 bg-zinc-800 rounded-xl">
-                    <span className="text-zinc-500 text-sm">Total Pengeluaran</span>
-                    <p className="text-red-400 font-bold">{formatCurrency(totalExpense)}</p>
+                  <div className="grid grid-cols-3 gap-3">
+                    <div className="bg-gradient-to-br from-zinc-950/60 to-zinc-900/60 rounded-xl p-3 border border-zinc-800/60 shadow-[inset_0_1px_2px_rgba(0,0,0,0.3)] text-center">
+                      <p className="text-2xl font-bold text-white font-mono">{transactions.length}</p>
+                      <p className="text-zinc-500 text-xs">Total</p>
+                    </div>
+                    <div className="bg-gradient-to-br from-green-900/40 to-green-950/40 rounded-xl p-3 border border-green-800/40 shadow-[inset_0_1px_2px_rgba(0,0,0,0.3)] text-center">
+                      <p className="text-xl font-bold text-green-400 font-mono">{transactions.filter(t => t.type === 'income').length}</p>
+                      <p className="text-green-400/70 text-xs">Masuk</p>
+                    </div>
+                    <div className="bg-gradient-to-br from-red-900/40 to-red-950/40 rounded-xl p-3 border border-red-800/40 shadow-[inset_0_1px_2px_rgba(0,0,0,0.3)] text-center">
+                      <p className="text-xl font-bold text-red-400 font-mono">{transactions.filter(t => t.type === 'expense').length}</p>
+                      <p className="text-red-400/70 text-xs">Keluar</p>
+                    </div>
                   </div>
                 </div>
               </div>
-              
-              <div className="bg-zinc-900 rounded-xl p-5 border border-zinc-800">
-                <h4 className="text-white font-medium mb-3">Statistik</h4>
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="p-3 bg-zinc-800 rounded-xl text-center">
-                    <p className="text-2xl font-bold text-white">{transactions.filter(t => t.type === 'income').length}</p>
-                    <p className="text-zinc-500 text-xs">Pemasukan</p>
+
+              <div className="relative bg-gradient-to-br from-zinc-800/80 via-zinc-900/80 to-zinc-950/80 rounded-2xl border border-zinc-700/50 shadow-xl overflow-hidden">
+                <div className="absolute inset-[1px] rounded-[14px] bg-gradient-to-br from-white/[0.02] to-transparent pointer-events-none" />
+                <div className="p-5">
+                  <h4 className="text-white font-semibold mb-4 flex items-center gap-2">
+                    <TrendingUp className="w-4 h-4 text-blue-400" />
+                    Ringkasan Keuangan
+                  </h4>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between p-3 bg-gradient-to-br from-green-900/30 to-green-950/30 rounded-xl border border-green-800/30">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-green-500/20 rounded-xl flex items-center justify-center">
+                          <ArrowUpRight className="w-5 h-5 text-green-400" />
+                        </div>
+                        <span className="text-zinc-300 text-sm">Total Pemasukan</span>
+                      </div>
+                      <span className="text-green-400 font-bold font-mono">{formatCurrency(totalIncome)}</span>
+                    </div>
+                    <div className="flex items-center justify-between p-3 bg-gradient-to-br from-red-900/30 to-red-950/30 rounded-xl border border-red-800/30">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-red-500/20 rounded-xl flex items-center justify-center">
+                          <ArrowDownRight className="w-5 h-5 text-red-400" />
+                        </div>
+                        <span className="text-zinc-300 text-sm">Total Pengeluaran</span>
+                      </div>
+                      <span className="text-red-400 font-bold font-mono">{formatCurrency(totalExpense)}</span>
+                    </div>
+                    <div className="h-[1px] bg-gradient-to-r from-transparent via-zinc-700 to-transparent my-2" />
+                    <div className="flex items-center justify-between p-3 bg-gradient-to-br from-blue-900/30 to-blue-950/30 rounded-xl border border-blue-800/30">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-blue-500/20 rounded-xl flex items-center justify-center">
+                          <Wallet className="w-5 h-5 text-blue-400" />
+                        </div>
+                        <span className="text-white text-sm font-medium">Saldo</span>
+                      </div>
+                      <span className={`font-bold font-mono ${balance >= 0 ? 'text-blue-400' : 'text-red-400'}`}>{formatCurrency(balance)}</span>
+                    </div>
                   </div>
-                  <div className="p-3 bg-zinc-800 rounded-xl text-center">
-                    <p className="text-2xl font-bold text-white">{transactions.filter(t => t.type === 'expense').length}</p>
-                    <p className="text-zinc-500 text-xs">Pengeluaran</p>
-                  </div>
+                </div>
+              </div>
+
+              <div className="relative bg-gradient-to-br from-zinc-800/80 via-zinc-900/80 to-zinc-950/80 rounded-2xl border border-zinc-700/50 shadow-xl overflow-hidden">
+                <div className="absolute inset-[1px] rounded-[14px] bg-gradient-to-br from-white/[0.02] to-transparent pointer-events-none" />
+                <div className="p-5">
+                  <h4 className="text-white font-semibold mb-4 flex items-center gap-2">
+                    <PieChart className="w-4 h-4 text-purple-400" />
+                    Kategori Pengeluaran Terbesar
+                  </h4>
+                  {(() => {
+                    const expenseByCategory = transactions
+                      .filter(t => t.type === 'expense')
+                      .reduce((acc, t) => {
+                        acc[t.category_name] = (acc[t.category_name] || 0) + t.amount
+                        return acc
+                      }, {} as Record<string, number>)
+                    
+                    const sortedCategories = Object.entries(expenseByCategory)
+                      .sort(([, a], [, b]) => b - a)
+                      .slice(0, 5)
+                    
+                    if (sortedCategories.length === 0) {
+                      return (
+                        <div className="text-center py-6">
+                          <Receipt className="w-10 h-10 text-zinc-700 mx-auto mb-2" />
+                          <p className="text-zinc-500 text-sm">Belum ada data pengeluaran</p>
+                        </div>
+                      )
+                    }
+                    
+                    const maxAmount = sortedCategories[0][1]
+                    
+                    return (
+                      <div className="space-y-3">
+                        {sortedCategories.map(([category, amount], i) => (
+                          <div key={category} className="space-y-1.5">
+                            <div className="flex items-center justify-between text-sm">
+                              <span className="text-zinc-300">{category}</span>
+                              <span className="text-zinc-400 font-mono">{formatCurrency(amount)}</span>
+                            </div>
+                            <div className="h-2 bg-zinc-900/60 rounded-full overflow-hidden border border-zinc-800/40">
+                              <div 
+                                className="h-full bg-gradient-to-r from-purple-500 to-purple-400 rounded-full transition-all duration-500"
+                                style={{ width: `${(amount / maxAmount) * 100}%` }}
+                              />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )
+                  })()}
                 </div>
               </div>
             </div>
