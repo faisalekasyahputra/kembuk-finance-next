@@ -623,59 +623,112 @@ export default function Dashboard() {
         <main className="p-4 lg:p-6 max-w-3xl lg:mx-auto">
           {activeTab === 'home' && (
             <div className="space-y-4">
-              <div className="bg-zinc-900 rounded-2xl p-5 border border-zinc-800">
-                <div className="flex items-center gap-2 mb-3">
-                  <div className="p-1.5 bg-zinc-800 rounded-lg border border-zinc-700">
-                    <Wallet className="w-4 h-4 text-zinc-400" />
+              <div className="relative">
+                <div className="absolute -inset-1 bg-gradient-to-r from-zinc-600 via-zinc-500 to-zinc-600 rounded-[22px] opacity-40 blur-sm" />
+                <div className="relative bg-gradient-to-b from-zinc-750 via-zinc-800 to-zinc-850 rounded-2xl p-6 border border-zinc-600/50 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1),0_8px_25px_rgba(0,0,0,0.5)]">
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/[0.03] via-transparent to-transparent rounded-2xl pointer-events-none" />
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-3">
+                      <div className="relative">
+                        <div className="absolute -inset-0.5 bg-blue-500/30 rounded-xl blur-md" />
+                        <div className="relative p-2 bg-gradient-to-br from-zinc-700 via-zinc-800 to-zinc-900 rounded-xl border-t border-l border-zinc-500/50 shadow-[inset_0_1px_1px_rgba(255,255,255,0.2),0_2px_4px_rgba(0,0,0,0.3)]">
+                          <Wallet className="w-5 h-5 text-blue-400" />
+                        </div>
+                      </div>
+                      <div>
+                        <p className="text-zinc-300 text-sm font-medium tracking-wide">SALDO</p>
+                        <p className="text-zinc-500 text-xs">Total Keseluruhan</p>
+                      </div>
+                    </div>
+                    <div className="w-10 h-10 bg-gradient-to-br from-green-500/20 to-green-600/20 rounded-xl flex items-center justify-center border border-green-500/30 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]">
+                      <TrendingUp className="w-5 h-5 text-green-400" />
+                    </div>
                   </div>
-                  <p className="text-zinc-400 text-sm font-medium">Total Balance</p>
-                </div>
-                <div className="bg-zinc-950 rounded-xl p-4 border border-zinc-800">
-                  <h2 className="text-4xl font-bold font-mono text-white tracking-tight">
-                    {formatCurrency(balance)}
-                  </h2>
+                  <div className="relative">
+                    <div className="absolute -inset-0.5 bg-gradient-to-r from-green-500/15 via-emerald-500/15 to-green-500/15 rounded-xl blur-sm" />
+                    <div className="relative bg-gradient-to-b from-zinc-950 via-zinc-900 to-zinc-950 rounded-xl p-5 border-t border-l border-zinc-700/60 shadow-[inset_0_3px_6px_rgba(0,0,0,0.7),inset_0_-1px_1px_rgba(255,255,255,0.03)]">
+                      <div className="flex items-baseline gap-2">
+                        <span className="text-zinc-500 text-xl font-mono">Rp</span>
+                        <span className="text-4xl font-bold font-mono text-white tracking-wider drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+                          {balance.toLocaleString('id-ID')}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              <button
-                onClick={() => setActiveTab('transactions')}
-                className="w-full bg-zinc-800 rounded-xl p-4 flex items-center justify-between border border-zinc-700 hover:bg-zinc-700 transition-colors"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-zinc-700 rounded-xl flex items-center justify-center border border-zinc-600">
-                    <TrendingUp className="w-5 h-5 text-zinc-300" />
+              <div className="relative">
+                <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 via-blue-500 to-purple-600 rounded-[18px] opacity-50 blur-sm" />
+                <button
+                  onClick={() => setActiveTab('transactions')}
+                  className="relative w-full bg-gradient-to-b from-blue-700 via-blue-800 to-blue-900 rounded-xl p-5 border-t border-l border-blue-400/40 shadow-[inset_0_1px_1px_rgba(255,255,255,0.2),inset_0_-1px_1px_rgba(0,0,0,0.4),0_4px_15px_rgba(59,130,246,0.3)] hover:shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),inset_0_-1px_1px_rgba(0,0,0,0.5),0_6px_20px_rgba(59,130,246,0.5)] transition-all active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)] active:translate-y-[1px]"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-xl pointer-events-none" />
+                  <div className="relative flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center shadow-[inset_0_1px_2px_rgba(255,255,255,0.3),0_2px_4px_rgba(0,0,0,0.3)] backdrop-blur-sm border border-white/20">
+                        <TrendingUp className="w-7 h-7 text-white" />
+                      </div>
+                      <div className="text-left">
+                        <span className="text-white font-bold text-lg block drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">Lihat Ringkasan</span>
+                        <span className="text-blue-200/80 text-sm">Semua transaksi kamu</span>
+                      </div>
+                    </div>
+                    <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center border border-white/20 shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)]">
+                      <ChevronRight className="w-6 h-6 text-white/80" />
+                    </div>
                   </div>
-                  <div className="text-left">
-                    <span className="text-white font-bold block">Lihat Ringkasan</span>
-                    <span className="text-zinc-400 text-sm">Semua transaksi</span>
+                </button>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="relative">
+                  <div className="absolute -inset-1 bg-gradient-to-b from-green-600/30 to-green-700/30 rounded-[16px] blur-sm" />
+                  <div className="relative bg-gradient-to-b from-zinc-750 via-zinc-800 to-zinc-850 rounded-xl p-4 border-t border-l border-zinc-600/40 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1),0_4px_10px_rgba(0,0,0,0.4)]">
+                    <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 via-transparent to-transparent rounded-xl pointer-events-none" />
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="w-11 h-11 bg-gradient-to-br from-green-600 via-green-700 to-green-800 rounded-xl flex items-center justify-center border-t border-l border-green-400/40 shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),0_2px_4px_rgba(0,0,0,0.3)]">
+                        <ArrowUpRight className="w-5 h-5 text-green-200" />
+                      </div>
+                      <div>
+                        <p className="text-green-400/80 text-xs font-medium">PEMASUKAN</p>
+                        <p className="text-green-500/60 text-[10px]">Bulan ini</p>
+                      </div>
+                    </div>
+                    <div className="relative">
+                      <div className="absolute -inset-0.5 bg-green-500/10 rounded-lg blur-sm" />
+                      <div className="relative bg-gradient-to-b from-zinc-950 via-zinc-900 to-zinc-950 rounded-lg p-3 border-t border-l border-green-700/50 shadow-[inset_0_2px_4px_rgba(0,0,0,0.6)]">
+                        <p className="text-green-400 font-bold font-mono text-lg tracking-wide drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">
+                          {formatCurrency(totalIncome)}
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <ChevronRight className="w-5 h-5 text-zinc-400" />
-              </button>
 
-              <div className="grid grid-cols-2 gap-3">
-                <div className="bg-zinc-900 rounded-xl p-4 border border-zinc-800">
-                  <div className="flex items-center gap-2 mb-2">
-                    <div className="w-9 h-9 bg-zinc-800 rounded-lg flex items-center justify-center border border-zinc-700">
-                      <ArrowUpRight className="w-4 h-4 text-green-500" />
+                <div className="relative">
+                  <div className="absolute -inset-1 bg-gradient-to-b from-red-600/30 to-red-700/30 rounded-[16px] blur-sm" />
+                  <div className="relative bg-gradient-to-b from-zinc-750 via-zinc-800 to-zinc-850 rounded-xl p-4 border-t border-l border-zinc-600/40 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1),0_4px_10px_rgba(0,0,0,0.4)]">
+                    <div className="absolute inset-0 bg-gradient-to-br from-red-500/5 via-transparent to-transparent rounded-xl pointer-events-none" />
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="w-11 h-11 bg-gradient-to-br from-red-600 via-red-700 to-red-800 rounded-xl flex items-center justify-center border-t border-l border-red-400/40 shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),0_2px_4px_rgba(0,0,0,0.3)]">
+                        <ArrowDownRight className="w-5 h-5 text-red-200" />
+                      </div>
+                      <div>
+                        <p className="text-red-400/80 text-xs font-medium">PENGELUARAN</p>
+                        <p className="text-red-500/60 text-[10px]">Bulan ini</p>
+                      </div>
                     </div>
-                    <span className="text-zinc-400 text-xs font-medium">Pemasukan</span>
-                  </div>
-                  <p className="text-green-500 font-bold font-mono">
-                    {formatCurrency(totalIncome)}
-                  </p>
-                </div>
-
-                <div className="bg-zinc-900 rounded-xl p-4 border border-zinc-800">
-                  <div className="flex items-center gap-2 mb-2">
-                    <div className="w-9 h-9 bg-zinc-800 rounded-lg flex items-center justify-center border border-zinc-700">
-                      <ArrowDownRight className="w-4 h-4 text-red-500" />
+                    <div className="relative">
+                      <div className="absolute -inset-0.5 bg-red-500/10 rounded-lg blur-sm" />
+                      <div className="relative bg-gradient-to-b from-zinc-950 via-zinc-900 to-zinc-950 rounded-lg p-3 border-t border-l border-red-700/50 shadow-[inset_0_2px_4px_rgba(0,0,0,0.6)]">
+                        <p className="text-red-400 font-bold font-mono text-lg tracking-wide drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">
+                          {formatCurrency(totalExpense)}
+                        </p>
+                      </div>
                     </div>
-                    <span className="text-zinc-400 text-xs font-medium">Pengeluaran</span>
                   </div>
-                  <p className="text-red-500 font-bold font-mono">
-                    {formatCurrency(totalExpense)}
-                  </p>
                 </div>
               </div>
 
