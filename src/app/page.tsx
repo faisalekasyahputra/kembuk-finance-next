@@ -9,7 +9,7 @@ import {
   ArrowLeftRight, Building2, Plane, Gift, Home, Gamepad2, GraduationCap, Baby,
   TrendingDown, DollarSign, Percent, Calendar, Search, Bell, Settings, LogOut,
   ChevronRight, ChevronDown, MoreVertical, Edit3, Trash2, Download, Share2,
-  Send, Image, Moon, Sun, PieChart
+  Send, Image, Moon, Sun, PieChart, Target, Check, AlertCircle, Trash
 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { formatCurrency } from '@/lib/formatters'
@@ -25,6 +25,7 @@ type Transaction = {
   description: string
   date: string
   created_at: string
+  target_ids?: string[]
 }
 
 type Category = {
@@ -32,6 +33,25 @@ type Category = {
   name: string
   icon: string
   group: string
+}
+
+type Target = {
+  id: string
+  name: string
+  amount: number
+  due_date: string | null
+  is_recurring: boolean
+  category_id: string | null
+  created_at: string
+}
+
+type TargetPayment = {
+  id: string
+  target_id: string
+  amount: number
+  paid_at: string
+  transaction_id: string | null
+  kf_targets?: Target
 }
 
 const defaultCategories: Category[] = [
@@ -252,10 +272,13 @@ export default function Dashboard() {
   const [balance, setBalance] = useState(0)
   const [totalIncome, setTotalIncome] = useState(0)
   const [totalExpense, setTotalExpense] = useState(0)
+  const [targets, setTargets] = useState<Target[]>([])
+  const [targetPayments, setTargetPayments] = useState<TargetPayment[]>([])
   const [showAddModal, setShowAddModal] = useState(false)
   const [showAddOptions, setShowAddOptions] = useState(false)
   const [showReceiptModal, setShowReceiptModal] = useState(false)
   const [showReceiptExport, setShowReceiptExport] = useState(false)
+  const [showAddTargetModal, setShowAddTargetModal] = useState(false)
   const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null)
   const [analyzing, setAnalyzing] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
@@ -267,6 +290,13 @@ export default function Dashboard() {
     category_id: '',
     description: '',
     date: new Date().toISOString().split('T')[0],
+    target_ids: [] as string[],
+  })
+  const [newTarget, setNewTarget] = useState({
+    name: '',
+    amount: '',
+    due_date: '',
+    is_recurring: true,
   })
 
   const showToast = (message: string, type: 'success' | 'error' | 'info' = 'info') => {
@@ -276,10 +306,16 @@ export default function Dashboard() {
 
   useEffect(() => {
     fetchTransactions()
+    fetchTargets()
+    fetchTargetPayments()
   }, [])
 
   useEffect(() => {
-    const handleFocus = () => fetchTransactions()
+    const handleFocus = () => {
+      fetchTransactions()
+      fetchTargets()
+      fetchTargetPayments()
+    }
     window.addEventListener('focus', handleFocus)
     return () => window.removeEventListener('focus', handleFocus)
   }, [])
@@ -318,8 +354,112 @@ export default function Dashboard() {
     setBalance(income - expense)
   }
 
+  const fetchTargets = async () => {
+    try {
+      const res = await fetch('/api/targets')
+      const data = await res.json()
+      if (data.targets) {
+        setTargets(data.targets)
+      }
+    } catch (error) {
+      console.error('Error fetching targets:', error)
+    }
+  }
+
+  const fetchTargetPayments = async () => {
+    try {
+      const res = await fetch('/api/target-payments')
+      const data = await res.json()
+      if (data.payments) {
+        setTargetPayments(data.payments)
+      }
+    } catch (error) {
+      console.error('Error fetching target payments:', error)
+    }
+  }
+
+  const handleAddTarget = async () => {
+    if (!newTarget.name || !newTarget.amount) {
+      showToast('Nama dan jumlah harus diisi', 'error')
+      return
+    }
+
+    try {
+      const res = await fetch('/api/targets', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: newTarget.name,
+          amount: parseFloat(newTarget.amount),
+          due_date: newTarget.due_date || null,
+          is_recurring: newTarget.is_recurring,
+        }),
+      })
+      const data = await res.json()
+      if (data.target) {
+        showToast('Target berhasil ditambahkan', 'success')
+        setTargets([...targets, data.target])
+        setNewTarget({ name: '', amount: '', due_date: '', is_recurring: true })
+        setShowAddTargetModal(false)
+      }
+    } catch (error) {
+      showToast('Gagal menambahkan target', 'error')
+    }
+  }
+
+  const handleDeleteTarget = async (id: string) => {
+    try {
+      const res = await fetch(`/api/targets/${id}`, { method: 'DELETE' })
+      if (res.ok) {
+        showToast('Target berhasil dihapus', 'success')
+        setTargets(targets.filter(t => t.id !== id))
+      }
+    } catch (error) {
+      showToast('Gagal menghapus target', 'error')
+    }
+  }
+
+  const handleToggleTargetPayment = async (target: Target) => {
+    const existingPayment = targetPayments.find(
+      p => p.target_id === target.id && 
+           new Date(p.paid_at).getMonth() === new Date().getMonth()
+    )
+
+    if (existingPayment) {
+      try {
+        const res = await fetch(`/api/target-payments/${existingPayment.id}`, {
+          method: 'DELETE'
+        })
+        if (res.ok) {
+          setTargetPayments(targetPayments.filter(p => p.id !== existingPayment.id))
+          showToast('Target取消标记为未支付', 'info')
+        }
+      } catch (error) {
+        showToast('Gagal mengupdate target', 'error')
+      }
+    } else {
+      try {
+        const res = await fetch('/api/target-payments', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            target_id: target.id,
+            amount: target.amount,
+          }),
+        })
+        const data = await res.json()
+        if (data.payment) {
+          setTargetPayments([...targetPayments, data.payment])
+          showToast('Target berhasil dibayar', 'success')
+        }
+      } catch (error) {
+        showToast('Gagal mengupdate target', 'error')
+      }
+    }
+  }
+
   const handleAddTransaction = async () => {
-    if (!formData.amount || !formData.category_id) return
+    if (!formData.amount) return
 
     const category = defaultCategories.find(c => c.id === formData.category_id)
     
@@ -327,7 +467,7 @@ export default function Dashboard() {
       id: crypto.randomUUID(),
       user_id: 'shared',
       type: formData.type,
-      category_id: formData.category_id,
+      category_id: formData.category_id || null,
       category_name: category?.name || 'Lainnya',
       category_group: formData.type === 'income' ? 'income' : 'expense',
       amount: parseFloat(formData.amount),
@@ -347,6 +487,21 @@ export default function Dashboard() {
         return
       }
 
+      if (formData.target_ids.length > 0) {
+        for (const targetId of formData.target_ids) {
+          await fetch('/api/target-payments', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              target_id: targetId,
+              amount: parseFloat(formData.amount) / formData.target_ids.length,
+              transaction_id: newTransaction.id,
+            }),
+          })
+        }
+        await fetchTargetPayments()
+      }
+
       console.log('Transaction saved successfully')
       await fetchTransactions()
       
@@ -360,6 +515,7 @@ export default function Dashboard() {
         category_id: '',
         description: '',
         date: new Date().toISOString().split('T')[0],
+        target_ids: [],
       })
     } catch (error) {
       console.error('Error adding transaction:', error)
@@ -531,9 +687,9 @@ export default function Dashboard() {
 
   const navItems = [
     { id: 'home', icon: Wallet, label: 'Beranda' },
+    { id: 'targets', icon: Target, label: 'Target' },
     { id: 'transactions', icon: Receipt, label: 'Transaksi' },
     { id: 'receipt', icon: Printer, label: 'Struk' },
-    { id: 'savings', icon: PiggyBank, label: 'Tabungan' },
     { id: 'account', icon: User, label: 'Akun' },
   ]
 
@@ -613,8 +769,8 @@ export default function Dashboard() {
           <div className="flex items-center justify-between">
             <h1 className="text-white font-bold">
               {activeTab === 'home' && 'Beranda'}
+              {activeTab === 'targets' && 'Target'}
               {activeTab === 'transactions' && 'Transaksi'}
-              {activeTab === 'savings' && 'Tabungan'}
               {activeTab === 'account' && 'Akun'}
             </h1>
           </div>
@@ -960,6 +1116,105 @@ export default function Dashboard() {
             </div>
           )}
 
+          {activeTab === 'targets' && (
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <h2 className="text-white font-bold text-lg">Target Checklist</h2>
+                <button
+                  onClick={() => setShowAddTargetModal(true)}
+                  className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-xl text-white text-sm font-medium flex items-center gap-2"
+                >
+                  <Plus className="w-4 h-4" />
+                  Tambah
+                </button>
+              </div>
+
+              {targets.length === 0 ? (
+                <div className="bg-zinc-900 rounded-xl p-8 border border-zinc-800 text-center">
+                  <Target className="w-12 h-12 text-zinc-700 mx-auto mb-3" />
+                  <p className="text-zinc-500 mb-2">Belum ada target</p>
+                  <p className="text-zinc-600 text-sm">Tambah target pengeluaran tetap</p>
+                </div>
+              ) : (
+                <>
+                  <div className="bg-zinc-900 rounded-xl p-4 border border-zinc-800">
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-zinc-400 text-sm">
+                        {new Date().toLocaleDateString('id-ID', { month: 'long', year: 'numeric' })}
+                      </span>
+                      <span className="text-zinc-500 text-sm">
+                        {targetPayments.length}/{targets.length} selesai
+                      </span>
+                    </div>
+                    <div className="w-full h-2 bg-zinc-800 rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-green-500 transition-all duration-300"
+                        style={{ width: `${targets.length > 0 ? (targetPayments.length / targets.length) * 100 : 0}%` }}
+                      />
+                    </div>
+                    <div className="mt-2 text-right">
+                      <span className="text-green-400 font-bold">
+                        Total: {formatCurrency(targets.reduce((sum, t) => sum + t.amount, 0))}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    {targets.map((target) => {
+                      const isPaid = targetPayments.some(
+                        p => p.target_id === target.id &&
+                             new Date(p.paid_at).getMonth() === new Date().getMonth()
+                      )
+                      return (
+                        <div
+                          key={target.id}
+                          className={`bg-zinc-900 rounded-xl p-4 border transition-all cursor-pointer ${
+                            isPaid ? 'border-green-600/50 bg-green-900/20' : 'border-zinc-800 hover:border-zinc-700'
+                          }`}
+                          onClick={() => handleToggleTargetPayment(target)}
+                        >
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                              <div className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all ${
+                                isPaid ? 'bg-green-500 border-green-500' : 'border-zinc-600'
+                              }`}>
+                                {isPaid && <Check className="w-4 h-4 text-white" />}
+                              </div>
+                              <div>
+                                <p className={`font-medium ${isPaid ? 'text-green-400 line-through' : 'text-white'}`}>
+                                  {target.name}
+                                </p>
+                                {target.due_date && (
+                                  <p className="text-zinc-500 text-xs">
+                                    Jatuh tempo: {new Date(target.due_date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })}
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-3">
+                              <span className={`font-mono font-bold ${isPaid ? 'text-green-400' : 'text-red-400'}`}>
+                                {formatCurrency(target.amount)}
+                              </span>
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  handleDeleteTarget(target.id)
+                                }}
+                                className="p-2 text-zinc-500 hover:text-red-500 transition-colors"
+                              >
+                                <Trash className="w-4 h-4" />
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </>
+              )}
+            </div>
+          )}
+
           {activeTab === 'savings' && (
             <div className="space-y-3">
               <div className="bg-zinc-900 rounded-xl p-5 border border-zinc-800">
@@ -1242,19 +1497,52 @@ export default function Dashboard() {
                 </div>
 
                 <div>
-                  <label className="text-zinc-400 text-xs font-medium mb-1.5 block">Kategori</label>
-                  <select
-                    value={formData.category_id}
-                    onChange={(e) => setFormData({ ...formData, category_id: e.target.value })}
-                    className="w-full px-3 py-3 bg-zinc-950 border border-zinc-700 rounded-lg text-white focus:outline-none focus:border-zinc-600"
-                  >
-                    <option value="">Pilih kategori</option>
-                    {defaultCategories
-                      .filter(c => formData.type === 'income' ? c.group === 'income' : c.group === 'expense')
-                      .map(c => (
-                        <option key={c.id} value={c.id}>{c.name}</option>
-                      ))}
-                  </select>
+                  <label className="text-zinc-400 text-xs font-medium mb-1.5 block">Target (opsional)</label>
+                  <div className="border border-zinc-700 rounded-lg overflow-hidden bg-zinc-950">
+                    <div className="p-2 max-h-40 overflow-y-auto space-y-1">
+                      {targets.length === 0 ? (
+                        <p className="text-zinc-500 text-sm p-2">Belum ada target. Tambah di tab Target.</p>
+                      ) : (
+                        targets.map((target) => {
+                          const isSelected = formData.target_ids.includes(target.id)
+                          return (
+                            <label
+                              key={target.id}
+                              className={`flex items-center gap-3 p-2 rounded-lg cursor-pointer transition-colors ${
+                                isSelected ? 'bg-green-900/30' : 'hover:bg-zinc-800/50'
+                              }`}
+                            >
+                              <input
+                                type="checkbox"
+                                checked={isSelected}
+                                onChange={(e) => {
+                                  if (e.target.checked) {
+                                    setFormData({
+                                      ...formData,
+                                      target_ids: [...formData.target_ids, target.id],
+                                      amount: target.amount.toString(),
+                                    })
+                                  } else {
+                                    setFormData({
+                                      ...formData,
+                                      target_ids: formData.target_ids.filter(id => id !== target.id),
+                                    })
+                                  }
+                                }}
+                                className="w-4 h-4 rounded border-zinc-600 text-green-500 focus:ring-green-500"
+                              />
+                              <div className="flex-1">
+                                <span className="text-white text-sm">{target.name}</span>
+                              </div>
+                              <span className="text-zinc-400 text-xs font-mono">
+                                {formatCurrency(target.amount)}
+                              </span>
+                            </label>
+                          )
+                        })
+                      )}
+                    </div>
+                  </div>
                 </div>
 
                 <div>
@@ -1374,6 +1662,84 @@ export default function Dashboard() {
         onChange={handleReceiptUpload}
         className="hidden"
       />
+
+      {/* Add Target Modal */}
+      {showAddTargetModal && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-xl z-50 flex items-center justify-center p-4">
+          <div className="w-full max-w-md" onClick={() => setShowAddTargetModal(false)}>
+            <div className="relative bg-gradient-to-br from-zinc-800/95 via-zinc-900/95 to-zinc-950/95 rounded-3xl border border-zinc-700/50 shadow-2xl shadow-black/50 overflow-hidden backdrop-blur-xl" onClick={e => e.stopPropagation()}>
+              <div className="absolute inset-[1px] rounded-[22px] bg-gradient-to-br from-white/[0.03] to-transparent pointer-events-none" />
+              <div className="relative">
+                <div className="p-5 border-b border-zinc-800/60 flex items-center justify-between bg-gradient-to-r from-zinc-900/50 to-transparent">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-gradient-to-br from-green-600/30 to-green-800/30 rounded-xl border border-green-500/30 shadow-[inset_0_1px_2px_rgba(255,255,255,0.1)]">
+                      <Target className="w-5 h-5 text-green-400" />
+                    </div>
+                    <h3 className="text-white font-bold text-lg">Tambah Target</h3>
+                  </div>
+                  <button onClick={() => setShowAddTargetModal(false)} className="p-2 bg-zinc-800/60 rounded-xl border border-zinc-700/40 hover:bg-zinc-700/60 transition-colors">
+                    <X className="w-5 h-5 text-zinc-400" />
+                  </button>
+                </div>
+
+                <div className="p-5 space-y-4">
+                  <div>
+                    <label className="text-zinc-400 text-sm font-medium mb-2 block">Nama Target</label>
+                    <input
+                      type="text"
+                      value={newTarget.name}
+                      onChange={(e) => setNewTarget({ ...newTarget, name: e.target.value })}
+                      placeholder="Contoh: Listrik PLN"
+                      className="w-full px-4 py-3 bg-zinc-950/80 border border-zinc-700/60 rounded-xl text-white placeholder-zinc-600 focus:outline-none focus:border-green-500/50 transition-all"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-zinc-400 text-sm font-medium mb-2 block">Jumlah</label>
+                    <input
+                      type="number"
+                      value={newTarget.amount}
+                      onChange={(e) => setNewTarget({ ...newTarget, amount: e.target.value })}
+                      placeholder="0"
+                      className="w-full px-4 py-3 bg-zinc-950/80 border border-zinc-700/60 rounded-xl text-white placeholder-zinc-600 focus:outline-none focus:border-green-500/50 transition-all"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-zinc-400 text-sm font-medium mb-2 block">Tanggal Jatuh Tempo (opsional)</label>
+                    <input
+                      type="date"
+                      value={newTarget.due_date}
+                      onChange={(e) => setNewTarget({ ...newTarget, due_date: e.target.value })}
+                      className="w-full px-4 py-3 bg-zinc-950/80 border border-zinc-700/60 rounded-xl text-white focus:outline-none focus:border-green-500/50 transition-all"
+                    />
+                  </div>
+
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="checkbox"
+                      id="is_recurring"
+                      checked={newTarget.is_recurring}
+                      onChange={(e) => setNewTarget({ ...newTarget, is_recurring: e.target.checked })}
+                      className="w-5 h-5 rounded bg-zinc-950 border-zinc-700 text-green-500 focus:ring-green-500"
+                    />
+                    <label htmlFor="is_recurring" className="text-zinc-400 text-sm">
+                      Berulang setiap bulan
+                    </label>
+                  </div>
+
+                  <button
+                    onClick={handleAddTarget}
+                    className="w-full py-4 bg-gradient-to-r from-green-600 to-green-700 rounded-xl text-white font-bold hover:from-green-700 hover:to-green-800 transition-all shadow-lg shadow-green-600/30 border border-green-500/30"
+                  >
+                    Simpan Target
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Add Options Modal */}
       {showAddOptions && (
