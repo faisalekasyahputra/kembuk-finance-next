@@ -31,8 +31,10 @@ type Transaction = {
 type Category = {
   id: string
   name: string
+  name_id: string
   icon: string
-  group: string
+  color: string
+  group_type: string
 }
 
 type Target = {
@@ -53,28 +55,6 @@ type TargetPayment = {
   transaction_id: string | null
   kf_targets?: Target
 }
-
-const defaultCategories: Category[] = [
-  { id: '1316db21-8b3e-4b16-9ac3-d7ad008f63ff', name: 'Bensin', icon: 'Fuel', group: 'expense' },
-  { id: '1d235330-090a-447f-b3db-2aa47e01db67', name: 'Rokok', icon: 'Cigarette', group: 'expense' },
-  { id: 'ced99f4f-a3c1-4434-9496-edf78ed28d8f', name: 'Listrik', icon: 'Zap', group: 'expense' },
-  { id: '95593a08-6e21-4260-9064-d728a0b42813', name: 'Wifi', icon: 'Wifi', group: 'expense' },
-  { id: 'cbc83d63-0c37-4326-8038-df1ee127fb86', name: 'Service Motor', icon: 'Wrench', group: 'expense' },
-  { id: '58728828-ee06-4d19-8f8e-c0bf8120057c', name: 'Cicilan', icon: 'CreditCard', group: 'expense' },
-  { id: '34b1475a-1bd6-4239-9e70-c8316b159b5f', name: 'Kuota', icon: 'Smartphone', group: 'expense' },
-  { id: '2a43d9f5-165a-46a6-a30f-0f6f683c2d7f', name: 'Google Drive', icon: 'HardDrive', group: 'expense' },
-  { id: '48c948ff-f155-46b7-8b6e-c0d58cc117dc', name: 'iCloud', icon: 'Cloud', group: 'expense' },
-  { id: 'cd2bf5ca-115d-4e94-8c0e-2df65206e5ea', name: 'Streaming', icon: 'Tv', group: 'expense' },
-  { id: '7a32aefb-2f84-459c-856e-b656e77666af', name: 'Laundry', icon: 'Shirt', group: 'expense' },
-  { id: '5606a0f2-8e20-44f8-9938-1b382f33fb68', name: 'Gemini AI', icon: 'Sparkles', group: 'expense' },
-  { id: '4a1d493c-9faf-4823-8ac4-2d1668d92463', name: 'Twitter', icon: 'Bird', group: 'expense' },
-  { id: 'a1b2c3d4-e5f6-7890-abcd-ef1234567899', name: 'Lainnya', icon: 'Package', group: 'expense' },
-  { id: '7b317b60-3011-4205-8465-bd8f09cd88e0', name: 'SIR ANGKI', icon: 'Briefcase', group: 'income' },
-  { id: '57a4fd47-8bc9-4113-ad02-ec0f822ea7a1', name: 'MELLY', icon: 'DollarSign', group: 'income' },
-  { id: '1bdc4fab-9691-4822-870e-62d398b686ec', name: 'RAPID', icon: 'Plane', group: 'income' },
-  { id: 'c7951d88-72f5-4261-bbac-50719a5342ad', name: 'ADHI', icon: 'Building2', group: 'income' },
-  { id: 'ac0e5853-f9da-4ad9-aa4b-97304529550c', name: 'FLATYFOOS', icon: 'Gift', group: 'income' },
-]
 
 const iconMap: Record<string, React.ComponentType<{className?: string, size?: number}>> = {
   Fuel, Cigarette, Zap, Wifi, Wrench, CreditCard, Smartphone, HardDrive, Cloud,
@@ -273,6 +253,7 @@ export default function Dashboard() {
   const [totalIncome, setTotalIncome] = useState(0)
   const [totalExpense, setTotalExpense] = useState(0)
   const [targets, setTargets] = useState<Target[]>([])
+  const [categories, setCategories] = useState<Category[]>([])
   const [targetPayments, setTargetPayments] = useState<TargetPayment[]>([])
   const [showAddModal, setShowAddModal] = useState(false)
   const [showAddOptions, setShowAddOptions] = useState(false)
@@ -308,6 +289,7 @@ export default function Dashboard() {
     fetchTransactions()
     fetchTargets()
     fetchTargetPayments()
+    fetchCategories()
   }, [])
 
   useEffect(() => {
@@ -315,6 +297,7 @@ export default function Dashboard() {
       fetchTransactions()
       fetchTargets()
       fetchTargetPayments()
+      fetchCategories()
     }
     window.addEventListener('focus', handleFocus)
     return () => window.removeEventListener('focus', handleFocus)
@@ -363,6 +346,20 @@ export default function Dashboard() {
       }
     } catch (error) {
       console.error('Error fetching targets:', error)
+    }
+  }
+
+  const fetchCategories = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('kf_categories')
+        .select('*')
+        .order('name', { ascending: true })
+      if (data) {
+        setCategories(data)
+      }
+    } catch (error) {
+      console.error('Error fetching categories:', error)
     }
   }
 
@@ -461,7 +458,7 @@ export default function Dashboard() {
   const handleAddTransaction = async () => {
     if (!formData.amount) return
 
-    const category = defaultCategories.find(c => c.id === formData.category_id)
+    const category = categories.find(c => c.id === formData.category_id)
     
     const newTransaction = {
       id: crypto.randomUUID(),
@@ -469,7 +466,7 @@ export default function Dashboard() {
       type: formData.type,
       category_id: formData.category_id || null,
       category_name: category?.name || 'Lainnya',
-      category_group: formData.type === 'income' ? 'income' : 'expense',
+      category_group: category?.group_type || formData.type,
       amount: parseFloat(formData.amount),
       description: formData.description || 'Transaksi',
       date: formData.date,
@@ -660,9 +657,9 @@ export default function Dashboard() {
       const result = await response.json()
 
       if (result.success) {
-        const category = defaultCategories.find(c => 
+        const category = categories.find(c => 
           c.name.toLowerCase().includes(result.data.category?.toLowerCase() || '')
-        ) || defaultCategories[9]
+        ) || categories[9]
 
         setFormData({
           type: 'expense',
@@ -1004,7 +1001,7 @@ export default function Dashboard() {
                 ) : (
                   <div className="divide-y divide-zinc-800">
                     {todayTransactions.slice(0, 5).map((t) => {
-                      const category = defaultCategories.find(c => c.id === t.category_id)
+                      const category = categories.find(c => c.id === t.category_id)
                       const IconComponent = iconMap[category?.icon || 'Package'] || Package
                       return (
                         <div key={t.id} className="px-4 py-3 flex items-center justify-between hover:bg-zinc-800/50 transition-colors group">
@@ -1084,7 +1081,7 @@ export default function Dashboard() {
                 <div className="bg-zinc-900 rounded-xl border border-zinc-800 overflow-hidden">
                   <div className="divide-y divide-zinc-800">
                     {transactions.map((t) => {
-                      const category = defaultCategories.find(c => c.id === t.category_id)
+                      const category = categories.find(c => c.id === t.category_id)
                       const IconComponent = iconMap[category?.icon || 'Package'] || Package
                       return (
                         <div key={t.id} className="px-4 py-3 flex items-center justify-between hover:bg-zinc-800/50 transition-colors group">
@@ -1486,8 +1483,8 @@ export default function Dashboard() {
                 <div>
                   <label className="text-zinc-400 text-xs font-medium mb-1.5 block">Kategori</label>
                   <div className="grid grid-cols-3 gap-2 max-h-48 overflow-y-auto p-1">
-                    {defaultCategories
-                      .filter(cat => cat.group === formData.type)
+                    {categories
+                      .filter(cat => cat.group_type === formData.type)
                       .map((cat) => {
                         const IconComponent = iconMap[cat.icon] || Package
                         const isSelected = formData.category_id === cat.id
