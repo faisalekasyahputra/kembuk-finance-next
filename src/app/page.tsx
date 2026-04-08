@@ -373,6 +373,7 @@ export default function Dashboard() {
     fetchCategories()
     fetchSavings()
     fetchSavingsTargets()
+    calculateAutoSave()
   }, [])
 
   useEffect(() => {
@@ -382,6 +383,8 @@ export default function Dashboard() {
       fetchTargetPayments()
       fetchCategories()
       fetchSavings()
+      fetchSavingsTargets()
+      calculateAutoSave()
       fetchSavingsTargets()
     }
     window.addEventListener('focus', handleFocus)
@@ -469,6 +472,21 @@ export default function Dashboard() {
       }
     } catch (error) {
       console.error('Error fetching savings targets:', error)
+    }
+  }
+
+  const calculateAutoSave = async () => {
+    try {
+      const res = await fetch('/api/savings/calculate', { method: 'POST' })
+      const data = await res.json()
+      if (data.savings) {
+        setSavings(data.savings)
+      }
+      if (data.targets) {
+        setSavingsTargets(data.targets)
+      }
+    } catch (error) {
+      console.error('Error calculating auto-save:', error)
     }
   }
 
@@ -610,6 +628,8 @@ export default function Dashboard() {
 
       console.log('Transaction saved successfully')
       await fetchTransactions()
+      
+      await calculateAutoSave()
       
       sendTransactionReceipt(newTransaction)
       
