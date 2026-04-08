@@ -245,7 +245,7 @@ function ReceiptExportView({ transactions, balance, totalIncome, totalExpense, o
   )
 }
 
-function SavingsTargetModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: () => void }) {
+function SavingsTargetModal({ onClose, onSuccess, onCreate }: { onClose: () => void; onSuccess: () => void; onCreate?: () => void }) {
   const [name, setName] = useState('')
   const [targetAmount, setTargetAmount] = useState('')
   const [loading, setLoading] = useState(false)
@@ -261,6 +261,7 @@ function SavingsTargetModal({ onClose, onSuccess }: { onClose: () => void; onSuc
       })
       const data = await res.json()
       if (data.target) {
+        if (onCreate) onCreate()
         onSuccess()
       }
     } catch (error) {
@@ -1930,7 +1931,11 @@ export default function Dashboard() {
 
       {/* Add Savings Target Modal */}
       {showAddSavingsTargetModal && (
-        <SavingsTargetModal onClose={() => setShowAddSavingsTargetModal(false)} onSuccess={() => { fetchSavingsTargets(); setShowAddSavingsTargetModal(false); }} />
+        <SavingsTargetModal 
+          onClose={() => setShowAddSavingsTargetModal(false)} 
+          onSuccess={() => { fetchSavingsTargets(); setShowAddSavingsTargetModal(false); }} 
+          onCreate={() => calculateAutoSave()} 
+        />
       )}
 
       {/* Add Options Modal */}
