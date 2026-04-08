@@ -688,6 +688,7 @@ export default function Dashboard() {
   const navItems = [
     { id: 'home', icon: Wallet, label: 'Beranda' },
     { id: 'targets', icon: Target, label: 'Target' },
+    { id: 'savings', icon: PiggyBank, label: 'Tabungan' },
     { id: 'transactions', icon: Receipt, label: 'Transaksi' },
     { id: 'receipt', icon: Printer, label: 'Struk' },
     { id: 'account', icon: User, label: 'Akun' },
