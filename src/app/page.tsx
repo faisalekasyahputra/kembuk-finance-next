@@ -1435,10 +1435,10 @@ export default function Dashboard() {
       </nav>
 
       {showAddModal && (
-        <div className="fixed inset-0 bg-black/80 z-50 flex items-end lg:items-center justify-center p-4">
-          <div className="w-full max-w-md">
-            <div className="bg-zinc-900 rounded-2xl border border-zinc-800">
-              <div className="p-4 border-b border-zinc-800 flex items-center justify-between">
+        <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4" onClick={() => setShowAddModal(false)}>
+          <div className="w-full max-w-md max-h-[90vh] flex flex-col" onClick={e => e.stopPropagation()}>
+            <div className="bg-zinc-900 rounded-2xl border border-zinc-800 flex flex-col max-h-full overflow-hidden">
+              <div className="p-4 border-b border-zinc-800 flex items-center justify-between flex-shrink-0">
                 <div className="flex items-center gap-2">
                   <div className="p-1.5 bg-zinc-800 rounded-lg border border-zinc-700">
                     <Plus className="w-4 h-4 text-blue-400" />
@@ -1450,7 +1450,7 @@ export default function Dashboard() {
                 </button>
               </div>
 
-              <div className="p-4 space-y-4">
+              <div className="p-4 space-y-4 overflow-y-auto flex-1">
                 <div className="grid grid-cols-2 gap-2">
                   <button
                     onClick={() => setFormData({ ...formData, type: 'income', category_id: '' })}
