@@ -245,6 +245,84 @@ function ReceiptExportView({ transactions, balance, totalIncome, totalExpense, o
   )
 }
 
+function SavingsTargetModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: () => void }) {
+  const [name, setName] = useState('')
+  const [targetAmount, setTargetAmount] = useState('')
+  const [loading, setLoading] = useState(false)
+
+  const handleSubmit = async () => {
+    if (!name || !targetAmount) return
+    setLoading(true)
+    try {
+      const res = await fetch('/api/savings-targets', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, target_amount: targetAmount }),
+      })
+      const data = await res.json()
+      if (data.target) {
+        onSuccess()
+      }
+    } catch (error) {
+      console.error('Error:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <div className="fixed inset-0 bg-black/80 backdrop-blur-xl z-50 flex items-center justify-center p-4" onClick={onClose}>
+      <div className="w-full max-w-md" onClick={e => e.stopPropagation()}>
+        <div className="relative bg-gradient-to-br from-zinc-800/95 via-zinc-900/95 to-zinc-950/95 rounded-3xl border border-zinc-700/50 shadow-2xl shadow-black/50 overflow-hidden backdrop-blur-xl">
+          <div className="absolute inset-[1px] rounded-[22px] bg-gradient-to-br from-white/[0.03] to-transparent pointer-events-none" />
+          <div className="relative">
+            <div className="p-5 border-b border-zinc-800/60 flex items-center justify-between bg-gradient-to-r from-zinc-900/50 to-transparent">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-gradient-to-br from-green-600/30 to-green-800/30 rounded-xl border border-green-500/30 shadow-[inset_0_1px_2px_rgba(255,255,255,0.1)]">
+                  <PiggyBank className="w-5 h-5 text-green-400" />
+                </div>
+                <h3 className="text-white font-bold text-lg">Tambah Target Tabungan</h3>
+              </div>
+              <button onClick={onClose} className="p-2 bg-zinc-800/60 rounded-xl border border-zinc-700/40 hover:bg-zinc-700/60 transition-colors">
+                <X className="w-5 h-5 text-zinc-400" />
+              </button>
+            </div>
+            <div className="p-5 space-y-4">
+              <div>
+                <label className="text-zinc-400 text-sm font-medium mb-2 block">Nama Barang</label>
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Contoh: Sepatu Nike Air Max"
+                  className="w-full px-4 py-3 bg-zinc-950/80 border border-zinc-700/60 rounded-xl text-white placeholder-zinc-600 focus:outline-none focus:border-green-500/50 transition-all"
+                />
+              </div>
+              <div>
+                <label className="text-zinc-400 text-sm font-medium mb-2 block">Harga Target</label>
+                <input
+                  type="number"
+                  value={targetAmount}
+                  onChange={(e) => setTargetAmount(e.target.value)}
+                  placeholder="0"
+                  className="w-full px-4 py-3 bg-zinc-950/80 border border-zinc-700/60 rounded-xl text-white placeholder-zinc-600 focus:outline-none focus:border-green-500/50 transition-all"
+                />
+              </div>
+              <button
+                onClick={handleSubmit}
+                disabled={!name || !targetAmount || loading}
+                className="w-full py-4 bg-gradient-to-r from-green-600 to-green-700 rounded-xl text-white font-bold hover:from-green-700 hover:to-green-800 transition-all shadow-lg shadow-green-600/30 border border-green-500/30 disabled:opacity-50"
+              >
+                {loading ? 'Menyimpan...' : 'Simpan Target'}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState('home')
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -255,11 +333,14 @@ export default function Dashboard() {
   const [targets, setTargets] = useState<Target[]>([])
   const [categories, setCategories] = useState<Category[]>([])
   const [targetPayments, setTargetPayments] = useState<TargetPayment[]>([])
+  const [savings, setSavings] = useState<{ balance: number; auto_save_percent: number } | null>(null)
+  const [savingsTargets, setSavingsTargets] = useState<{ id: string; name: string; target_amount: number; current_amount: number; icon: string; color: string; is_completed: boolean }[]>([])
   const [showAddModal, setShowAddModal] = useState(false)
   const [showAddOptions, setShowAddOptions] = useState(false)
   const [showReceiptModal, setShowReceiptModal] = useState(false)
   const [showReceiptExport, setShowReceiptExport] = useState(false)
   const [showAddTargetModal, setShowAddTargetModal] = useState(false)
+  const [showAddSavingsTargetModal, setShowAddSavingsTargetModal] = useState(false)
   const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null)
   const [analyzing, setAnalyzing] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
@@ -290,6 +371,8 @@ export default function Dashboard() {
     fetchTargets()
     fetchTargetPayments()
     fetchCategories()
+    fetchSavings()
+    fetchSavingsTargets()
   }, [])
 
   useEffect(() => {
@@ -298,6 +381,8 @@ export default function Dashboard() {
       fetchTargets()
       fetchTargetPayments()
       fetchCategories()
+      fetchSavings()
+      fetchSavingsTargets()
     }
     window.addEventListener('focus', handleFocus)
     return () => window.removeEventListener('focus', handleFocus)
@@ -360,6 +445,30 @@ export default function Dashboard() {
       }
     } catch (error) {
       console.error('Error fetching categories:', error)
+    }
+  }
+
+  const fetchSavings = async () => {
+    try {
+      const res = await fetch('/api/savings')
+      const data = await res.json()
+      if (data.savings) {
+        setSavings(data.savings)
+      }
+    } catch (error) {
+      console.error('Error fetching savings:', error)
+    }
+  }
+
+  const fetchSavingsTargets = async () => {
+    try {
+      const res = await fetch('/api/savings-targets')
+      const data = await res.json()
+      if (data.targets) {
+        setSavingsTargets(data.targets)
+      }
+    } catch (error) {
+      console.error('Error fetching savings targets:', error)
     }
   }
 
@@ -1216,71 +1325,97 @@ export default function Dashboard() {
           {activeTab === 'savings' && (
             <div className="space-y-3">
               <div className="bg-zinc-900 rounded-xl p-5 border border-zinc-800">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="p-2 bg-zinc-800 rounded-lg border border-zinc-700">
-                    <PiggyBank className="w-5 h-5 text-green-500" />
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-zinc-800 rounded-lg border border-zinc-700">
+                      <PiggyBank className="w-5 h-5 text-green-500" />
+                    </div>
+                    <div>
+                      <p className="text-zinc-400 text-sm">Total Tabungan</p>
+                      <h2 className="text-2xl font-bold font-mono text-green-500">{formatCurrency(savings?.balance || 0)}</h2>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-zinc-400 text-sm">Total Tabungan</p>
-                    <h2 className="text-2xl font-bold font-mono text-green-500">{formatCurrency(0)}</h2>
+                  <div className="text-right">
+                    <p className="text-zinc-500 text-xs">Auto Save</p>
+                    <p className="text-yellow-400 text-sm font-bold">{savings?.auto_save_percent || 0}%</p>
                   </div>
+                </div>
+                <div className="flex gap-2">
+                  <button 
+                    onClick={() => setShowAddSavingsTargetModal(true)}
+                    className="flex-1 py-2 px-3 bg-green-600 hover:bg-green-700 rounded-lg text-white text-sm font-medium border border-green-500"
+                  >
+                    + Tambah Target
+                  </button>
                 </div>
               </div>
 
-              <button className="w-full bg-zinc-800 rounded-xl p-4 flex items-center justify-between border border-zinc-700 hover:bg-zinc-700 transition-colors">
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 bg-zinc-700 rounded-lg flex items-center justify-center border border-zinc-600">
-                    <Plus className="w-4 h-4 text-green-500" />
+              {savingsTargets.filter(t => !t.is_completed).length > 0 && (
+                <div className="bg-zinc-900 rounded-xl border border-zinc-800">
+                  <div className="px-4 py-3 border-b border-zinc-800">
+                    <h3 className="text-white font-semibold flex items-center gap-2">
+                      <div className="w-2 h-2 bg-yellow-500 rounded-full" />
+                      Target Aktif ({savingsTargets.filter(t => !t.is_completed).length})
+                    </h3>
                   </div>
-                  <span className="text-white font-medium">Tambah Target Tabungan</span>
+                  <div className="p-3 space-y-3">
+                    {savingsTargets.filter(t => !t.is_completed).map((target) => {
+                      const percent = Math.min(100, Math.round((target.current_amount / target.target_amount) * 100))
+                      return (
+                        <div key={target.id} className="bg-zinc-800 rounded-lg p-3 border border-zinc-700">
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="text-white font-medium">{target.name}</span>
+                            <span className="text-xs text-zinc-400 font-mono">{percent}%</span>
+                          </div>
+                          <div className="h-2 bg-zinc-900 rounded-full overflow-hidden mb-2">
+                            <div 
+                              className="h-full rounded-full transition-all"
+                              style={{ width: `${percent}%`, backgroundColor: target.color }}
+                            />
+                          </div>
+                          <div className="flex items-center justify-between text-xs">
+                            <span className="text-green-400 font-mono">{formatCurrency(target.current_amount)}</span>
+                            <span className="text-zinc-500 font-mono">{formatCurrency(target.target_amount)}</span>
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
                 </div>
-                <ChevronRight className="w-5 h-5 text-zinc-400" />
-              </button>
+              )}
 
-              <div className="bg-zinc-900 rounded-xl border border-zinc-800">
-                <div className="px-4 py-3 border-b border-zinc-800">
-                  <h3 className="text-white font-semibold flex items-center gap-2">
-                    <div className="w-2 h-2 bg-yellow-500 rounded-full" />
-                    Target Aktif
-                  </h3>
-                </div>
-                <div className="p-6 text-center">
-                  <div className="w-16 h-16 bg-zinc-800 rounded-xl mx-auto mb-3 flex items-center justify-center border border-zinc-700">
-                    <PiggyBank className="w-8 h-8 text-zinc-600" />
+              {savingsTargets.filter(t => t.is_completed).length > 0 && (
+                <div className="bg-zinc-900 rounded-xl border border-zinc-800">
+                  <div className="px-4 py-3 border-b border-zinc-800">
+                    <h3 className="text-white font-semibold flex items-center gap-2">
+                      <Check className="w-4 h-4 text-green-500" />
+                      Target Selesai ({savingsTargets.filter(t => t.is_completed).length})
+                    </h3>
                   </div>
-                  <p className="text-zinc-400 font-medium mb-1">Belum ada target tabungan</p>
-                  <p className="text-zinc-500 text-sm">Buat target untuk mulai menabung</p>
+                  <div className="p-3 space-y-2">
+                    {savingsTargets.filter(t => t.is_completed).map((target) => (
+                      <div key={target.id} className="bg-zinc-800/50 rounded-lg p-3 border border-zinc-700/50 opacity-60">
+                        <div className="flex items-center justify-between">
+                          <span className="text-white font-medium line-through">{target.name}</span>
+                          <span className="text-green-400 text-xs font-mono">COMPLETED</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
 
-              <div className="bg-zinc-900 rounded-xl border border-zinc-800">
-                <div className="px-4 py-3 border-b border-zinc-800">
-                  <h3 className="text-white font-semibold flex items-center gap-2">
-                    <TrendingUp className="w-4 h-4 text-zinc-400" />
-                    Tips Menabung
-                  </h3>
-                </div>
-                <div className="p-4 space-y-2">
-                  <div className="flex items-start gap-3 p-2.5 bg-zinc-800 rounded-lg">
-                    <div className="w-5 h-5 bg-zinc-700 rounded flex items-center justify-center flex-shrink-0">
-                      <span className="text-zinc-400 text-xs font-bold">1</span>
+              {savingsTargets.length === 0 && (
+                <div className="bg-zinc-900 rounded-xl border border-zinc-800">
+                  <div className="p-6 text-center">
+                    <div className="w-16 h-16 bg-zinc-800 rounded-xl mx-auto mb-3 flex items-center justify-center border border-zinc-700">
+                      <PiggyBank className="w-8 h-8 text-zinc-600" />
                     </div>
-                    <p className="text-zinc-300 text-sm">Catat setiap pengeluaran untuk Awareness</p>
-                  </div>
-                  <div className="flex items-start gap-3 p-2.5 bg-zinc-800 rounded-lg">
-                    <div className="w-5 h-5 bg-zinc-700 rounded flex items-center justify-center flex-shrink-0">
-                      <span className="text-zinc-400 text-xs font-bold">2</span>
-                    </div>
-                    <p className="text-zinc-300 text-sm">Pisahkan uang kebutuhan dan keinginan</p>
-                  </div>
-                  <div className="flex items-start gap-3 p-2.5 bg-zinc-800 rounded-lg">
-                    <div className="w-5 h-5 bg-zinc-700 rounded flex items-center justify-center flex-shrink-0">
-                      <span className="text-zinc-400 text-xs font-bold">3</span>
-                    </div>
-                    <p className="text-zinc-300 text-sm">Transfer otomatis ke rekening tabungan</p>
+                    <p className="text-zinc-400 font-medium mb-1">Belum ada target tabungan</p>
+                    <p className="text-zinc-500 text-sm">Buat target untuk mulai menabung</p>
                   </div>
                 </div>
-              </div>
+              )}
             </div>
           )}
 
@@ -1771,6 +1906,11 @@ export default function Dashboard() {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Add Savings Target Modal */}
+      {showAddSavingsTargetModal && (
+        <SavingsTargetModal onClose={() => setShowAddSavingsTargetModal(false)} onSuccess={() => { fetchSavingsTargets(); setShowAddSavingsTargetModal(false); }} />
       )}
 
       {/* Add Options Modal */}
