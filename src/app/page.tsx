@@ -1456,7 +1456,7 @@ export default function Dashboard() {
               <div className="p-4 space-y-4">
                 <div className="grid grid-cols-2 gap-2">
                   <button
-                    onClick={() => setFormData({ ...formData, type: 'income' })}
+                    onClick={() => setFormData({ ...formData, type: 'income', category_id: '' })}
                     className={`py-3 px-4 rounded-lg border ${
                       formData.type === 'income'
                         ? 'bg-zinc-800 border-green-500 text-green-400'
@@ -1469,7 +1469,7 @@ export default function Dashboard() {
                     </div>
                   </button>
                   <button
-                    onClick={() => setFormData({ ...formData, type: 'expense' })}
+                    onClick={() => setFormData({ ...formData, type: 'expense', category_id: '' })}
                     className={`py-3 px-4 rounded-lg border ${
                       formData.type === 'expense'
                         ? 'bg-zinc-800 border-red-500 text-red-400'
@@ -1481,6 +1481,37 @@ export default function Dashboard() {
                       <span className="font-medium text-sm">Keluar</span>
                     </div>
                   </button>
+                </div>
+
+                <div>
+                  <label className="text-zinc-400 text-xs font-medium mb-1.5 block">Kategori</label>
+                  <div className="grid grid-cols-3 gap-2 max-h-48 overflow-y-auto p-1">
+                    {defaultCategories
+                      .filter(cat => cat.group === formData.type)
+                      .map((cat) => {
+                        const IconComponent = iconMap[cat.icon] || Package
+                        const isSelected = formData.category_id === cat.id
+                        return (
+                          <button
+                            key={cat.id}
+                            onClick={() => setFormData({ ...formData, category_id: cat.id })}
+                            className={`p-2 rounded-lg border flex flex-col items-center gap-1 transition-colors ${
+                              isSelected
+                                ? formData.type === 'income'
+                                  ? 'bg-green-900/30 border-green-500'
+                                  : 'bg-red-900/30 border-red-500'
+                                : 'bg-zinc-950 border-zinc-700 hover:border-zinc-600'
+                            }`}
+                          >
+                            <IconComponent className={`w-5 h-5 ${isSelected ? (formData.type === 'income' ? 'text-green-400' : 'text-red-400') : 'text-zinc-400'}`} />
+                            <span className={`text-xs ${isSelected ? 'text-white' : 'text-zinc-400'}`}>{cat.name}</span>
+                          </button>
+                        )
+                      })}
+                  </div>
+                  {!formData.category_id && (
+                    <p className="text-zinc-500 text-xs mt-1">Pilih kategori terlebih dahulu</p>
+                  )}
                 </div>
 
                 <div>
@@ -1520,7 +1551,9 @@ export default function Dashboard() {
                                   if (e.target.checked) {
                                     setFormData({
                                       ...formData,
+                                      type: 'expense',
                                       target_ids: [...formData.target_ids, target.id],
+                                      category_id: target.category_id || '',
                                       amount: target.amount.toString(),
                                     })
                                   } else {
