@@ -1525,56 +1525,57 @@ export default function Dashboard() {
                   </div>
                 </div>
 
-                <div>
-                  <label className="text-zinc-400 text-xs font-medium mb-1.5 block">Target (opsional)</label>
-                  <div className="border border-zinc-700 rounded-lg overflow-hidden bg-zinc-950">
-                    <div className="p-2 max-h-40 overflow-y-auto space-y-1">
-                      {targets.length === 0 ? (
-                        <p className="text-zinc-500 text-sm p-2">Belum ada target. Tambah di tab Target.</p>
-                      ) : (
-                        targets.map((target) => {
-                          const isSelected = formData.target_ids.includes(target.id)
-                          return (
-                            <label
-                              key={target.id}
-                              className={`flex items-center gap-3 p-2 rounded-lg cursor-pointer transition-colors ${
-                                isSelected ? 'bg-green-900/30' : 'hover:bg-zinc-800/50'
-                              }`}
-                            >
-                              <input
-                                type="checkbox"
-                                checked={isSelected}
-                                onChange={(e) => {
-                                  if (e.target.checked) {
-                                    setFormData({
-                                      ...formData,
-                                      type: 'expense',
-                                      target_ids: [...formData.target_ids, target.id],
-                                      category_id: target.category_id || '',
-                                      amount: target.amount.toString(),
-                                    })
-                                  } else {
-                                    setFormData({
-                                      ...formData,
-                                      target_ids: formData.target_ids.filter(id => id !== target.id),
-                                    })
-                                  }
-                                }}
-                                className="w-4 h-4 rounded border-zinc-600 text-green-500 focus:ring-green-500"
-                              />
-                              <div className="flex-1">
-                                <span className="text-white text-sm">{target.name}</span>
-                              </div>
-                              <span className="text-zinc-400 text-xs font-mono">
-                                {formatCurrency(target.amount)}
-                              </span>
-                            </label>
-                          )
-                        })
-                      )}
+                {formData.type === 'expense' && (
+                  <div>
+                    <label className="text-zinc-400 text-xs font-medium mb-1.5 block">Target (opsional)</label>
+                    <div className="border border-zinc-700 rounded-lg overflow-hidden bg-zinc-950">
+                      <div className="p-2 max-h-40 overflow-y-auto space-y-1">
+                        {targets.length === 0 ? (
+                          <p className="text-zinc-500 text-sm p-2">Belum ada target. Tambah di tab Target.</p>
+                        ) : (
+                          targets.map((target) => {
+                            const isSelected = formData.target_ids.includes(target.id)
+                            return (
+                              <label
+                                key={target.id}
+                                className={`flex items-center gap-3 p-2 rounded-lg cursor-pointer transition-colors ${
+                                  isSelected ? 'bg-green-900/30' : 'hover:bg-zinc-800/50'
+                                }`}
+                              >
+                                <input
+                                  type="checkbox"
+                                  checked={isSelected}
+                                  onChange={(e) => {
+                                    if (e.target.checked) {
+                                      setFormData({
+                                        ...formData,
+                                        target_ids: [...formData.target_ids, target.id],
+                                        category_id: target.category_id || '',
+                                        amount: target.amount.toString(),
+                                      })
+                                    } else {
+                                      setFormData({
+                                        ...formData,
+                                        target_ids: formData.target_ids.filter(id => id !== target.id),
+                                      })
+                                    }
+                                  }}
+                                  className="w-4 h-4 rounded border-zinc-600 text-green-500 focus:ring-green-500"
+                                />
+                                <div className="flex-1">
+                                  <span className="text-white text-sm">{target.name}</span>
+                                </div>
+                                <span className="text-zinc-400 text-xs font-mono">
+                                  {formatCurrency(target.amount)}
+                                </span>
+                              </label>
+                            )
+                          })
+                        )}
+                      </div>
                     </div>
                   </div>
-                </div>
+                )}
 
                 <div>
                   <label className="text-zinc-400 text-xs font-medium mb-1.5 block">Keterangan</label>
