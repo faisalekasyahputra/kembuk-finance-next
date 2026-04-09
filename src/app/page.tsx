@@ -262,6 +262,9 @@ function SavingsTargetModal({ onClose, onSuccess, onCreate }: { onClose: () => v
       const data = await res.json()
       if (data.target) {
         if (onCreate) onCreate()
+        
+        await fetch('/api/savings/redistribute', { method: 'POST' })
+        
         onSuccess()
       }
     } catch (error) {
