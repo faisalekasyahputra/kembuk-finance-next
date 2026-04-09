@@ -645,6 +645,30 @@ export default function Dashboard() {
     }
   }
 
+  const handleClearCompletedTargets = async () => {
+    if (!confirm('Hapus semua riwayat target yang sudah selesai?')) return
+    try {
+      // Find all completed targets
+      const completed = savingsTargets.filter(t => t.is_completed)
+      if (completed.length === 0) return
+
+      // Delete them one by one or via a bulk action if available
+      // For now, let's use the individual delete to trigger balance redistribution if needed
+      // Actually, bulk is better for UX.
+      const { error } = await supabase
+        .from('kf_savings_targets')
+        .delete()
+        .eq('is_completed', true)
+
+      if (error) throw error
+      
+      showToast('Riwayat berhasil dibersihkan', 'success')
+      fetchSavingsTargets()
+    } catch (error) {
+      showToast('Gagal membersihkan riwayat', 'error')
+    }
+  }
+
   const fetchTargetPayments = async () => {
     try {
       const res = await fetch('/api/target-payments')
@@ -1677,11 +1701,18 @@ export default function Dashboard() {
 
               {savingsTargets.filter(t => t.is_completed).length > 0 && (
                 <div className="skeuo-card overflow-hidden">
-                  <div className="px-4 py-3 border-b border-[#0f0f0f]">
+                  <div className="px-4 py-3 border-b border-[#0f0f0f] flex items-center justify-between">
                     <h3 className="text-white font-semibold flex items-center gap-2 tracking-wide">
                       <Check className="w-4 h-4 text-green-500" />
                       Target Selesai ({savingsTargets.filter(t => t.is_completed).length})
                     </h3>
+                    <button 
+                      onClick={handleClearCompletedTargets}
+                      className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg skeuo-panel-inner text-zinc-500 hover:text-red-400 text-[10px] font-bold uppercase tracking-widest transition-all active:scale-95"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                      <span>Hapus Semua</span>
+                    </button>
                   </div>
                   <div className="p-3 space-y-3 bg-[#111]">
                     {savingsTargets.filter(t => t.is_completed).map((target) => (
