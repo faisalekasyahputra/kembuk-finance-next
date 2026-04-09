@@ -9,7 +9,7 @@ import {
   ArrowLeftRight, Building2, Plane, Gift, Home, Gamepad2, GraduationCap, Baby,
   TrendingDown, DollarSign, Percent, Calendar, Search, Bell, Settings, LogOut,
   ChevronRight, ChevronDown, MoreVertical, Edit3, Trash2, Download, Share2,
-  Send, Image, Moon, Sun, PieChart, Target, Check, AlertCircle, Trash
+  Send, Image, Moon, Sun, PieChart, Target, Check, AlertCircle, Trash, History
 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { formatCurrency } from '@/lib/formatters'
@@ -337,6 +337,7 @@ export default function Dashboard() {
   const [targets, setTargets] = useState<Target[]>([])
   const [categories, setCategories] = useState<Category[]>([])
   const [targetPayments, setTargetPayments] = useState<TargetPayment[]>([])
+  const [monthlyLogs, setMonthlyLogs] = useState<{ month: string; paid: number; total: number; amount_paid: number; amount_total: number }[]>([])
   const [savings, setSavings] = useState<{ balance: number; auto_save_percent: number } | null>(null)
   const [savingsTargets, setSavingsTargets] = useState<{ id: string; name: string; target_amount: number; current_amount: number; icon: string; color: string; is_completed: boolean }[]>([])
   const [showAddModal, setShowAddModal] = useState(false)
@@ -500,10 +501,56 @@ export default function Dashboard() {
       const data = await res.json()
       if (data.payments) {
         setTargetPayments(data.payments)
+        calculateMonthlyLogs(data.payments)
       }
     } catch (error) {
       console.error('Error fetching target payments:', error)
     }
+  }
+
+  const calculateMonthlyLogs = (payments: TargetPayment[]) => {
+    const monthlyData: Record<string, { paid: number; total: number; amount_paid: number; amount_total: number }> = {}
+    
+    payments.forEach(payment => {
+      const monthKey = new Date(payment.paid_at).toISOString().slice(0, 7)
+      if (!monthlyData[monthKey]) {
+        monthlyData[monthKey] = { paid: 0, total: 0, amount_paid: 0, amount_total: 0 }
+      }
+      monthlyData[monthKey].paid += 1
+      monthlyData[monthKey].amount_paid += Number(payment.amount)
+    })
+    
+    targets.forEach(target => {
+      const createdMonth = new Date(target.created_at).toISOString().slice(0, 7)
+      const monthPayments = payments.filter(p => p.target_id === target.id)
+      const paidMonths = new Set(monthPayments.map(p => new Date(p.paid_at).toISOString().slice(0, 7)))
+      
+      paidMonths.forEach(month => {
+        if (monthlyData[month]) {
+          monthlyData[month].total += 1
+          monthlyData[month].amount_total += Number(target.amount)
+        }
+      })
+      
+      if (!paidMonths.has(createdMonth)) {
+        const month = createdMonth
+        if (!monthlyData[month]) {
+          monthlyData[month] = { paid: 0, total: 0, amount_paid: 0, amount_total: 0 }
+        }
+        monthlyData[month].total += 1
+        monthlyData[month].amount_total += Number(target.amount)
+      }
+    })
+    
+    const logs = Object.entries(monthlyData)
+      .map(([month, data]) => ({
+        month,
+        ...data
+      }))
+      .sort((a, b) => b.month.localeCompare(a.month))
+      .slice(0, 6)
+    
+    setMonthlyLogs(logs)
   }
 
   const handleAddTarget = async () => {
@@ -1341,6 +1388,44 @@ export default function Dashboard() {
                       )
                     })}
                   </div>
+
+                  {monthlyLogs.length > 0 && (
+                    <div className="bg-zinc-900/50 rounded-xl p-4 border border-zinc-800/50 mt-4">
+                      <h3 className="text-zinc-400 text-sm font-medium mb-3 flex items-center gap-2">
+                        <History className="w-4 h-4" />
+                        Riwayat Bulanan
+                      </h3>
+                      <div className="space-y-2">
+                        {monthlyLogs.map((log, idx) => {
+                          const percent = log.total > 0 ? Math.round((log.paid / log.total) * 100) : 0
+                          const monthDate = new Date(log.month + '-01')
+                          const monthLabel = monthDate.toLocaleDateString('id-ID', { month: 'short', year: 'numeric' })
+                          return (
+                            <div key={log.month} className="flex items-center justify-between text-sm">
+                              <div className="flex items-center gap-3">
+                                <span className="text-zinc-400 w-20">{monthLabel}</span>
+                                <div className="flex items-center gap-2">
+                                  <span className={`font-bold ${percent === 100 ? 'text-green-400' : percent >= 50 ? 'text-yellow-400' : 'text-red-400'}`}>
+                                    {log.paid}/{log.total}
+                                  </span>
+                                  <div className="w-16 h-1.5 bg-zinc-800 rounded-full overflow-hidden">
+                                    <div 
+                                      className={`h-full transition-all ${percent === 100 ? 'bg-green-500' : percent >= 50 ? 'bg-yellow-500' : 'bg-red-500'}`}
+                                      style={{ width: `${percent}%` }}
+                                    />
+                                  </div>
+                                  <span className="text-zinc-500 text-xs">{percent}%</span>
+                                </div>
+                              </div>
+                              <span className="text-zinc-500 font-mono text-xs">
+                                {formatCurrency(log.amount_paid)}/{formatCurrency(log.amount_total)}
+                              </span>
+                            </div>
+                          )
+                        })}
+                      </div>
+                    </div>
+                  )}
                 </>
               )}
             </div>
