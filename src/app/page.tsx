@@ -808,6 +808,10 @@ export default function Dashboard() {
   const handleAddTransaction = async () => {
     if (!formData.amount) return
 
+    // Respons Instan
+    showToast('Transaksi Berhasil! Menyiapkan Struk...', 'success')
+    setShowAddModal(false)
+
     const category = categories.find(c => c.id === formData.category_id)
     
     const newTransaction = {
@@ -856,8 +860,7 @@ export default function Dashboard() {
       
       sendTransactionReceipt(newTransaction)
       
-      showToast('Transaksi Berhasil! Menyiapkan Struk...', 'success')
-      setShowAddModal(false)
+
       setFormData({
         type: 'expense',
         amount: '',
