@@ -560,7 +560,7 @@ export default function Dashboard() {
         })
         if (res.ok) {
           setTargetPayments(targetPayments.filter(p => p.id !== existingPayment.id))
-          showToast('Target取消标记为未支付', 'info')
+          showToast('Target取消标记为未完成', 'info')
         }
       } catch (error) {
         showToast('Gagal mengupdate target', 'error')

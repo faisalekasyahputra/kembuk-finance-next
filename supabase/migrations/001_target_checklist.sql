@@ -9,7 +9,6 @@ CREATE TABLE IF NOT EXISTS kf_targets (
   amount DECIMAL(15,0) NOT NULL,
   due_date TEXT,
   is_recurring BOOLEAN DEFAULT true,
-  category_id UUID REFERENCES kf_categories(id) ON DELETE SET NULL,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );

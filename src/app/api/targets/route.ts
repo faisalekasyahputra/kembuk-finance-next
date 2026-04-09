@@ -21,7 +21,7 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { name, amount, due_date, is_recurring, category_id } = body
+    const { name, amount, due_date, is_recurring } = body
 
     if (!name || !amount) {
       return NextResponse.json({ error: 'Name and amount are required' }, { status: 400 })
@@ -34,7 +34,6 @@ export async function POST(request: NextRequest) {
         amount: parseFloat(amount),
         due_date: due_date || null,
         is_recurring: is_recurring ?? true,
-        category_id: category_id || null,
         user_id: 'shared'
       })
       .select()
