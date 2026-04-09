@@ -287,46 +287,49 @@ function SavingsTargetModal({ onClose, onSuccess, onCreate }: { onClose: () => v
   }
 
   return (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-xl z-50 flex items-center justify-center p-4" onClick={onClose}>
-      <div className="w-full max-w-md" onClick={e => e.stopPropagation()}>
-        <div className="skeuo-card p-0 overflow-hidden relative">
+    <div className="fixed inset-0 bg-black/80 backdrop-blur-xl z-50 flex items-center justify-center p-3 lg:p-4" onClick={onClose}>
+      <div className="w-full max-w-md animate-in slide-in-from-bottom-4 duration-300" onClick={e => e.stopPropagation()}>
+        <div className="skeuo-card p-0 overflow-hidden relative shadow-[0_20px_50px_rgba(0,0,0,0.5),0_0_20px_rgba(34,197,94,0.1)]">
           <div className="relative">
-            <div className="p-5 border-b border-zinc-800/60 flex items-center justify-between">
+            <div className="p-4 lg:p-5 border-b border-zinc-800/60 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="p-2 skeuo-panel-inner rounded-xl">
                   <PiggyBank className="w-5 h-5 text-green-400 drop-shadow-[0_0_5px_rgba(74,222,128,0.5)]" />
                 </div>
-                <h3 className="text-white font-bold text-lg tracking-wide uppercase text-shadow-glow">Tambah Target Tabungan</h3>
+                <h3 className="text-white font-bold text-base lg:text-lg tracking-wide uppercase text-shadow-glow">Target Tabungan</h3>
               </div>
               <button onClick={onClose} className="p-2 skeuo-panel-inner rounded-xl hover:brightness-110 active:scale-95 transition-all">
                 <X className="w-5 h-5 text-zinc-400" />
               </button>
             </div>
-            <div className="p-5 space-y-4">
+            <div className="p-4 space-y-4">
               <div>
-                <label className="text-zinc-400 text-xs font-bold uppercase tracking-widest mb-2 block">Nama Barang</label>
+                <label className="text-zinc-400 text-[10px] font-bold uppercase tracking-widest mb-2 block ml-1">Nama Barang</label>
                 <input
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Contoh: Sepatu Nike Air Max"
-                  className="w-full px-4 py-3 bg-zinc-950/80 border border-zinc-700/60 rounded-xl text-white placeholder-zinc-600 focus:outline-none focus:border-green-500/50 transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)]"
+                  className="w-full px-4 py-3 bg-zinc-950/80 border border-zinc-700/60 rounded-xl text-white placeholder-zinc-600 focus:outline-none focus:border-green-500/50 text-sm transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)]"
                 />
               </div>
               <div>
-                <label className="text-zinc-400 text-xs font-bold uppercase tracking-widest mb-2 block">Harga Target</label>
-                <input
-                  type="number"
-                  value={targetAmount}
-                  onChange={(e) => setTargetAmount(e.target.value)}
-                  placeholder="0"
-                  className="w-full px-4 py-3 bg-zinc-950/80 border border-zinc-700/60 rounded-xl text-white placeholder-zinc-600 focus:outline-none focus:border-green-500/50 transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)]"
-                />
+                <label className="text-zinc-400 text-[10px] font-bold uppercase tracking-widest mb-2 block ml-1">Harga Target</label>
+                <div className="relative">
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 font-mono text-sm tracking-widest">Rp</span>
+                  <input
+                    type="number"
+                    value={targetAmount}
+                    onChange={(e) => setTargetAmount(e.target.value)}
+                    placeholder="0"
+                    className="w-full pl-12 pr-4 py-3 bg-zinc-950/80 border border-zinc-700/60 rounded-xl text-white font-mono tracking-wider placeholder-zinc-600 focus:outline-none focus:border-green-500/50 transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)]"
+                  />
+                </div>
               </div>
               <button
                 onClick={handleSubmit}
                 disabled={!name || !targetAmount || loading}
-                className="w-full btn-skeuo mt-2"
+                className="w-full btn-skeuo mt-2 py-4 shadow-[0_4px_20px_rgba(34,197,94,0.3)]"
               >
                 {loading ? 'Menyimpan...' : 'Simpan Target'}
               </button>
@@ -979,18 +982,18 @@ export default function Dashboard() {
           </div>
         </header>
 
-        <main className="p-4 lg:p-6 max-w-3xl lg:mx-auto">
+        <main className="p-3 lg:p-6 max-w-3xl lg:mx-auto pb-24">
           {activeTab === 'home' && (
             <div className="space-y-4">
-              <div className="skeuo-card p-6 mb-4">
-                <div className="flex items-center justify-between mb-4">
+              <div className="skeuo-card p-4 lg:p-6 mb-4">
+                <div className="flex items-center justify-between mb-3 lg:mb-4">
                   <div className="flex items-center gap-3">
                     <div className="p-2 skeuo-panel-inner rounded-xl flex items-center justify-center">
                       <Wallet className="w-5 h-5 text-gray-400" />
                     </div>
                     <div>
-                      <p className="text-zinc-300 text-sm font-medium tracking-wide font-mono uppercase">SALDO</p>
-                      <p className="text-zinc-500 text-xs">Total Keseluruhan</p>
+                      <p className="text-zinc-300 text-[10px] lg:text-sm font-medium tracking-[0.2em] font-mono uppercase">SALDO</p>
+                      <p className="hidden lg:block text-zinc-500 text-xs">Total Keseluruhan</p>
                     </div>
                   </div>
                   <div className="p-2 skeuo-panel-inner rounded-xl flex items-center justify-center">
@@ -998,9 +1001,9 @@ export default function Dashboard() {
                   </div>
                 </div>
                 
-                <div className="skeuo-panel-inner p-5 flex items-baseline gap-2">
-                  <span className="text-green-600 text-xl font-mono">Rp</span>
-                  <span className="text-4xl font-bold font-mono text-green-500 tracking-wider" style={{ textShadow: '0 0 5px rgba(0,255,102,0.3)' }}>
+                <div className="skeuo-panel-inner p-4 lg:p-5 flex items-baseline gap-2">
+                  <span className="text-green-600 text-lg lg:text-xl font-mono">Rp</span>
+                  <span className="text-3xl lg:text-4xl font-bold font-mono text-green-500 tracking-wider" style={{ textShadow: '0 0 5px rgba(0,255,102,0.3)' }}>
                     {balance.toLocaleString('id-ID')}
                   </span>
                 </div>
@@ -1014,52 +1017,52 @@ export default function Dashboard() {
                 <span>Lihat Ringkasan</span>
               </button>
 
-              <div className="grid grid-cols-2 gap-4 mb-4">
-                <div className="skeuo-card p-4">
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="p-2 skeuo-panel-inner rounded-xl flex items-center justify-center">
-                      <ArrowUpRight className="w-5 h-5 text-green-500" />
+              <div className="grid grid-cols-2 gap-3 lg:gap-4 mb-4">
+                <div className="skeuo-card p-3 lg:p-4">
+                  <div className="flex items-center gap-2 lg:gap-3 mb-2 lg:mb-3">
+                    <div className="p-1.5 lg:p-2 skeuo-panel-inner rounded-xl flex items-center justify-center">
+                      <ArrowUpRight className="w-4 lg:w-5 h-4 lg:h-5 text-green-500" />
                     </div>
                     <div>
-                      <p className="text-green-500 text-xs font-medium uppercase tracking-wider">PEMASUKAN</p>
-                      <p className="text-zinc-500 text-[10px]">Bulan ini</p>
+                      <p className="text-green-500 text-[9px] lg:text-xs font-medium uppercase tracking-wider">MASUK</p>
+                      <p className="text-zinc-500 text-[8px] lg:text-[10px]">Bulan ini</p>
                     </div>
                   </div>
-                  <div className="skeuo-panel-inner p-3">
-                    <p className="text-green-500 font-bold font-mono text-sm tracking-wide" style={{ textShadow: '0 0 5px rgba(0,255,102,0.3)' }}>
+                  <div className="skeuo-panel-inner p-2.5 lg:p-3">
+                    <p className="text-green-500 font-bold font-mono text-xs lg:text-sm tracking-wide" style={{ textShadow: '0 0 5px rgba(0,255,102,0.3)' }}>
                       {formatCurrency(totalIncome)}
                     </p>
                   </div>
                 </div>
 
-                <div className="skeuo-card p-4">
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="p-2 skeuo-panel-inner rounded-xl flex items-center justify-center">
-                      <ArrowDownRight className="w-5 h-5 text-red-500" />
+                <div className="skeuo-card p-3 lg:p-4">
+                  <div className="flex items-center gap-2 lg:gap-3 mb-2 lg:mb-3">
+                    <div className="p-1.5 lg:p-2 skeuo-panel-inner rounded-xl flex items-center justify-center">
+                      <ArrowDownRight className="w-4 lg:w-5 h-4 lg:h-5 text-red-500" />
                     </div>
                     <div>
-                      <p className="text-red-500 text-xs font-medium uppercase tracking-wider">PENGELUARAN</p>
-                      <p className="text-zinc-500 text-[10px]">Bulan ini</p>
+                      <p className="text-red-500 text-[9px] lg:text-xs font-medium uppercase tracking-wider">KELUAR</p>
+                      <p className="text-zinc-500 text-[8px] lg:text-[10px]">Bulan ini</p>
                     </div>
                   </div>
-                  <div className="skeuo-panel-inner p-3">
-                    <p className="text-red-500 font-bold font-mono text-sm tracking-wide" style={{ textShadow: '0 0 5px rgba(255,0,0,0.3)' }}>
+                  <div className="skeuo-panel-inner p-2.5 lg:p-3">
+                    <p className="text-red-500 font-bold font-mono text-xs lg:text-sm tracking-wide" style={{ textShadow: '0 0 5px rgba(255,0,0,0.3)' }}>
                       {formatCurrency(totalExpense)}
                     </p>
                   </div>
                 </div>
               </div>
 
-              <div className="grid grid-cols-3 gap-3 mb-4">
+              <div className="grid grid-cols-3 gap-2 lg:gap-3 mb-4">
                 <button 
                   onClick={() => {
                     setShowAddOptions(false)
                     setShowAddModal(true)
                   }}
-                  className="btn-skeuo flex flex-col py-4 gap-1 items-center"
+                  className="btn-skeuo flex flex-col py-3 lg:py-4 gap-1 items-center"
                 >
-                  <ArrowUpRight className="w-5 h-5" />
-                  <span className="text-[10px]">Pemasukan</span>
+                  <ArrowUpRight className="w-5 h-5 text-green-500" />
+                  <span className="text-[9px] lg:text-[10px] uppercase font-bold tracking-tighter lg:tracking-widest">Pemasukan</span>
                 </button>
 
                 <button 
@@ -1068,20 +1071,20 @@ export default function Dashboard() {
                     setShowAddModal(true)
                     setFormData({...formData, type: 'expense'})
                   }}
-                  className="btn-skeuo flex flex-col py-4 gap-1 items-center"
+                  className="btn-skeuo flex flex-col py-3 lg:py-4 gap-1 items-center"
                 >
-                  <ArrowDownRight className="w-5 h-5" />
-                  <span className="text-[10px]">Pengeluaran</span>
+                  <ArrowDownRight className="w-5 h-5 text-red-500" />
+                  <span className="text-[9px] lg:text-[10px] uppercase font-bold tracking-tighter lg:tracking-widest">Pengeluaran</span>
                 </button>
 
                 <button 
                   onClick={() => {
                     setShowReceiptModal(true)
                   }}
-                  className="btn-skeuo flex flex-col py-4 gap-1 items-center"
+                  className="btn-skeuo flex flex-col py-3 lg:py-4 gap-1 items-center"
                 >
-                  <Camera className="w-5 h-5" />
-                  <span className="text-[10px]">Scan Struk</span>
+                  <Camera className="w-5 h-5 text-blue-400" />
+                  <span className="text-[9px] lg:text-[10px] uppercase font-bold tracking-tighter lg:tracking-widest">Scan Struk</span>
                 </button>
               </div>
 
@@ -1156,22 +1159,46 @@ export default function Dashboard() {
                       const category = categories.find(c => c.id === t.category_id)
                       const IconComponent = iconMap[category?.icon || 'Package'] || Package
                       return (
-                        <div key={t.id} className="px-4 py-3 flex items-center justify-between hover:bg-[#1a1a1a] transition-all group cursor-pointer border-l-2 border-transparent hover:border-green-500/50">
-                          <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-lg flex items-center justify-center skeuo-panel-inner group-hover:shadow-[inset_0_0_10px_rgba(0,0,0,0.8)]">
-                              <IconComponent className={`w-5 h-5 transition-transform group-hover:scale-110 ${t.type === 'income' ? 'text-green-500 drop-shadow-[0_0_5px_rgba(34,197,94,0.3)]' : 'text-red-500 drop-shadow-[0_0_5px_rgba(239,68,68,0.3)]'}`} />
+                        <div key={t.id} 
+                          className="px-2 py-2 lg:px-4 lg:py-3 flex items-center justify-between hover:bg-[#1a1a1a] active:bg-[#151515] transition-all group cursor-pointer border-l-2 border-transparent hover:border-green-500/50"
+                          onClick={() => {
+                            setEditingTransaction(t);
+                            setFormData({
+                              amount: t.amount.toString(),
+                              category_id: t.category_id,
+                              description: t.description,
+                              type: t.type,
+                              date: new Date(t.date).toISOString().split('T')[0]
+                            });
+                          }}
+                        >
+                          <div className="flex items-center gap-2.5 lg:gap-3 min-w-0">
+                            <div className="w-8 h-8 lg:w-10 lg:h-10 rounded-lg flex items-center justify-center skeuo-panel-inner group-hover:shadow-[inset_0_0_10px_rgba(0,0,0,0.8)] shrink-0">
+                              <IconComponent className={`w-3.5 h-3.5 lg:w-5 lg:h-5 transition-transform group-hover:scale-110 ${t.type === 'income' ? 'text-green-500 drop-shadow-[0_0_5px_rgba(34,197,94,0.3)]' : 'text-red-500 drop-shadow-[0_0_5px_rgba(239,68,68,0.3)]'}`} />
                             </div>
-                            <div>
-                              <p className="text-zinc-100 text-sm font-bold tracking-wide group-hover:text-white">{t.description}</p>
-                              <p className="text-zinc-500 text-[10px] tracking-[0.1em] uppercase group-hover:text-zinc-400">{t.category_name}</p>
+                            <div className="min-w-0">
+                              <p className="text-zinc-100 text-xs lg:text-sm font-bold tracking-wide group-hover:text-white truncate">{t.description}</p>
+                              <p className="text-zinc-500 text-[8px] lg:text-[10px] tracking-[0.1em] uppercase group-hover:text-zinc-400 truncate">{t.category_name}</p>
                             </div>
                           </div>
-                          <span className={`font-mono text-sm font-bold tracking-wider ${
-                            t.type === 'income' ? 'text-green-500 drop-shadow-[0_0_8px_rgba(34,197,94,0.4)]' : 'text-red-500 drop-shadow-[0_0_8px_rgba(239,68,68,0.4)]'
-                          }`}>
-                            {t.type === 'income' ? '+' : '-'}
-                            {formatCurrency(t.amount)}
-                          </span>
+                          <div className="flex items-center gap-1.5 lg:gap-3 shrink-0">
+                            <span className={`font-mono text-[10px] lg:text-sm font-bold tracking-tighter lg:tracking-wider ${
+                              t.type === 'income' ? 'text-green-500 drop-shadow-[0_0_8px_rgba(34,197,94,0.4)]' : 'text-red-500 drop-shadow-[0_0_8px_rgba(239,68,68,0.4)]'
+                            }`}>
+                              {t.type === 'income' ? '+' : '-'}{formatCurrency(t.amount)}
+                            </span>
+                            <div className="flex items-center gap-1 lg:opacity-0 lg:group-hover:opacity-100 transition-all">
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleDeleteTransaction(t.id);
+                                }}
+                                className="text-zinc-500 lg:text-zinc-600 hover:text-red-500 p-1 lg:p-1.5 skeuo-panel-inner rounded-md active:scale-75 transition-transform"
+                              >
+                                <Trash2 className="w-3 h-3 lg:w-4 lg:h-4" />
+                              </button>
+                            </div>
+                          </div>
                         </div>
                       )
                     })}
@@ -1234,26 +1261,43 @@ export default function Dashboard() {
                       const category = categories.find(c => c.id === t.category_id)
                       const IconComponent = iconMap[category?.icon || 'Package'] || Package
                       return (
-                        <div key={t.id} className="px-4 py-3 flex items-center justify-between hover:bg-[#1a1a1a] transition-colors group">
-                          <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 skeuo-panel-inner rounded-lg flex items-center justify-center">
-                              <IconComponent className={`w-5 h-5 ${t.type === 'income' ? 'text-green-500' : 'text-red-500'}`} />
+                        <div key={t.id} 
+                          className="px-2 py-2 lg:px-4 lg:py-3 flex items-center justify-between hover:bg-[#1a1a1a] active:bg-[#151515] transition-all group cursor-pointer border-l-2 border-transparent hover:border-green-500/30"
+                          onClick={() => {
+                            setEditingTransaction(t);
+                            setFormData({
+                              amount: t.amount.toString(),
+                              category_id: t.category_id,
+                              description: t.description,
+                              type: t.type,
+                              date: new Date(t.date).toISOString().split('T')[0]
+                            });
+                          }}
+                        >
+                          <div className="flex items-center gap-2.5 lg:gap-3 min-w-0 flex-1">
+                            <div className="w-8 h-8 lg:w-10 lg:h-10 skeuo-panel-inner rounded-lg flex items-center justify-center shrink-0 group-hover:shadow-[inset_0_0_10px_rgba(0,0,0,0.8)]">
+                              <IconComponent className={`w-3.5 h-3.5 lg:w-5 lg:h-5 transition-transform group-hover:scale-110 ${t.type === 'income' ? 'text-green-500' : 'text-red-500'}`} />
                             </div>
-                            <div>
-                              <p className="text-white text-sm font-medium tracking-wide">{t.description}</p>
-                              <p className="text-zinc-500 text-xs tracking-wider">{t.category_name} • {new Date(t.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })}</p>
+                            <div className="min-w-0 flex-1">
+                              <p className="text-white text-xs lg:text-sm font-bold tracking-wide truncate group-hover:text-white">{t.description}</p>
+                              <p className="text-zinc-500 text-[8px] lg:text-xs tracking-wider line-clamp-1 uppercase font-mono opacity-80">{t.category_name} • {new Date(t.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })}</p>
                             </div>
                           </div>
-                          <div className="flex items-center gap-3">
-                            <span className={`font-mono text-sm font-semibold tracking-wider ${t.type === 'income' ? 'text-green-500' : 'text-red-500'}`}>
+                          <div className="flex items-center gap-1.5 lg:gap-3 shrink-0 ml-2">
+                            <span className={`font-mono text-[10px] lg:text-sm font-bold tracking-tighter lg:tracking-wider ${t.type === 'income' ? 'text-green-500' : 'text-red-500'}`}>
                               {t.type === 'income' ? '+' : '-'}{formatCurrency(t.amount)}
                             </span>
-                            <button
-                              onClick={() => handleDeleteTransaction(t.id)}
-                              className="text-zinc-600 hover:text-red-500 p-2 skeuo-panel-inner rounded-md opacity-0 group-hover:opacity-100 transition-opacity"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </button>
+                            <div className="flex items-center gap-1 lg:opacity-0 lg:group-hover:opacity-100 transition-all">
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleDeleteTransaction(t.id);
+                                }}
+                                className="text-zinc-500 lg:text-zinc-600 hover:text-red-500 p-1 lg:p-1.5 skeuo-panel-inner rounded-md active:scale-75 transition-transform"
+                              >
+                                <Trash2 className="w-3 h-3 lg:w-4 lg:h-4" />
+                              </button>
+                            </div>
                           </div>
                         </div>
                       )
@@ -1318,42 +1362,44 @@ export default function Dashboard() {
                       return (
                         <div
                           key={target.id}
-                          className={`p-4 skeuo-panel-inner transition-all cursor-pointer ${
-                            isPaid ? 'border-green-600/50 opacity-80' : 'hover:border-zinc-500'
+                          className={`px-3 py-2 lg:p-4 skeuo-panel-inner transition-all group border-l-2 ${
+                            isPaid ? 'border-green-600/50 bg-green-500/5' : 'border-zinc-800 hover:border-zinc-600 cursor-pointer active:bg-zinc-800/20'
                           }`}
-                          onClick={() => handleToggleTargetPayment(target)}
+                          onClick={() => !isPaid && handleToggleTargetPayment(target)}
                         >
                           <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-3">
-                              <div className={`w-6 h-6 rounded-lg border flex items-center justify-center transition-all ${
-                                isPaid ? 'bg-green-500 border-green-400 shadow-[0_0_5px_rgba(0,255,102,0.5)]' : 'border-zinc-600 bg-[#0f0f0f]'
+                            <div className="flex items-center gap-2.5 lg:gap-3 min-w-0 flex-1">
+                              <div className={`w-6 h-6 lg:w-8 lg:h-8 rounded-lg border flex items-center justify-center shrink-0 transition-all ${
+                                isPaid ? 'bg-green-500 border-green-400 shadow-[0_0_10px_rgba(0,255,102,0.3)]' : 'border-zinc-700 bg-[#0f0f0f] shadow-inner'
                               }`}>
-                                {isPaid && <Check className="w-4 h-4 text-white" />}
+                                {isPaid ? <Check className="w-3.5 h-3.5 lg:w-4 lg:h-4 text-black font-bold" /> : <div className="w-1.5 h-1.5 rounded-full bg-zinc-800" />}
                               </div>
-                              <div>
-                                <p className={`font-medium tracking-wide ${isPaid ? 'text-green-500 line-through' : 'text-white'}`}>
+                              <div className="min-w-0">
+                                <p className={`text-xs lg:text-sm font-bold tracking-wide truncate ${isPaid ? 'text-green-500 line-through opacity-70' : 'text-white'}`}>
                                   {target.name}
                                 </p>
                                 {target.due_date && (
-                                  <p className="text-zinc-500 text-[10px] tracking-wider uppercase mt-0.5">
-                                    Jatuh tempo: {new Date(target.due_date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })}
+                                  <p className="text-zinc-600 text-[8px] lg:text-[10px] tracking-widest uppercase mt-0.5">
+                                    {new Date(target.due_date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })}
                                   </p>
                                 )}
                               </div>
                             </div>
-                            <div className="flex items-center gap-3">
-                              <span className={`font-mono text-sm font-semibold tracking-wider ${isPaid ? 'text-green-500' : 'text-red-500'}`}>
+                            <div className="flex items-center gap-2 lg:gap-4 ml-2">
+                              <span className={`font-mono text-xs lg:text-sm font-bold tracking-tighter lg:tracking-normal ${isPaid ? 'text-green-500/50' : 'text-red-500'}`}>
                                 {formatCurrency(target.amount)}
                               </span>
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation()
-                                  handleDeleteTarget(target.id)
-                                }}
-                                className="p-2 skeuo-panel-inner text-zinc-500 hover:text-red-500 transition-colors"
-                              >
-                                <Trash className="w-3 h-3" />
-                              </button>
+                              <div className="flex items-center gap-1 lg:opacity-0 lg:group-hover:opacity-100 transition-all">
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation()
+                                    handleDeleteTarget(target.id)
+                                  }}
+                                  className="p-1.5 lg:p-2 skeuo-panel-inner text-zinc-600 hover:text-red-500 transition-all active:scale-75"
+                                >
+                                  <Trash className="w-3 h-3 lg:w-3.5 lg:h-3.5" />
+                                </button>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -1373,25 +1419,25 @@ export default function Dashboard() {
                           const monthDate = new Date(log.month + '-01')
                           const monthLabel = monthDate.toLocaleDateString('id-ID', { month: 'short', year: 'numeric' })
                           return (
-                            <div key={log.month} className="skeuo-panel-inner p-3 flex items-center justify-between text-sm">
-                              <div className="flex items-center gap-3">
-                                <span className="text-white font-medium w-20">{monthLabel}</span>
+                            <div key={log.month} className="skeuo-panel-inner p-3 flex flex-wrap lg:flex-nowrap items-center justify-between gap-2 text-sm">
+                              <div className="flex items-center gap-3 flex-1 min-w-[150px]">
+                                <span className="text-white font-bold tracking-tight w-20 uppercase text-[10px] lg:text-xs">{monthLabel}</span>
                                 <div className="flex items-center gap-2">
-                                  <span className={`font-bold font-mono tracking-wider ${percent === 100 ? 'text-green-500' : percent >= 50 ? 'text-yellow-500' : 'text-red-500'}`}>
-                                    {log.paid}/{log.total}
-                                  </span>
-                                  <div className="w-16 h-1.5 skeo-panel-inner bg-black rounded-full overflow-hidden border border-[#222]">
+                                  <div className="w-16 h-1.5 skeuo-panel-inner bg-black/50 rounded-full overflow-hidden border border-zinc-800/50">
                                     <div 
-                                      className={`h-full transition-all ${percent === 100 ? 'bg-green-500' : percent >= 50 ? 'bg-yellow-500' : 'bg-red-500'}`}
+                                      className={`h-full transition-all duration-1000 ${percent === 100 ? 'bg-green-500 shadow-[0_0_8px_rgba(74,222,128,0.5)]' : percent >= 50 ? 'bg-yellow-500' : 'bg-red-500'}`}
                                       style={{ width: `${percent}%` }}
                                     />
                                   </div>
-                                  <span className="text-zinc-500 text-xs font-mono">{percent}%</span>
+                                  <span className={`text-[10px] font-bold font-mono tracking-tight ${percent === 100 ? 'text-green-500' : 'text-zinc-400'}`}>
+                                    {percent}%
+                                  </span>
                                 </div>
                               </div>
-                              <span className="text-zinc-400 font-mono text-[10px] tracking-wider">
-                                {formatCurrency(log.amount_paid)}/{formatCurrency(log.amount_total)}
-                              </span>
+                              <div className="text-right flex flex-col items-end border-l border-zinc-800/50 pl-2 lg:pl-3">
+                                <span className="text-white font-mono text-[11px] lg:text-xs tracking-tight">{formatCurrency(log.amount_paid)}</span>
+                                <span className="text-zinc-500 font-mono text-[9px] tracking-tight border-t border-zinc-800/30 mt-0.5 pt-0.5">{formatCurrency(log.amount_total)}</span>
+                              </div>
                             </div>
                           )
                         })}
@@ -1658,22 +1704,22 @@ export default function Dashboard() {
       </nav>
 
       {showAddModal && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-xl z-50 flex items-center justify-center p-4" onClick={() => setShowAddModal(false)}>
-          <div className="w-full max-w-md max-h-[90vh] flex flex-col" onClick={e => e.stopPropagation()}>
-            <div className="skeuo-card p-0 flex flex-col max-h-[90vh] overflow-hidden relative">
-              <div className="p-5 border-b border-zinc-800/60 flex items-center justify-between flex-shrink-0">
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-xl z-50 flex items-center justify-center p-3 lg:p-4" onClick={() => setShowAddModal(false)}>
+          <div className="w-full max-w-md max-h-[95vh] flex flex-col animate-in slide-in-from-bottom-4 duration-300" onClick={e => e.stopPropagation()}>
+            <div className="skeuo-card p-0 flex flex-col max-h-[95vh] overflow-hidden relative shadow-[0_20px_50px_rgba(0,0,0,0.5),0_0_20px_rgba(34,197,94,0.1)]">
+              <div className="p-4 lg:p-5 border-b border-zinc-800/60 flex items-center justify-between flex-shrink-0">
                 <div className="flex items-center gap-3">
                   <div className="p-2 skeuo-panel-inner rounded-xl">
                     <Plus className="w-5 h-5 text-green-400 drop-shadow-[0_0_5px_rgba(74,222,128,0.5)]" />
                   </div>
-                  <h3 className="text-white font-bold text-lg tracking-wide uppercase text-shadow-glow">Tambah Transaksi</h3>
+                  <h3 className="text-white font-bold text-base lg:text-lg tracking-wide uppercase text-shadow-glow">Tambah Transaksi</h3>
                 </div>
                 <button onClick={() => setShowAddModal(false)} className="p-2 skeuo-panel-inner rounded-xl hover:brightness-110 active:scale-95 transition-all">
                   <X className="w-5 h-5 text-zinc-400" />
                 </button>
               </div>
 
-              <div className="p-4 space-y-4 overflow-y-auto flex-1">
+              <div className="p-4 space-y-4 overflow-y-auto flex-1 custom-scrollbar">
                 <div className="grid grid-cols-2 gap-3">
                   <button
                     onClick={() => setFormData({ ...formData, type: 'income', category_id: '' })}
@@ -1684,8 +1730,8 @@ export default function Dashboard() {
                     }`}
                   >
                     <div className="flex items-center justify-center gap-2">
-                      <ArrowUpRight className={`w-4 h-4 ${formData.type === 'income' ? 'text-green-400' : 'text-zinc-500'}`} />
-                      <span className={`font-bold tracking-wide uppercase text-sm ${formData.type === 'income' ? 'text-green-400' : 'text-zinc-500'}`}>Masuk</span>
+                       <ArrowUpRight className={`w-4 h-4 ${formData.type === 'income' ? 'text-green-400' : 'text-zinc-500'}`} />
+                      <span className={`font-bold tracking-wide uppercase text-xs lg:text-sm ${formData.type === 'income' ? 'text-green-400' : 'text-zinc-500'}`}>Masuk</span>
                     </div>
                   </button>
                   <button
@@ -1698,13 +1744,13 @@ export default function Dashboard() {
                   >
                     <div className="flex items-center justify-center gap-2">
                       <ArrowDownRight className={`w-4 h-4 ${formData.type === 'expense' ? 'text-red-400' : 'text-zinc-500'}`} />
-                      <span className={`font-bold tracking-wide uppercase text-sm ${formData.type === 'expense' ? 'text-red-400' : 'text-zinc-500'}`}>Keluar</span>
+                      <span className={`font-bold tracking-wide uppercase text-xs lg:text-sm ${formData.type === 'expense' ? 'text-red-400' : 'text-zinc-500'}`}>Keluar</span>
                     </div>
                   </button>
                 </div>
 
                 <div>
-                  <label className="text-zinc-400 text-xs font-bold uppercase tracking-widest mb-2 block">Kategori</label>
+                  <label className="text-zinc-400 text-[10px] font-bold uppercase tracking-widest mb-2 block ml-1">Kategori</label>
                   <div className="grid grid-cols-3 gap-2 max-h-48 overflow-y-auto p-1 custom-scrollbar">
                     {categories
                       .filter(cat => cat.group_type === formData.type)
@@ -1724,18 +1770,15 @@ export default function Dashboard() {
                             }`}
                           >
                             <IconComponent className={`w-6 h-6 ${isSelected ? (formData.type === 'income' ? 'text-green-400 drop-shadow-[0_0_5px_rgba(74,222,128,0.5)]' : 'text-red-400 drop-shadow-[0_0_5px_rgba(248,113,113,0.5)]') : 'text-zinc-500'}`} />
-                            <span className={`text-xs font-medium tracking-wide text-center ${isSelected ? 'text-white' : 'text-zinc-500'}`}>{cat.name}</span>
+                            <span className={`text-[10px] font-medium tracking-wide text-center leading-tight ${isSelected ? 'text-white' : 'text-zinc-500'}`}>{cat.name}</span>
                           </button>
                         )
                       })}
                   </div>
-                  {!formData.category_id && (
-                    <p className="text-zinc-500 text-xs mt-1">Pilih kategori terlebih dahulu</p>
-                  )}
                 </div>
 
                 <div>
-                  <label className="text-zinc-400 text-xs font-bold uppercase tracking-widest mb-2 block">Jumlah</label>
+                  <label className="text-zinc-400 text-[10px] font-bold uppercase tracking-widest mb-2 block ml-1">Jumlah</label>
                   <div className="relative">
                     <span className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 font-mono text-sm tracking-widest">Rp</span>
                     <input
@@ -1749,19 +1792,19 @@ export default function Dashboard() {
                 </div>
 
                 {formData.type === 'expense' && (
-                  <div className="mt-2">
-                    <label className="text-zinc-400 text-xs font-bold uppercase tracking-widest mb-2 block">Target (opsional)</label>
+                  <div>
+                    <label className="text-zinc-400 text-[10px] font-bold uppercase tracking-widest mb-2 block ml-1">Target (opsional)</label>
                     <div className="border border-zinc-700/60 rounded-xl overflow-hidden bg-zinc-950/80 shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)]">
-                      <div className="p-2 max-h-40 overflow-y-auto space-y-1 custom-scrollbar">
+                      <div className="p-2 max-h-32 lg:max-h-40 overflow-y-auto space-y-1 custom-scrollbar">
                         {targets.length === 0 ? (
-                          <p className="text-zinc-500 text-sm p-3 text-center">Belum ada target. Tambah di tab Target.</p>
+                          <p className="text-zinc-500 text-xs p-3 text-center">Belum ada target.</p>
                         ) : (
                           targets.map((target) => {
                             const isSelected = formData.target_ids.includes(target.id)
                             return (
                               <label
                                 key={target.id}
-                                className={`flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all ${
+                                className={`flex items-center gap-3 p-2.5 rounded-xl cursor-pointer transition-all ${
                                   isSelected ? 'skeuo-panel-inner border-green-500/30' : 'bg-transparent hover:bg-zinc-900'
                                 }`}
                               >
@@ -1783,12 +1826,12 @@ export default function Dashboard() {
                                       })
                                     }
                                   }}
-                                  className="w-4 h-4 rounded bg-zinc-900 border-zinc-700 text-green-500 focus:ring-green-500 focus:ring-offset-zinc-900"
+                                  className="w-4 h-4 rounded bg-zinc-900 border-zinc-700 text-green-500 focus:ring-green-500"
                                 />
                                 <div className="flex-1">
-                                  <span className={`text-sm ${isSelected ? 'text-white drop-shadow-[0_0_5px_rgba(255,255,255,0.3)]' : 'text-zinc-400'}`}>{target.name}</span>
+                                  <span className={`text-xs ${isSelected ? 'text-white' : 'text-zinc-400'}`}>{target.name}</span>
                                 </div>
-                                <span className={`text-xs font-mono tracking-wide ${isSelected ? 'text-green-400' : 'text-zinc-500'}`}>
+                                <span className={`text-[10px] font-mono tracking-wide ${isSelected ? 'text-green-400' : 'text-zinc-500'}`}>
                                   {formatCurrency(target.amount)}
                                 </span>
                               </label>
@@ -1801,23 +1844,23 @@ export default function Dashboard() {
                 )}
 
                 <div>
-                  <label className="text-zinc-400 text-xs font-bold uppercase tracking-widest mb-2 block">Keterangan</label>
+                  <label className="text-zinc-400 text-[10px] font-bold uppercase tracking-widest mb-2 block ml-1">Keterangan</label>
                   <input
                     type="text"
                     value={formData.description}
                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                     placeholder="Deskripsi transaksi"
-                    className="w-full px-4 py-3 bg-zinc-950/80 border border-zinc-700/60 rounded-xl text-white placeholder-zinc-600 focus:outline-none focus:border-green-500/50 shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)] transition-colors"
+                    className="w-full px-4 py-3 bg-zinc-950/80 border border-zinc-700/60 rounded-xl text-white placeholder-zinc-600 text-sm focus:outline-none focus:border-green-500/50 shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)]"
                   />
                 </div>
 
                 <div>
-                  <label className="text-zinc-400 text-xs font-bold uppercase tracking-widest mb-2 block">Tanggal</label>
+                  <label className="text-zinc-400 text-[10px] font-bold uppercase tracking-widest mb-2 block ml-1">Tanggal</label>
                   <input
                     type="date"
                     value={formData.date}
                     onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                    className="w-full px-4 py-3 bg-zinc-950/80 border border-zinc-700/60 rounded-xl text-white text-sm focus:outline-none focus:border-green-500/50 shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)] transition-colors appearance-none [&::-webkit-calendar-picker-indicator]:invert"
+                    className="w-full px-4 py-3 bg-zinc-950/80 border border-zinc-700/60 rounded-xl text-white text-sm focus:outline-none focus:border-green-500/50 appearance-none [&::-webkit-calendar-picker-indicator]:invert"
                     style={{ colorScheme: 'dark' }}
                   />
                 </div>
@@ -1825,7 +1868,7 @@ export default function Dashboard() {
                 <button
                   onClick={handleAddTransaction}
                   disabled={!formData.amount || !formData.category_id}
-                  className="w-full btn-skeuo mt-2"
+                  className="w-full btn-skeuo mt-2 py-4 shadow-[0_4px_20px_rgba(34,197,94,0.3)]"
                 >
                   Simpan Transaksi
                 </button>
@@ -1920,76 +1963,77 @@ export default function Dashboard() {
 
       {/* Add Target Modal */}
       {showAddTargetModal && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-xl z-50 flex items-center justify-center p-4">
-          <div className="w-full max-w-md" onClick={() => setShowAddTargetModal(false)}>
-            <div className="skeuo-card p-0 overflow-hidden relative" onClick={e => e.stopPropagation()}>
-              <div className="relative">
-                <div className="p-5 border-b border-zinc-800/60 flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 skeuo-panel-inner rounded-xl">
-                      <Target className="w-5 h-5 text-green-400 drop-shadow-[0_0_5px_rgba(74,222,128,0.5)]" />
-                    </div>
-                    <h3 className="text-white font-bold text-lg tracking-wide uppercase text-shadow-glow">Tambah Target</h3>
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-xl z-50 flex items-center justify-center p-3 lg:p-4" onClick={() => setShowAddTargetModal(false)}>
+          <div className="w-full max-w-md animate-in slide-in-from-bottom-4 duration-300" onClick={e => e.stopPropagation()}>
+            <div className="skeuo-card p-0 overflow-hidden relative shadow-[0_20px_50px_rgba(0,0,0,0.5),0_0_20px_rgba(34,197,94,0.1)]">
+              <div className="p-4 lg:p-5 border-b border-zinc-800/60 flex items-center justify-between flex-shrink-0">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 skeuo-panel-inner rounded-xl">
+                    <Target className="w-5 h-5 text-green-400 drop-shadow-[0_0_5px_rgba(74,222,128,0.5)]" />
                   </div>
-                  <button onClick={() => setShowAddTargetModal(false)} className="p-2 skeuo-panel-inner rounded-xl hover:brightness-110 active:scale-95 transition-all">
-                    <X className="w-5 h-5 text-zinc-400" />
-                  </button>
+                  <h3 className="text-white font-bold text-base lg:text-lg tracking-wide uppercase text-shadow-glow">Tambah Tagihan</h3>
+                </div>
+                <button onClick={() => setShowAddTargetModal(false)} className="p-2 skeuo-panel-inner rounded-xl hover:brightness-110 active:scale-95 transition-all">
+                  <X className="w-5 h-5 text-zinc-400" />
+                </button>
+              </div>
+
+              <div className="p-4 space-y-4">
+                <div>
+                  <label className="text-zinc-400 text-[10px] font-bold uppercase tracking-widest mb-2 block ml-1">Nama Tagihan</label>
+                  <input
+                    type="text"
+                    value={newTarget.name}
+                    onChange={(e) => setNewTarget({ ...newTarget, name: e.target.value })}
+                    placeholder="Contoh: Listrik PLN"
+                    className="w-full px-4 py-3 bg-zinc-950/80 border border-zinc-700/60 rounded-xl text-white placeholder-zinc-600 text-sm focus:outline-none focus:border-green-500/50 transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)]"
+                  />
                 </div>
 
-                <div className="p-5 space-y-4">
-                  <div>
-                    <label className="text-zinc-400 text-xs font-bold uppercase tracking-widest mb-2 block">Nama Target</label>
-                    <input
-                      type="text"
-                      value={newTarget.name}
-                      onChange={(e) => setNewTarget({ ...newTarget, name: e.target.value })}
-                      placeholder="Contoh: Listrik PLN"
-                      className="w-full px-4 py-3 bg-zinc-950/80 border border-zinc-700/60 rounded-xl text-white placeholder-zinc-600 focus:outline-none focus:border-green-500/50 transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)]"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="text-zinc-400 text-xs font-bold uppercase tracking-widest mb-2 block">Jumlah</label>
+                <div>
+                  <label className="text-zinc-400 text-[10px] font-bold uppercase tracking-widest mb-2 block ml-1">Jumlah</label>
+                  <div className="relative">
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 font-mono text-sm tracking-widest">Rp</span>
                     <input
                       type="number"
                       value={newTarget.amount}
                       onChange={(e) => setNewTarget({ ...newTarget, amount: e.target.value })}
                       placeholder="0"
-                      className="w-full px-4 py-3 bg-zinc-950/80 border border-zinc-700/60 rounded-xl text-white font-mono tracking-wider placeholder-zinc-600 focus:outline-none focus:border-green-500/50 transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)]"
+                      className="w-full pl-12 pr-4 py-3 bg-zinc-950/80 border border-zinc-700/60 rounded-xl text-white font-mono tracking-wider placeholder-zinc-600 focus:outline-none focus:border-green-500/50 transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)]"
                     />
                   </div>
-
-                  <div>
-                    <label className="text-zinc-400 text-xs font-bold uppercase tracking-widest mb-2 block">Tanggal Jatuh Tempo (opsional)</label>
-                    <input
-                      type="date"
-                      value={newTarget.due_date}
-                      onChange={(e) => setNewTarget({ ...newTarget, due_date: e.target.value })}
-                      className="w-full px-4 py-3 bg-zinc-950/80 border border-zinc-700/60 rounded-xl text-white focus:outline-none focus:border-green-500/50 transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)] appearance-none [&::-webkit-calendar-picker-indicator]:invert"
-                      style={{ colorScheme: 'dark' }}
-                    />
-                  </div>
-
-                  <div className="flex items-center gap-3 p-2">
-                    <input
-                      type="checkbox"
-                      id="is_recurring"
-                      checked={newTarget.is_recurring}
-                      onChange={(e) => setNewTarget({ ...newTarget, is_recurring: e.target.checked })}
-                      className="w-5 h-5 rounded bg-zinc-900 border-zinc-700 text-green-500 focus:ring-green-500 focus:ring-offset-zinc-900"
-                    />
-                    <label htmlFor="is_recurring" className="text-zinc-300 font-medium text-sm tracking-wide">
-                      Berulang setiap bulan
-                    </label>
-                  </div>
-
-                  <button
-                    onClick={handleAddTarget}
-                    className="w-full btn-skeuo mt-2"
-                  >
-                    Simpan Target
-                  </button>
                 </div>
+
+                <div>
+                  <label className="text-zinc-400 text-[10px] font-bold uppercase tracking-widest mb-2 block ml-1">Jatuh Tempo (opsional)</label>
+                  <input
+                    type="date"
+                    value={newTarget.due_date || ''}
+                    onChange={(e) => setNewTarget({ ...newTarget, due_date: e.target.value })}
+                    className="w-full px-4 py-3 bg-zinc-950/80 border border-zinc-700/60 rounded-xl text-white text-sm focus:outline-none focus:border-green-500/50 transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)] appearance-none [&::-webkit-calendar-picker-indicator]:invert"
+                    style={{ colorScheme: 'dark' }}
+                  />
+                </div>
+
+                <div className="flex items-center gap-3 p-2">
+                  <input
+                    type="checkbox"
+                    id="is_recurring"
+                    checked={newTarget.is_recurring}
+                    onChange={(e) => setNewTarget({ ...newTarget, is_recurring: e.target.checked })}
+                    className="w-5 h-5 rounded bg-zinc-900 border-zinc-700 text-green-500 focus:ring-green-500"
+                  />
+                  <label htmlFor="is_recurring" className="text-zinc-300 font-medium text-xs lg:text-sm tracking-wide">
+                    Berulang setiap bulan
+                  </label>
+                </div>
+
+                <button
+                  onClick={handleAddTarget}
+                  className="w-full btn-skeuo mt-2 py-4 shadow-[0_4px_20px_rgba(34,197,94,0.3)]"
+                >
+                  Simpan Tagihan
+                </button>
               </div>
             </div>
           </div>
@@ -2007,36 +2051,37 @@ export default function Dashboard() {
 
       {/* Add Options Modal */}
       {showAddOptions && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-xl z-[60] flex items-center justify-center p-4" onClick={() => setShowAddOptions(false)}>
-          <div className="w-full max-w-md animate-in zoom-in-95 duration-200" onClick={e => e.stopPropagation()}>
-            <div className="skeuo-card p-0 flex flex-col max-h-[90vh] overflow-hidden relative">
-              <div className="p-5 border-b border-zinc-800/60 flex items-center justify-between flex-shrink-0">
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-xl z-[60] flex items-center justify-center p-3 lg:p-4" onClick={() => setShowAddOptions(false)}>
+          <div className="w-full max-w-md animate-in slide-in-from-bottom-4 duration-300" onClick={e => e.stopPropagation()}>
+            <div className="skeuo-card p-0 flex flex-col max-h-[95vh] overflow-hidden relative shadow-[0_20px_50px_rgba(0,0,0,0.5),0_0_20px_rgba(34,197,94,0.1)]">
+              <div className="p-4 lg:p-5 border-b border-zinc-800/60 flex items-center justify-between flex-shrink-0">
                 <div className="flex items-center gap-3">
                   <div className="p-2 skeuo-panel-inner rounded-xl">
                     <Plus className="w-5 h-5 text-green-400 drop-shadow-[0_0_5px_rgba(74,222,128,0.5)]" />
                   </div>
-                  <h3 className="text-white font-bold text-lg tracking-wide uppercase text-shadow-glow">Tambah Transaksi</h3>
+                  <h3 className="text-white font-bold text-base lg:text-lg tracking-wide uppercase text-shadow-glow">Opsi Input</h3>
                 </div>
                 <button onClick={() => setShowAddOptions(false)} className="p-2 skeuo-panel-inner rounded-xl hover:brightness-110 active:scale-95 transition-all">
                   <X className="w-5 h-5 text-zinc-400" />
                 </button>
               </div>
               
-              <div className="p-5 space-y-3">
+              <div className="p-4 lg:p-5 space-y-3 lg:space-y-4">
                 <button
                   onClick={() => {
                     setShowAddOptions(false);
                     setShowAddModal(true);
                   }}
-                  className="w-full flex items-center gap-4 p-4 skeuo-panel-inner hover:brightness-110 active:scale-[0.98] transition-all rounded-xl border border-zinc-700/50 group"
+                  className="w-full flex items-center gap-3 lg:gap-4 p-3 lg:p-4 skeuo-panel-inner hover:brightness-110 active:scale-[0.98] transition-all rounded-2xl border border-zinc-700/50 group shadow-[0_4px_15px_rgba(0,0,0,0.2)]"
                 >
-                  <div className="w-12 h-12 flex items-center justify-center shrink-0">
-                    <Plus className="w-6 h-6 text-green-400 drop-shadow-[0_0_8px_rgba(74,222,128,0.5)] group-hover:scale-110 transition-transform" />
+                  <div className="w-10 h-10 lg:w-12 lg:h-12 flex items-center justify-center shrink-0 skeuo-panel rounded-xl group-hover:shadow-[0_0_15px_rgba(74,222,128,0.3)] transition-all">
+                    <Edit3 className="w-5 h-5 lg:w-6 lg:h-6 text-green-400 drop-shadow-[0_0_8px_rgba(74,222,128,0.5)] group-hover:scale-110 transition-transform" />
                   </div>
-                  <div className="text-left flex-1 border-l border-zinc-700/50 pl-4">
-                    <p className="text-white font-bold uppercase tracking-wider text-sm drop-shadow-md">Input Manual</p>
-                    <p className="text-zinc-400 text-xs mt-1">Masukkan transaksi secara manual</p>
+                  <div className="text-left flex-1 border-l border-zinc-700/50 pl-3 lg:pl-4">
+                    <p className="text-white font-bold uppercase tracking-wider text-xs lg:text-sm drop-shadow-md">Input Manual</p>
+                    <p className="text-zinc-500 text-[10px] lg:text-xs mt-0.5 lg:mt-1 uppercase tracking-widest font-mono">Manual Entry</p>
                   </div>
+                  <ChevronRight className="w-4 h-4 text-zinc-600 group-hover:text-green-500/50 transition-colors" />
                 </button>
 
                 <button
@@ -2044,15 +2089,16 @@ export default function Dashboard() {
                     setShowAddOptions(false);
                     setShowReceiptModal(true);
                   }}
-                  className="w-full flex items-center gap-4 p-4 skeuo-panel-inner hover:brightness-110 active:scale-[0.98] transition-all rounded-xl border border-zinc-700/50 group"
+                  className="w-full flex items-center gap-3 lg:gap-4 p-3 lg:p-4 skeuo-panel-inner hover:brightness-110 active:scale-[0.98] transition-all rounded-2xl border border-zinc-700/50 group shadow-[0_4px_15px_rgba(0,0,0,0.2)]"
                 >
-                  <div className="w-12 h-12 flex items-center justify-center shrink-0">
-                    <Camera className="w-6 h-6 text-green-400 drop-shadow-[0_0_8px_rgba(74,222,128,0.5)] group-hover:scale-110 transition-transform" />
+                  <div className="w-10 h-10 lg:w-12 lg:h-12 flex items-center justify-center shrink-0 skeuo-panel rounded-xl group-hover:shadow-[0_0_15px_rgba(74,222,128,0.3)] transition-all">
+                    <Camera className="w-5 h-5 lg:w-6 lg:h-6 text-green-400 drop-shadow-[0_0_8px_rgba(74,222,128,0.5)] group-hover:scale-110 transition-transform" />
                   </div>
-                  <div className="text-left flex-1 border-l border-zinc-700/50 pl-4">
-                    <p className="text-white font-bold uppercase tracking-wider text-sm drop-shadow-md">Scan Struk</p>
-                    <p className="text-zinc-400 text-xs mt-1">Ambil foto struk dari kamera</p>
+                  <div className="text-left flex-1 border-l border-zinc-700/50 pl-3 lg:pl-4">
+                    <p className="text-white font-bold uppercase tracking-wider text-xs lg:text-sm drop-shadow-md">Scan Struk</p>
+                    <p className="text-green-500/70 text-[10px] lg:text-xs mt-0.5 lg:mt-1 uppercase tracking-widest font-bold font-mono">Powered by Gemini AI</p>
                   </div>
+                  <ChevronRight className="w-4 h-4 text-zinc-600 group-hover:text-green-500/50 transition-colors" />
                 </button>
 
                 <button
@@ -2060,15 +2106,16 @@ export default function Dashboard() {
                     setShowAddOptions(false);
                     fileInputRef.current?.click();
                   }}
-                  className="w-full flex items-center gap-4 p-4 skeuo-panel-inner hover:brightness-110 active:scale-[0.98] transition-all rounded-xl border border-zinc-700/50 group"
+                  className="w-full flex items-center gap-3 lg:gap-4 p-3 lg:p-4 skeuo-panel-inner hover:brightness-110 active:scale-[0.98] transition-all rounded-2xl border border-zinc-700/50 group shadow-[0_4px_15px_rgba(0,0,0,0.2)]"
                 >
-                  <div className="w-12 h-12 flex items-center justify-center shrink-0">
-                    <Upload className="w-6 h-6 text-green-400 drop-shadow-[0_0_8px_rgba(74,222,128,0.5)] group-hover:scale-110 transition-transform" />
+                  <div className="w-10 h-10 lg:w-12 lg:h-12 flex items-center justify-center shrink-0 skeuo-panel rounded-xl group-hover:shadow-[0_0_15px_rgba(74,222,128,0.3)] transition-all">
+                    <Upload className="w-5 h-5 lg:w-6 lg:h-6 text-green-400 drop-shadow-[0_0_8px_rgba(74,222,128,0.5)] group-hover:scale-110 transition-transform" />
                   </div>
-                  <div className="text-left flex-1 border-l border-zinc-700/50 pl-4">
-                    <p className="text-white font-bold uppercase tracking-wider text-sm drop-shadow-md">Pilih dari Galeri</p>
-                    <p className="text-zinc-400 text-xs mt-1">Upload gambar struk dari galeri</p>
+                  <div className="text-left flex-1 border-l border-zinc-700/50 pl-3 lg:pl-4">
+                    <p className="text-white font-bold uppercase tracking-wider text-xs lg:text-sm drop-shadow-md">Pilih dari Galeri</p>
+                    <p className="text-zinc-500 text-[10px] lg:text-xs mt-0.5 lg:mt-1 uppercase tracking-widest font-mono">Upload Image</p>
                   </div>
+                  <ChevronRight className="w-4 h-4 text-zinc-600 group-hover:text-green-500/50 transition-colors" />
                 </button>
               </div>
             </div>
@@ -2077,71 +2124,136 @@ export default function Dashboard() {
       )}
 
       {editingTransaction && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-xl z-[60] flex items-center justify-center p-4" onClick={() => setEditingTransaction(null)}>
-          <div className="w-full max-w-md animate-in zoom-in-95 duration-200" onClick={e => e.stopPropagation()}>
-            <div className="skeuo-card p-0 flex flex-col max-h-[90vh] overflow-hidden relative">
-              <div className="p-5 border-b border-zinc-800/60 flex items-center justify-between flex-shrink-0">
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-xl z-[60] flex items-center justify-center p-3 lg:p-4" onClick={() => setEditingTransaction(null)}>
+          <div className="w-full max-w-md animate-in slide-in-from-bottom-4 duration-300 max-h-[95vh] flex flex-col" onClick={e => e.stopPropagation()}>
+            <div className="skeuo-card p-0 flex flex-col max-h-[95vh] overflow-hidden relative shadow-[0_20px_50px_rgba(0,0,0,0.5),0_0_20px_rgba(34,197,94,0.1)]">
+              <div className="p-4 lg:p-5 border-b border-zinc-800/60 flex items-center justify-between flex-shrink-0">
                 <div className="flex items-center gap-3">
                   <div className="p-2 skeuo-panel-inner rounded-xl">
                     <Wallet className="w-5 h-5 text-green-400 drop-shadow-[0_0_5px_rgba(74,222,128,0.5)]" />
                   </div>
-                  <h3 className="text-white font-bold text-lg tracking-wide uppercase text-shadow-glow">Edit Transaksi</h3>
+                  <h3 className="text-white font-bold text-base lg:text-lg tracking-wide uppercase text-shadow-glow">Edit Transaksi</h3>
                 </div>
                 <button onClick={() => setEditingTransaction(null)} className="p-2 skeuo-panel-inner rounded-xl hover:brightness-110 active:scale-95 transition-all">
                   <X className="w-5 h-5 text-zinc-400" />
                 </button>
               </div>
-              <div className="p-5 space-y-4 overflow-y-auto flex-1">
+              <div className="p-4 space-y-4 overflow-y-auto flex-1 custom-scrollbar">
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    onClick={() => setEditingTransaction({ ...editingTransaction, type: 'income', category_id: '' })}
+                    className={`py-3 px-4 rounded-xl transition-all ${
+                      editingTransaction.type === 'income'
+                        ? 'skeuo-panel-inner border-green-500/50 shadow-[0_0_10px_rgba(74,222,128,0.2)]'
+                        : 'bg-zinc-950/50 border border-zinc-800 hover:border-zinc-700'
+                    }`}
+                  >
+                    <div className="flex items-center justify-center gap-2">
+                      <ArrowUpRight className={`w-4 h-4 ${editingTransaction.type === 'income' ? 'text-green-400' : 'text-zinc-500'}`} />
+                      <span className={`font-bold tracking-wide uppercase text-xs lg:text-sm ${editingTransaction.type === 'income' ? 'text-green-400' : 'text-zinc-500'}`}>Masuk</span>
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => setEditingTransaction({ ...editingTransaction, type: 'expense', category_id: '' })}
+                    className={`py-3 px-4 rounded-xl transition-all ${
+                      editingTransaction.type === 'expense'
+                        ? 'skeuo-panel-inner border-red-500/50 shadow-[0_0_10px_rgba(248,113,113,0.2)]'
+                        : 'bg-zinc-950/50 border border-zinc-800 hover:border-zinc-700'
+                    }`}
+                  >
+                    <div className="flex items-center justify-center gap-2">
+                      <ArrowDownRight className={`w-4 h-4 ${editingTransaction.type === 'expense' ? 'text-red-400' : 'text-zinc-500'}`} />
+                      <span className={`font-bold tracking-wide uppercase text-xs lg:text-sm ${editingTransaction.type === 'expense' ? 'text-red-400' : 'text-zinc-500'}`}>Keluar</span>
+                    </div>
+                  </button>
+                </div>
+
                 <div>
-                  <label className="text-zinc-400 text-xs font-bold uppercase tracking-wider drop-shadow-md block mb-2">Deskripsi</label>
+                  <label className="text-zinc-400 text-[10px] font-bold uppercase tracking-widest mb-2 block ml-1">Kategori</label>
+                  <div className="grid grid-cols-3 gap-2 max-h-48 overflow-y-auto p-1 custom-scrollbar">
+                    {categories
+                      .filter(cat => cat.group_type === editingTransaction.type)
+                      .map((cat) => {
+                        const IconComponent = iconMap[cat.icon] || Package
+                        const isSelected = editingTransaction.category_id === cat.id
+                        return (
+                          <button
+                            key={cat.id}
+                            onClick={() => setEditingTransaction({ ...editingTransaction, category_id: cat.id })}
+                            className={`p-3 rounded-xl flex flex-col items-center gap-2 transition-all ${
+                              isSelected
+                                ? editingTransaction.type === 'income'
+                                  ? 'skeuo-panel-inner border-green-500/30'
+                                  : 'skeuo-panel-inner border-red-500/30'
+                                : 'bg-zinc-950/50 border border-zinc-800 hover:border-zinc-700 shadow-[inset_0_2px_4px_rgba(0,0,0,0.2)]'
+                            }`}
+                          >
+                            <IconComponent className={`w-6 h-6 ${isSelected ? (editingTransaction.type === 'income' ? 'text-green-400 drop-shadow-[0_0_5px_rgba(74,222,128,0.5)]' : 'text-red-400 drop-shadow-[0_0_5px_rgba(248,113,113,0.5)]') : 'text-zinc-500'}`} />
+                            <span className={`text-[10px] font-medium tracking-wide text-center leading-tight ${isSelected ? 'text-white' : 'text-zinc-500'}`}>{cat.name}</span>
+                          </button>
+                        )
+                      })}
+                  </div>
+                </div>
+
+                <div>
+                  <label className="text-zinc-400 text-[10px] font-bold uppercase tracking-wider block mb-2 ml-1">Deskripsi</label>
                   <input
                     type="text"
                     value={editingTransaction.description}
                     onChange={(e) => setEditingTransaction({ ...editingTransaction, description: e.target.value })}
-                    className="w-full bg-zinc-900/50 border border-zinc-700 rounded-xl px-4 py-3 text-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)] focus:outline-none focus:border-green-500/50 focus:ring-1 focus:ring-green-500/50 transition-all font-mono"
+                    className="w-full bg-zinc-950/80 border border-zinc-700/60 rounded-xl px-4 py-3 text-white text-sm shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)] focus:outline-none focus:border-green-500/50 transition-all font-mono"
                   />
                 </div>
                 <div>
-                  <label className="text-zinc-400 text-xs font-bold uppercase tracking-wider drop-shadow-md block mb-2">Jumlah</label>
-                  <input
-                    type="number"
-                    value={editingTransaction.amount}
-                    onChange={(e) => setEditingTransaction({ ...editingTransaction, amount: parseFloat(e.target.value) || 0 })}
-                    className="w-full bg-zinc-900/50 border border-zinc-700 rounded-xl px-4 py-3 text-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)] focus:outline-none focus:border-green-500/50 focus:ring-1 focus:ring-green-500/50 transition-all font-mono font-bold text-lg"
-                  />
+                  <label className="text-zinc-400 text-[10px] font-bold uppercase tracking-wider block mb-2 ml-1">Jumlah</label>
+                  <div className="relative">
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 font-mono text-sm tracking-widest">Rp</span>
+                    <input
+                      type="number"
+                      value={editingTransaction.amount}
+                      onChange={(e) => setEditingTransaction({ ...editingTransaction, amount: parseFloat(e.target.value) || 0 })}
+                      className="w-full pl-12 pr-4 py-3 bg-zinc-950/80 border border-zinc-700/60 rounded-xl text-white font-mono font-bold text-lg shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)] focus:outline-none focus:border-green-500/50 transition-all"
+                    />
+                  </div>
                 </div>
                 <div>
-                  <label className="text-zinc-400 text-xs font-bold uppercase tracking-wider drop-shadow-md block mb-2">Tanggal</label>
+                  <label className="text-zinc-400 text-[10px] font-bold uppercase tracking-wider block mb-2 ml-1">Tanggal</label>
                   <input
                     type="date"
                     value={editingTransaction.date}
                     onChange={(e) => setEditingTransaction({ ...editingTransaction, date: e.target.value })}
-                    className="w-full bg-zinc-900/50 border border-zinc-700 rounded-xl px-4 py-3 text-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)] focus:outline-none focus:border-green-500/50 focus:ring-1 focus:ring-green-500/50 transition-all font-mono appearance-none [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-4 [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-100 [&::-webkit-calendar-picker-indicator]:invert"
+                    className="w-full bg-zinc-950/80 border border-zinc-700/60 rounded-xl px-4 py-3 text-white text-sm shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)] focus:outline-none focus:border-green-500/50 transition-all font-mono appearance-none [&::-webkit-calendar-picker-indicator]:invert"
                     style={{ colorScheme: 'dark' }}
                   />
-                  <p className="text-zinc-500 text-xs mt-2 font-mono ml-1">
-                    {new Date(editingTransaction.date + 'T00:00:00').toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
-                  </p>
                 </div>
               </div>
-              <div className="p-5 border-t border-zinc-800/60 flex flex-col gap-3 flex-shrink-0">
+              <div className="p-4 lg:p-5 border-t border-zinc-800/60 flex flex-col gap-3 flex-shrink-0">
                 <button
                   onClick={async () => {
                     try {
-                      await supabase.from('kf_transactions').update({
+                      const { error } = await supabase.from('kf_transactions').update({
                         description: editingTransaction.description,
                         amount: editingTransaction.amount,
                         date: editingTransaction.date,
+                        type: editingTransaction.type,
+                        category_id: editingTransaction.category_id,
                       }).eq('id', editingTransaction.id)
+
+                      if (error) throw error
                       
-                      setTransactions(prev => prev.map(t => t.id === editingTransaction.id ? editingTransaction : t))
-                      calculateStats(transactions.map(t => t.id === editingTransaction.id ? editingTransaction : t))
+                      const updatedTransactions = transactions.map(t => t.id === editingTransaction.id ? editingTransaction : t)
+                      setTransactions(updatedTransactions)
+                      calculateStats(updatedTransactions)
                       setEditingTransaction(null)
+                      showToast('Transaksi diperbarui', 'success')
                     } catch (error) {
                       console.error('Error updating:', error)
+                      showToast('Gagal memperbarui transaksi', 'error')
                     }
                   }}
-                  className="w-full btn-skeuo rounded-xl py-4 active:scale-[0.98] transition-transform"
+                  disabled={!editingTransaction.amount || !editingTransaction.category_id}
+                  className="w-full btn-skeuo rounded-xl py-4 active:scale-[0.98] transition-transform shadow-[0_4px_20px_rgba(34,197,94,0.3)]"
                 >
                   <span className="flex items-center justify-center gap-2">
                     <Check className="w-5 h-5 text-green-400 drop-shadow-[0_0_8px_rgba(74,222,128,0.8)]" />
@@ -2150,10 +2262,12 @@ export default function Dashboard() {
                 </button>
                 <button
                   onClick={() => {
-                    handleDeleteTransaction(editingTransaction.id)
-                    setEditingTransaction(null)
+                    if (confirm('Hapus transaksi ini?')) {
+                      handleDeleteTransaction(editingTransaction.id)
+                      setEditingTransaction(null)
+                    }
                   }}
-                  className="w-full py-4 skeuo-panel-inner rounded-xl border border-red-500/30 text-red-500 font-bold uppercase tracking-wider text-sm hover:brightness-110 active:scale-[0.98] transition-all shadow-[inset_0_0_15px_rgba(239,68,68,0.1)]"
+                  className="w-full py-4 skeuo-panel-inner rounded-xl border border-red-500/30 text-red-500 font-bold uppercase tracking-wider text-xs lg:text-sm hover:brightness-110 active:scale-[0.98] transition-all"
                 >
                   Hapus Transaksi
                 </button>
