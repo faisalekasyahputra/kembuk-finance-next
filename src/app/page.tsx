@@ -1059,10 +1059,10 @@ export default function Dashboard() {
                     setShowAddOptions(false)
                     setShowAddModal(true)
                   }}
-                  className="btn-skeuo flex flex-col py-3 lg:py-4 gap-1 items-center"
+                  className="btn-skeuo flex flex-col py-3 lg:py-4 gap-1 items-center active:scale-95 transition-transform"
                 >
                   <ArrowUpRight className="w-5 h-5 text-green-500" />
-                  <span className="text-[9px] lg:text-[10px] uppercase font-bold tracking-tighter lg:tracking-widest">Pemasukan</span>
+                  <span className="text-[10px] lg:text-xs uppercase font-bold tracking-tighter lg:tracking-widest">Pemasukan</span>
                 </button>
 
                 <button 
@@ -1071,20 +1071,20 @@ export default function Dashboard() {
                     setShowAddModal(true)
                     setFormData({...formData, type: 'expense'})
                   }}
-                  className="btn-skeuo flex flex-col py-3 lg:py-4 gap-1 items-center"
+                  className="btn-skeuo flex flex-col py-3 lg:py-4 gap-1 items-center active:scale-95 transition-transform"
                 >
                   <ArrowDownRight className="w-5 h-5 text-red-500" />
-                  <span className="text-[9px] lg:text-[10px] uppercase font-bold tracking-tighter lg:tracking-widest">Pengeluaran</span>
+                  <span className="text-[10px] lg:text-xs uppercase font-bold tracking-tighter lg:tracking-widest">Pengeluaran</span>
                 </button>
 
                 <button 
                   onClick={() => {
                     setShowReceiptModal(true)
                   }}
-                  className="btn-skeuo flex flex-col py-3 lg:py-4 gap-1 items-center"
+                  className="btn-skeuo flex flex-col py-3 lg:py-4 gap-1 items-center active:scale-95 transition-transform"
                 >
                   <Camera className="w-5 h-5 text-blue-400" />
-                  <span className="text-[9px] lg:text-[10px] uppercase font-bold tracking-tighter lg:tracking-widest">Scan Struk</span>
+                  <span className="text-[10px] lg:text-xs uppercase font-bold tracking-tighter lg:tracking-widest">Scan Struk</span>
                 </button>
               </div>
 
@@ -1675,9 +1675,10 @@ export default function Dashboard() {
               onClick={() => setShowAddOptions(true)}
               className="flex flex-col items-center relative -mt-10 group"
             >
-              <div className="w-16 h-16 rounded-full flex items-center justify-center skeuo-card p-1.5 bg-[#111] transition-transform active:scale-95">
-                <div className="w-full h-full bg-gradient-to-br from-green-400 via-green-500 to-green-600 rounded-full flex items-center justify-center shadow-[inset_0_2px_8px_rgba(255,255,255,0.4),0_0_20px_rgba(34,197,94,0.3)]">
-                  <Plus className="w-8 h-8 text-black drop-shadow-[0_1px_1px_rgba(255,255,255,0.3)]" />
+              <div className="w-16 h-16 rounded-full flex items-center justify-center skeuo-card p-1 bg-[#111] transition-all active:scale-90 relative overflow-hidden">
+                <div className="absolute inset-0 bg-green-500/10 animate-pulse"></div>
+                <div className="w-full h-full bg-gradient-to-br from-green-400 via-green-500 to-green-600 rounded-full flex items-center justify-center shadow-[inset_0_2px_8px_rgba(255,255,255,0.4),0_0_25px_rgba(34,197,94,0.4)] relative z-10">
+                  <Plus className="w-8 h-8 text-black drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]" />
                 </div>
               </div>
             </button>
@@ -1707,7 +1708,7 @@ export default function Dashboard() {
         <div className="fixed inset-0 bg-black/80 backdrop-blur-xl z-50 flex items-center justify-center p-3 lg:p-4" onClick={() => setShowAddModal(false)}>
           <div className="w-full max-w-md max-h-[95vh] flex flex-col animate-in slide-in-from-bottom-4 duration-300" onClick={e => e.stopPropagation()}>
             <div className="skeuo-card p-0 flex flex-col max-h-[95vh] overflow-hidden relative shadow-[0_20px_50px_rgba(0,0,0,0.5),0_0_20px_rgba(34,197,94,0.1)]">
-              <div className="p-4 lg:p-5 border-b border-zinc-800/60 flex items-center justify-between flex-shrink-0">
+              <div className="p-3 lg:p-5 border-b border-zinc-800/60 flex items-center justify-between flex-shrink-0">
                 <div className="flex items-center gap-3">
                   <div className="p-2 skeuo-panel-inner rounded-xl">
                     <Plus className="w-5 h-5 text-green-400 drop-shadow-[0_0_5px_rgba(74,222,128,0.5)]" />
@@ -1719,7 +1720,7 @@ export default function Dashboard() {
                 </button>
               </div>
 
-              <div className="p-4 space-y-4 overflow-y-auto flex-1 custom-scrollbar">
+              <div className="p-3 lg:p-4 space-y-3 lg:space-y-4 overflow-y-auto flex-1 custom-scrollbar">
                 <div className="grid grid-cols-2 gap-3">
                   <button
                     onClick={() => setFormData({ ...formData, type: 'income', category_id: '' })}
