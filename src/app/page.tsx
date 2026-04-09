@@ -501,14 +501,19 @@ export default function Dashboard() {
       const data = await res.json()
       if (data.payments) {
         setTargetPayments(data.payments)
-        calculateMonthlyLogs(data.payments)
       }
     } catch (error) {
       console.error('Error fetching target payments:', error)
     }
   }
 
-  const calculateMonthlyLogs = (payments: TargetPayment[]) => {
+  useEffect(() => {
+    if (targets.length > 0 && targetPayments.length >= 0) {
+      calculateMonthlyLogs(targetPayments, targets)
+    }
+  }, [targets, targetPayments])
+
+  const calculateMonthlyLogs = (payments: TargetPayment[], currentTargets: Target[]) => {
     const monthlyData: Record<string, { paid: number; total: number; amount_paid: number; amount_total: number }> = {}
     
     payments.forEach(payment => {
@@ -520,25 +525,18 @@ export default function Dashboard() {
       monthlyData[monthKey].amount_paid += Number(payment.amount)
     })
     
-    targets.forEach(target => {
+    currentTargets.forEach(target => {
       const createdMonth = new Date(target.created_at).toISOString().slice(0, 7)
-      const monthPayments = payments.filter(p => p.target_id === target.id)
-      const paidMonths = new Set(monthPayments.map(p => new Date(p.paid_at).toISOString().slice(0, 7)))
+      const now = new Date()
+      const startMonth = new Date(createdMonth)
       
-      paidMonths.forEach(month => {
-        if (monthlyData[month]) {
-          monthlyData[month].total += 1
-          monthlyData[month].amount_total += Number(target.amount)
+      for (let d = new Date(startMonth); d <= now; d.setMonth(d.getMonth() + 1)) {
+        const monthKey = d.toISOString().slice(0, 7)
+        if (!monthlyData[monthKey]) {
+          monthlyData[monthKey] = { paid: 0, total: 0, amount_paid: 0, amount_total: 0 }
         }
-      })
-      
-      if (!paidMonths.has(createdMonth)) {
-        const month = createdMonth
-        if (!monthlyData[month]) {
-          monthlyData[month] = { paid: 0, total: 0, amount_paid: 0, amount_total: 0 }
-        }
-        monthlyData[month].total += 1
-        monthlyData[month].amount_total += Number(target.amount)
+        monthlyData[monthKey].total += 1
+        monthlyData[monthKey].amount_total += Number(target.amount)
       }
     })
     
