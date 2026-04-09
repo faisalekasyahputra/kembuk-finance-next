@@ -1026,10 +1026,9 @@ export default function Dashboard() {
   const navItems = [
     { id: 'home', icon: Wallet, label: 'Beranda' },
     { id: 'targets', icon: Target, label: 'Target' },
-    { id: 'savings', icon: PiggyBank, label: 'Tabungan' },
-    { id: 'transactions', icon: Receipt, label: 'Transaksi' },
     { id: 'receipt', icon: Printer, label: 'Struk' },
-    { id: 'account', icon: User, label: 'Akun' },
+    { id: 'transactions', icon: Receipt, label: 'Transaksi' },
+    { id: 'savings', icon: PiggyBank, label: 'Tabungan' },
   ]
 
   const todayTransactions = transactions.filter(
@@ -1103,13 +1102,22 @@ export default function Dashboard() {
         </nav>
 
         <div className="pt-4 border-t border-zinc-800 mt-4">
-          <div className="flex items-center gap-3 px-3 py-3 rounded-lg bg-zinc-800/50 border border-zinc-700/50">
-            <div className="w-10 h-10 bg-zinc-700 rounded-lg flex items-center justify-center border border-zinc-600">
-              <User className="w-5 h-5 text-zinc-300" />
+          <div 
+            onClick={() => setActiveTab('account')}
+            className={`flex items-center gap-3 px-3 py-3 rounded-lg transition-all cursor-pointer ${
+              activeTab === 'account' 
+                ? 'skeuo-card bg-[#1a1a1a] border-green-500/30 shadow-[0_0_15px_rgba(0,255,102,0.1)]' 
+                : 'bg-zinc-800/50 border border-zinc-700/50 hover:bg-zinc-800'
+            }`}
+          >
+            <div className={`w-10 h-10 rounded-lg flex items-center justify-center border transition-all ${
+              activeTab === 'account' ? 'border-green-500/50 bg-green-500/10' : 'bg-zinc-700 border-zinc-600'
+            }`}>
+              <User className={`w-5 h-5 ${activeTab === 'account' ? 'text-green-500' : 'text-zinc-300'}`} />
             </div>
             <div className="flex-1">
-              <p className="text-white text-sm">Kembuk</p>
-              <p className="text-zinc-500 text-xs">Premium User</p>
+              <p className={`text-sm font-bold ${activeTab === 'account' ? 'text-green-500' : 'text-white'}`}>Kembuk</p>
+              <p className="text-zinc-500 text-[10px] uppercase font-bold tracking-widest">Premium User</p>
             </div>
             <button className="p-2 bg-zinc-700/50 rounded-lg border border-zinc-600/50 hover:bg-zinc-700 transition-colors">
               <Settings className="w-4 h-4 text-zinc-400" />
@@ -1125,8 +1133,20 @@ export default function Dashboard() {
               {activeTab === 'home' && 'Beranda'}
               {activeTab === 'targets' && 'Target'}
               {activeTab === 'transactions' && 'Transaksi'}
+              {activeTab === 'savings' && 'Tabungan'}
               {activeTab === 'account' && 'Akun'}
+              {activeTab === 'receipt' && 'Input'}
             </h1>
+            <button 
+              onClick={() => setActiveTab('account')}
+              className={`p-2 rounded-xl transition-all ${
+                activeTab === 'account' 
+                  ? 'skeuo-panel-inner text-green-500 border-green-500/30' 
+                  : 'skeuo-panel hover:bg-zinc-800 text-zinc-400 border-zinc-700/50'
+              } border shadow-lg`}
+            >
+              <User className="w-5 h-5 transition-transform active:scale-90" />
+            </button>
           </div>
         </header>
 
