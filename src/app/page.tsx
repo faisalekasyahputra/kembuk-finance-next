@@ -1036,7 +1036,7 @@ export default function Dashboard() {
   )
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-zinc-300 pb-24 lg:pb-0 font-sans">
+    <div className="min-h-screen bg-[#050505] text-zinc-300 pb-24 lg:pb-0 font-sans">
       {toast && (
         <div className="fixed top-6 left-1/2 -translate-x-1/2 z-[200] px-6 py-4 skeuo-card !rounded-2xl flex items-center gap-4 animate-in slide-in-from-top-10 duration-300">
           <div className="skeuo-panel-inner p-2.5 rounded-xl">
@@ -1066,7 +1066,7 @@ export default function Dashboard() {
           </div>
         </div>
       )}
-      <aside className="hidden lg:flex fixed left-0 top-0 h-full w-64 bg-[#111] border-r border-[#0f0f0f] shadow-[inset_-2px_0_10px_rgba(0,0,0,0.5)] flex-col p-5 z-40">
+      <aside className="hidden lg:flex fixed left-0 top-0 h-full w-64 bg-[#050505] border-r border-[#000] shadow-[inset_-2px_0_10px_rgba(0,0,0,0.5)] flex-col p-5 z-40">
         <div className="flex items-center gap-3 mb-8 px-3">
           <div className="w-12 h-12 bg-zinc-800 rounded-xl flex items-center justify-center border border-zinc-700">
             <Wallet className="w-6 h-6 text-zinc-300" />
@@ -1127,7 +1127,7 @@ export default function Dashboard() {
       </aside>
 
       <div className="lg:ml-60">
-        <header className="sticky top-0 bg-[#111]/90 backdrop-blur-md border-b border-[#0f0f0f] px-4 py-4 z-30 lg:hidden shadow-lg">
+        <header className="sticky top-0 bg-[#050505]/95 backdrop-blur-md border-b border-[#000] px-4 py-4 z-30 lg:hidden shadow-lg">
           <div className="flex items-center justify-between">
             <h1 className="text-white font-bold tracking-wide">
               {activeTab === 'home' && 'Beranda'}
@@ -1870,7 +1870,7 @@ export default function Dashboard() {
         </main>
       </div>
 
-      <nav className="fixed bottom-0 left-0 right-0 bg-[#0c0c0c] border-t border-[#000] shadow-[0_-10px_30px_rgba(0,0,0,0.9)] flex items-center justify-around py-3 pb-8 z-50 lg:hidden">
+      <nav className="fixed bottom-0 left-0 right-0 bg-[#030303] border-t border-[#000] shadow-[0_-10px_30px_rgba(0,0,0,0.9)] flex items-center justify-around py-3 pb-8 z-50 lg:hidden">
         {navItems.map((item) => (
           item.id === 'receipt' ? (
             <button
@@ -1889,16 +1889,13 @@ export default function Dashboard() {
             <button
               key={item.id}
               onClick={() => setActiveTab(item.id)}
-              className={`flex flex-col items-center gap-1.5 p-2 transition-all duration-300 relative ${
+              className={`flex flex-col items-center justify-center p-2 transition-all duration-300 relative ${
                 activeTab === item.id 
                   ? 'text-green-500 scale-110' 
                   : 'text-zinc-600 hover:text-zinc-400'
               }`}
             >
-              <item.icon className={`w-5 h-5 transition-all ${activeTab === item.id ? 'drop-shadow-[0_0_8px_rgba(0,255,102,0.6)]' : ''}`} />
-              <span className={`text-[9px] font-mono font-bold tracking-[0.15em] uppercase transition-all ${activeTab === item.id ? 'drop-shadow-[0_0_5px_rgba(0,255,102,0.4)]' : ''}`}>
-                {item.label}
-              </span>
+              <item.icon className={`w-6 h-6 transition-all ${activeTab === item.id ? 'drop-shadow-[0_0_8px_rgba(0,255,102,0.6)]' : ''}`} />
               {activeTab === item.id && (
                 <div className="absolute -bottom-1 w-1 h-1 bg-green-500 rounded-full shadow-[0_0_8px_rgba(0,255,102,1)]" />
               )}

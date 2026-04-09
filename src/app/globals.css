@@ -6,12 +6,12 @@
 }
 
 :root {
-  --bg-dark: #1a1a1a;
-  --bg-darker: #111;
-  --metal-top: #4f4f4f;
-  --metal-bottom: #2b2b2b;
-  --metal-pressed-top: #1e1e1e;
-  --metal-pressed-bottom: #262626;
+  --bg-dark: #080808;
+  --bg-darker: #050505;
+  --metal-top: #2a2a2a;
+  --metal-bottom: #151515;
+  --metal-pressed-top: #0a0a0a;
+  --metal-pressed-bottom: #111;
   --neon-green: #00ff66;
   --neon-green-glow: rgba(0, 255, 102, 0.4);
   --highlight: rgba(255, 255, 255, 0.15);
@@ -21,10 +21,10 @@
 
 body {
   margin: 0;
-  background-color: #2a2a2a;
+  background-color: #050505;
   background-image: 
-    radial-gradient(circle at 50% 0%, #3b3b3b, #151515),
-    repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(0,0,0,0.05) 2px, rgba(0,0,0,0.05) 4px);
+    radial-gradient(circle at 50% 0%, #1a1a1a, #000000),
+    repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(0,0,0,0.1) 2px, rgba(0,0,0,0.1) 4px);
   color: white;
   min-height: 100vh;
 }
@@ -75,11 +75,11 @@ body {
   background: linear-gradient(135deg, var(--metal-top), var(--metal-bottom));
   border-radius: 16px;
   box-shadow:
-    inset 0 1px 2px rgba(255, 255, 255, 0.3),
-    inset 0 -1px 3px rgba(0, 0, 0, 0.6),
-    0 8px 15px rgba(0, 0, 0, 0.8);
-  border-top: 1px solid #777;
-  border-left: 1px solid #555;
+    inset 0 1px 2px rgba(255, 255, 255, 0.1),
+    inset 0 -1px 3px rgba(0, 0, 0, 0.8),
+    0 10px 20px rgba(0, 0, 0, 0.9);
+  border-top: 1px solid #333;
+  border-left: 1px solid #222;
 }
 
 /* 6. INPUTS */
