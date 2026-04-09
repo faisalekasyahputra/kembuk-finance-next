@@ -257,25 +257,40 @@ function ReceiptExportView({ transactions, balance, totalIncome, totalExpense, o
   )
 }
 
-function SavingsTargetModal({ onClose, onSuccess, onCreate }: { onClose: () => void; onSuccess: () => void; onCreate?: () => void }) {
-  const [name, setName] = useState('')
-  const [targetAmount, setTargetAmount] = useState('')
+function SavingsTargetModal({ onClose, onSuccess, onCreate, target }: { 
+  onClose: () => void; 
+  onSuccess: () => void; 
+  onCreate?: () => void;
+  target?: { id: string; name: string; target_amount: number; current_amount: number } | null
+}) {
+  const [name, setName] = useState(target?.name || '')
+  const [targetAmount, setTargetAmount] = useState(target?.target_amount?.toString() || '')
+  const [currentAmount, setCurrentAmount] = useState(target?.current_amount?.toString() || '')
   const [loading, setLoading] = useState(false)
 
   const handleSubmit = async () => {
     if (!name || !targetAmount) return
     setLoading(true)
     try {
-      const res = await fetch('/api/savings-targets', {
-        method: 'POST',
+      const url = target ? `/api/savings-targets/${target.id}` : '/api/savings-targets'
+      const method = target ? 'PUT' : 'POST'
+      
+      const res = await fetch(url, {
+        method,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, target_amount: targetAmount }),
+        body: JSON.stringify({ 
+          name, 
+          target_amount: targetAmount,
+          current_amount: currentAmount || 0
+        }),
       })
       const data = await res.json()
       if (data.target) {
         if (onCreate) onCreate()
         
-        await fetch('/api/savings/redistribute', { method: 'POST' })
+        if (!target) {
+          await fetch('/api/savings/redistribute', { method: 'POST' })
+        }
         
         onSuccess()
       }
@@ -287,7 +302,7 @@ function SavingsTargetModal({ onClose, onSuccess, onCreate }: { onClose: () => v
   }
 
   return (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-xl z-50 flex items-center justify-center p-3 lg:p-4" onClick={onClose}>
+    <div className="fixed inset-0 bg-black/80 backdrop-blur-xl z-[80] flex items-center justify-center p-3 lg:p-4" onClick={onClose}>
       <div className="w-full max-w-md animate-in slide-in-from-bottom-4 duration-300" onClick={e => e.stopPropagation()}>
         <div className="skeuo-card p-0 overflow-hidden relative shadow-[0_20px_50px_rgba(0,0,0,0.5),0_0_20px_rgba(34,197,94,0.1)]">
           <div className="relative">
@@ -296,7 +311,9 @@ function SavingsTargetModal({ onClose, onSuccess, onCreate }: { onClose: () => v
                 <div className="p-2 skeuo-panel-inner rounded-xl">
                   <PiggyBank className="w-5 h-5 text-green-400 drop-shadow-[0_0_5px_rgba(74,222,128,0.5)]" />
                 </div>
-                <h3 className="text-white font-bold text-base lg:text-lg tracking-wide uppercase text-shadow-glow">Target Tabungan</h3>
+                <h3 className="text-white font-bold text-base lg:text-lg tracking-wide uppercase text-shadow-glow">
+                  {target ? 'Edit Target' : 'Target Baru'}
+                </h3>
               </div>
               <button onClick={onClose} className="p-2 skeuo-panel-inner rounded-xl hover:brightness-110 active:scale-95 transition-all">
                 <X className="w-5 h-5 text-zinc-400" />
@@ -326,12 +343,115 @@ function SavingsTargetModal({ onClose, onSuccess, onCreate }: { onClose: () => v
                   />
                 </div>
               </div>
+              {target && (
+                <div>
+                  <label className="text-zinc-400 text-[10px] font-bold uppercase tracking-widest mb-2 block ml-1">Sudah Terkumpul</label>
+                  <div className="relative">
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 font-mono text-sm tracking-widest">Rp</span>
+                    <input
+                      type="number"
+                      value={currentAmount}
+                      onChange={(e) => setCurrentAmount(e.target.value)}
+                      placeholder="0"
+                      className="w-full pl-12 pr-4 py-3 bg-zinc-950/80 border border-zinc-700/60 rounded-xl text-white font-mono tracking-wider placeholder-zinc-600 focus:outline-none focus:border-green-500/50 transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)]"
+                    />
+                  </div>
+                </div>
+              )}
               <button
                 onClick={handleSubmit}
                 disabled={!name || !targetAmount || loading}
                 className="w-full btn-skeuo mt-2 py-4 shadow-[0_4px_20px_rgba(34,197,94,0.3)]"
               >
-                {loading ? 'Menyimpan...' : 'Simpan Target'}
+                {loading ? 'Menyimpan...' : (target ? 'Simpan Perubahan' : 'Simpan Target')}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function AutoSaveModal({ onClose, initialPercent, currentBalance, onSuccess }: { 
+  onClose: () => void; 
+  initialPercent: number; 
+  currentBalance: number;
+  onSuccess: () => void 
+}) {
+  const [percent, setPercent] = useState(initialPercent.toString())
+  const [balance, setBalance] = useState(currentBalance.toString())
+  const [loading, setLoading] = useState(false)
+
+  const handleSubmit = async () => {
+    setLoading(true)
+    try {
+      const res = await fetch('/api/savings', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          auto_save_percent: parseFloat(percent),
+          balance: parseFloat(balance)
+        }),
+      })
+      if (res.ok) {
+        onSuccess()
+      }
+    } catch (error) {
+      console.error('Error:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <div className="fixed inset-0 bg-black/80 backdrop-blur-xl z-[80] flex items-center justify-center p-3 lg:p-4" onClick={onClose}>
+      <div className="w-full max-w-sm animate-in slide-in-from-bottom-4 duration-300" onClick={e => e.stopPropagation()}>
+        <div className="skeuo-card p-0 overflow-hidden relative shadow-[0_20px_50px_rgba(0,0,0,0.5),0_0_20px_rgba(234,179,8,0.1)]">
+          <div className="relative">
+            <div className="p-4 border-b border-zinc-800/60 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="p-2 skeuo-panel-inner rounded-xl">
+                  <Settings className="w-5 h-5 text-yellow-400 drop-shadow-[0_0_5px_rgba(234,179,8,0.5)]" />
+                </div>
+                <h3 className="text-white font-bold text-base tracking-wide uppercase text-shadow-glow">Kelola Tabungan</h3>
+              </div>
+              <button onClick={onClose} className="p-2 skeuo-panel-inner rounded-xl">
+                <X className="w-5 h-5 text-zinc-400" />
+              </button>
+            </div>
+            <div className="p-4 space-y-4">
+              <div>
+                <label className="text-zinc-400 text-[10px] font-bold uppercase tracking-widest mb-2 block ml-1">Persentase Auto Save</label>
+                <div className="relative">
+                  <input
+                    type="number"
+                    value={percent}
+                    onChange={(e) => setPercent(e.target.value)}
+                    className="w-full px-4 py-3 bg-zinc-950/80 border border-zinc-700/60 rounded-xl text-white font-mono placeholder-zinc-600 focus:outline-none focus:border-yellow-500/50 text-sm transition-all"
+                  />
+                  <span className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-500 font-mono text-sm leading-none">%</span>
+                </div>
+                <p className="text-[9px] text-zinc-500 mt-2 ml-1 italic leading-relaxed">* Persentase pemasukan yang otomatis masuk ke tabungan.</p>
+              </div>
+              <div>
+                <label className="text-zinc-400 text-[10px] font-bold uppercase tracking-widest mb-2 block ml-1">Saldo Tabungan (Manual)</label>
+                <div className="relative">
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 font-mono text-sm">Rp</span>
+                  <input
+                    type="number"
+                    value={balance}
+                    onChange={(e) => setBalance(e.target.value)}
+                    className="w-full pl-12 pr-4 py-3 bg-zinc-950/80 border border-zinc-700/60 rounded-xl text-white font-mono placeholder-zinc-600 focus:outline-none focus:border-yellow-500/50 text-sm transition-all"
+                  />
+                </div>
+              </div>
+              <button
+                onClick={handleSubmit}
+                disabled={loading}
+                className="w-full btn-skeuo mt-2 py-4 shadow-[0_4px_20px_rgba(234,179,8,0.2)] !bg-yellow-500/10 !border-yellow-500/50 hover:!bg-yellow-500/20"
+              >
+                <span className="text-yellow-500 font-bold">{loading ? 'Menyimpan...' : 'Simpan Pengaturan'}</span>
               </button>
             </div>
           </div>
@@ -363,6 +483,8 @@ export default function Dashboard() {
   const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null)
   const [analyzing, setAnalyzing] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
+  const [editingSavingsTarget, setEditingSavingsTarget] = useState<{ id: string; name: string; target_amount: number; current_amount: number; icon: string; color: string; is_completed: boolean } | null>(null)
+  const [showEditAutoSaveModal, setShowEditAutoSaveModal] = useState(false)
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [formData, setFormData] = useState({
@@ -506,6 +628,20 @@ export default function Dashboard() {
       }
     } catch (error) {
       console.error('Error calculating auto-save:', error)
+    }
+  }
+
+  const handleDeleteSavingsTarget = async (id: string) => {
+    if (!confirm('Hapus target tabungan ini?')) return
+    try {
+      const res = await fetch(`/api/savings-targets/${id}`, { method: 'DELETE' })
+      if (res.ok) {
+        showToast('Target berhasil dihapus', 'success')
+        fetchSavingsTargets()
+        fetchSavings() // Refresh balance distribution
+      }
+    } catch (error) {
+      showToast('Gagal menghapus target', 'error')
     }
   }
 
@@ -1462,9 +1598,15 @@ export default function Dashboard() {
                       <h2 className="text-2xl font-bold font-mono text-green-500 drop-shadow-[0_0_5px_rgba(0,255,102,0.3)]">{formatCurrency(savings?.balance || 0)}</h2>
                     </div>
                   </div>
-                  <div className="text-right p-2 skeuo-panel-inner rounded-lg">
-                    <p className="text-zinc-500 text-[10px] uppercase">Auto Save</p>
-                    <p className="text-yellow-500 text-sm font-bold drop-shadow-[0_0_5px_rgba(234,179,8,0.3)]">{savings?.auto_save_percent || 0}%</p>
+                  <div 
+                    onClick={() => setShowEditAutoSaveModal(true)}
+                    className="text-right p-2 skeuo-panel-inner rounded-lg hover:brightness-110 active:scale-95 cursor-pointer transition-all flex flex-col items-center justify-center gap-1 group"
+                  >
+                    <p className="text-zinc-500 text-[10px] uppercase font-bold group-hover:text-yellow-500/50 transition-colors">Auto Save</p>
+                    <div className="flex items-center gap-1">
+                      <p className="text-yellow-500 text-sm font-bold drop-shadow-[0_0_5px_rgba(234,179,8,0.3)]">{savings?.auto_save_percent || 0}%</p>
+                      <Settings className="w-3 h-3 text-zinc-600 group-hover:text-yellow-500/50" />
+                    </div>
                   </div>
                 </div>
                 <div className="flex gap-2">
@@ -1489,10 +1631,32 @@ export default function Dashboard() {
                     {savingsTargets.filter(t => !t.is_completed).map((target) => {
                       const percent = Math.min(100, Math.round((target.current_amount / target.target_amount) * 100))
                       return (
-                        <div key={target.id} className="skeuo-panel-inner p-4">
+                        <div key={target.id} className="skeuo-panel-inner p-4 relative group">
                           <div className="flex items-center justify-between mb-2">
                             <span className="text-white font-medium tracking-wide">{target.name}</span>
-                            <span className="text-xs text-yellow-500 font-mono drop-shadow-[0_0_3px_rgba(234,179,8,0.3)]">{percent}%</span>
+                            <div className="flex items-center gap-2">
+                              <span className="text-xs text-yellow-500 font-mono drop-shadow-[0_0_3px_rgba(234,179,8,0.3)]">{percent}%</span>
+                              <div className="flex items-center gap-1 ml-2">
+                                <button 
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setEditingSavingsTarget(target);
+                                  }}
+                                  className="p-1.5 rounded-lg hover:bg-zinc-800 text-zinc-500 hover:text-white transition-colors active:scale-90"
+                                >
+                                  <Edit3 className="w-3.5 h-3.5" />
+                                </button>
+                                <button 
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleDeleteSavingsTarget(target.id);
+                                  }}
+                                  className="p-1.5 rounded-lg hover:bg-zinc-800 text-zinc-500 hover:text-red-500 transition-colors active:scale-90"
+                                >
+                                  <Trash2 className="w-3.5 h-3.5" />
+                                </button>
+                              </div>
+                            </div>
                           </div>
                           <div className="h-2.5 bg-black rounded-full overflow-hidden mb-3 border border-[#222]">
                             <div 
@@ -2047,6 +2211,25 @@ export default function Dashboard() {
           onClose={() => setShowAddSavingsTargetModal(false)} 
           onSuccess={() => { fetchSavingsTargets(); setShowAddSavingsTargetModal(false); }} 
           onCreate={() => calculateAutoSave()} 
+        />
+      )}
+
+      {/* Edit Savings Target Modal */}
+      {editingSavingsTarget && (
+        <SavingsTargetModal 
+          target={editingSavingsTarget}
+          onClose={() => setEditingSavingsTarget(null)} 
+          onSuccess={() => { fetchSavingsTargets(); setEditingSavingsTarget(null); fetchSavings(); }} 
+        />
+      )}
+
+      {/* Edit Auto Save Modal */}
+      {showEditAutoSaveModal && savings && (
+        <AutoSaveModal 
+          initialPercent={savings.auto_save_percent}
+          currentBalance={savings.balance}
+          onClose={() => setShowEditAutoSaveModal(false)} 
+          onSuccess={() => { fetchSavings(); fetchSavingsTargets(); setShowEditAutoSaveModal(false); showToast('Pengaturan tabungan diperbarui', 'success'); }} 
         />
       )}
 
