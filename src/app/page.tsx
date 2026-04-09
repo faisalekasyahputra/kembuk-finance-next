@@ -127,118 +127,130 @@ function ReceiptExportView({ transactions, balance, totalIncome, totalExpense, o
   const sortedTransactions = [...transactions].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 
   return (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={onClose}>
-      <div className="w-full max-w-sm" onClick={e => e.stopPropagation()}>
-        <div 
-          ref={receiptRef}
-          id="receipt-export"
-          className="bg-white text-black"
-          style={{ 
-            fontFamily: 'Courier New, monospace',
-            padding: '16px',
-            width: '280px',
-            margin: '0 auto',
-            boxShadow: '0 4px 20px rgba(0,0,0,0.3)'
-          }}
-        >
-          <div className="text-center" style={{ borderBottom: '1px dashed #000', paddingBottom: '8px', marginBottom: '8px' }}>
-            <div style={{ fontSize: '18px', fontWeight: 'bold', letterSpacing: '2px' }}>KEMBUK FINANCE</div>
-            <div style={{ fontSize: '10px', color: '#666', marginTop: '4px' }}>Struk Laporan Keuangan</div>
+    <div className="fixed inset-0 bg-black/80 backdrop-blur-xl z-[70] flex items-center justify-center p-4" onClick={onClose}>
+      <div className="w-full max-w-sm animate-in zoom-in-95 duration-200" onClick={e => e.stopPropagation()}>
+        <div className="skeuo-card p-6 flex flex-col relative">
+          <div className="absolute inset-x-0 -top-2 h-4 flex justify-around pointer-events-none">
+            {[...Array(6)].map((_, i) => (
+              <div key={i} className="w-8 h-8 rounded-full bg-zinc-900 border border-zinc-700/50 shadow-inner" />
+            ))}
           </div>
 
-          <div style={{ fontSize: '10px', padding: '4px 0', borderBottom: '1px dashed #ccc' }}>
-            <div>Tanggal: {dateStr} {timeStr}</div>
-            <div>ID: {receiptId}</div>
-          </div>
-
-          <div style={{ fontSize: '11px', padding: '8px 0', borderBottom: '1px dashed #000', marginBottom: '8px' }}>
-            <div style={{ fontWeight: 'bold', marginBottom: '6px' }}>RINGKASAN</div>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <span>Pemasukan (+):</span>
-              <span style={{ color: '#22c55e', fontWeight: 'bold' }}>Rp {totalIncome.toLocaleString('id-ID')}</span>
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <span>Pengeluaran (-):</span>
-              <span style={{ color: '#ef4444', fontWeight: 'bold' }}>Rp {totalExpense.toLocaleString('id-ID')}</span>
-            </div>
-          </div>
-
-          {sortedTransactions.length > 0 && (
-            <div style={{ fontSize: '10px', padding: '6px 0', borderBottom: '1px dashed #000', marginBottom: '8px' }}>
-              <div style={{ fontWeight: 'bold', marginBottom: '4px' }}>DETAIL TRANSAKSI</div>
-              {sortedTransactions.slice(0, 10).map((t, i) => (
-                <div key={t.id} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '3px' }}>
-                  <span style={{ maxWidth: '150px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                    {i+1}. {t.description}
-                  </span>
-                  <span style={{ color: t.type === 'income' ? '#22c55e' : '#ef4444' }}>
-                    {t.type === 'income' ? '+' : '-'}Rp {t.amount.toLocaleString('id-ID')}
-                  </span>
-                </div>
-              ))}
-              {sortedTransactions.length > 10 && (
-                <div style={{ color: '#666', fontStyle: 'italic' }}>...dan {sortedTransactions.length - 10} transaksi lagi</div>
-              )}
-            </div>
-          )}
-
-          <div style={{ 
-            padding: '10px', 
-            background: '#000', 
-            color: '#fff', 
-            textAlign: 'center', 
-            marginTop: '8px',
-            borderRadius: '4px'
-          }}>
-            <div style={{ fontSize: '10px', opacity: 0.8 }}>SALDO AKHIR</div>
-            <div style={{ fontSize: '16px', fontWeight: 'bold', letterSpacing: '1px' }}>
-              Rp {balance.toLocaleString('id-ID')}
-            </div>
-          </div>
-
-          <div style={{ textAlign: 'center', paddingTop: '12px', borderTop: '1px dashed #ccc', marginTop: '8px' }}>
-            <div style={{ fontSize: '9px', color: '#666' }}>================================</div>
-            <div style={{ fontSize: '10px', marginTop: '6px' }}>Terima Kasih</div>
-            <div style={{ fontSize: '9px', color: '#999', marginTop: '4px' }}>kembuk-finance.vercel.app</div>
-          </div>
-
-          <div style={{ textAlign: 'center', marginTop: '8px' }}>
-            <div style={{ 
-              display: 'inline-block', 
-              border: '1px solid #ccc',
-              padding: '4px 8px',
-              fontSize: '8px',
-              color: '#666'
-            }}>
-              |||||||||||||||||{receiptId}|||||||||||||||
-            </div>
-          </div>
-        </div>
-        
-        <div className="mt-4 flex gap-3">
-          <button 
-            onClick={onClose} 
-            className="flex-1 py-3.5 bg-zinc-700 hover:bg-zinc-600 rounded-xl text-white font-medium transition-colors"
+          <div 
+            ref={receiptRef}
+            id="receipt-export"
+            className="bg-[#f8f8f0] text-black shadow-[0_10px_30px_rgba(0,0,0,0.5),inset_0_-2px_5px_rgba(0,0,0,0.1)] transform rotate-[-0.5deg]"
+            style={{ 
+              fontFamily: 'Courier New, monospace',
+              padding: '24px 20px',
+              width: '100%',
+              margin: '0 auto',
+              backgroundImage: 'radial-gradient(#dcdcdc 1px, transparent 1px)',
+              backgroundSize: '20px 20px'
+            }}
           >
-            Tutup
-          </button>
-          <button 
-            onClick={handleSendToTelegram} 
-            disabled={sending}
-            className="flex-1 py-3.5 bg-blue-600 hover:bg-blue-700 rounded-xl text-white font-bold flex items-center justify-center gap-2 transition-all disabled:opacity-50"
-          >
-            {sending ? (
-              <>
-                <Loader2 className="w-5 h-5 animate-spin" />
-                Mengirim...
-              </>
-            ) : (
-              <>
-                <MessageCircle className="w-5 h-5" />
-                Kirim Telegram
-              </>
+            <div className="text-center" style={{ borderBottom: '2px dashed #000', paddingBottom: '12px', marginBottom: '12px' }}>
+              <div style={{ fontSize: '20px', fontWeight: 'bold', letterSpacing: '3px' }}>KEMBUK FINANCE</div>
+              <div style={{ fontSize: '11px', color: '#444', marginTop: '6px', fontWeight: 'bold' }}>STRUK LAPORAN RESMI</div>
+            </div>
+
+            <div style={{ fontSize: '11px', padding: '6px 0', borderBottom: '1px dashed #444', marginBottom: '12px' }}>
+              <div className="flex justify-between">
+                <span>TANGGAL:</span>
+                <span>{dateStr} {timeStr}</span>
+              </div>
+              <div className="flex justify-between mt-1">
+                <span>ID STRUK:</span>
+                <span>{receiptId}</span>
+              </div>
+            </div>
+
+            <div style={{ fontSize: '12px', padding: '10px 0', borderBottom: '2px dashed #000', marginBottom: '12px' }}>
+              <div style={{ fontWeight: 'bold', marginBottom: '8px', textAlign: 'center', letterSpacing: '1px' }}>=== RINGKASAN ===</div>
+              <div className="flex justify-between mb-2">
+                <span>PEMASUKAN (+)</span>
+                <span style={{ color: '#059669', fontWeight: 'bold' }}>Rp {totalIncome.toLocaleString('id-ID')}</span>
+              </div>
+              <div className="flex justify-between mb-2">
+                <span>PENGELUARAN (-)</span>
+                <span style={{ color: '#dc2626', fontWeight: 'bold' }}>Rp {totalExpense.toLocaleString('id-ID')}</span>
+              </div>
+            </div>
+
+            {sortedTransactions.length > 0 && (
+              <div style={{ fontSize: '11px', padding: '8px 0', borderBottom: '2px dashed #000', marginBottom: '12px' }}>
+                <div style={{ fontWeight: 'bold', marginBottom: '6px', textAlign: 'center' }}>DETAIL TRANSAKSI</div>
+                {sortedTransactions.slice(0, 10).map((t, i) => (
+                  <div key={t.id} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
+                    <span style={{ maxWidth: '160px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      {i+1}. {t.description.toUpperCase()}
+                    </span>
+                    <span style={{ color: t.type === 'income' ? '#059669' : '#dc2626', fontWeight: 'bold' }}>
+                      {t.type === 'income' ? '+' : '-'} {t.amount.toLocaleString('id-ID')}
+                    </span>
+                  </div>
+                ))}
+                {sortedTransactions.length > 10 && (
+                  <div style={{ color: '#666', fontStyle: 'italic', textAlign: 'center', marginTop: '4px', fontSize: '9px' }}>
+                    ... DAN {sortedTransactions.length - 10} TRANSAKSI LAINNYA
+                  </div>
+                )}
+              </div>
             )}
-          </button>
+
+            <div style={{ 
+              padding: '12px', 
+              background: '#000', 
+              color: '#0f6', 
+              textAlign: 'center', 
+              marginTop: '12px',
+              boxShadow: 'inset 0 2px 10px rgba(0,0,0,1)'
+            }}>
+              <div style={{ fontSize: '10px', opacity: 0.8, letterSpacing: '2px' }}>SALDO AKHIR</div>
+              <div style={{ fontSize: '18px', fontWeight: 'bold', letterSpacing: '2px', textShadow: '0 0 5px rgba(0,255,102,0.5)' }}>
+                RP {balance.toLocaleString('id-ID')}
+              </div>
+            </div>
+
+            <div style={{ textAlign: 'center', paddingTop: '16px', borderTop: '2px dashed #000', marginTop: '12px' }}>
+              <div style={{ fontSize: '10px', fontWeight: 'bold' }}>TERIMA KASIH TELAH MENGGUNAKAN</div>
+              <div style={{ fontSize: '11px', fontWeight: 'bold', marginTop: '4px', letterSpacing: '1px' }}>KEMBUK FINANCE APP</div>
+              <div style={{ fontSize: '9px', color: '#666', marginTop: '8px' }}>WWW.KEMBUK-FINANCE.COM</div>
+            </div>
+
+            <div style={{ textAlign: 'center', marginTop: '12px' }}>
+              <div className="font-mono text-[10px] tracking-tighter opacity-50 whitespace-nowrap overflow-hidden">
+                || |||| ||| || |||| || ||| |||| || ||| |||| || ||| |||| || {receiptId} || ||| |||| || ||| |||| || ||| ||||
+              </div>
+            </div>
+          </div>
+          
+          <div className="mt-6 flex flex-col gap-3">
+            <button 
+              onClick={handleSendToTelegram} 
+              disabled={sending}
+              className="w-full btn-skeuo py-4 rounded-xl group relative overflow-hidden"
+            >
+              <div className="absolute inset-0 bg-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+              {sending ? (
+                <span className="flex items-center justify-center gap-2">
+                  <Loader2 className="w-5 h-5 animate-spin text-blue-400" />
+                  <span className="text-blue-400">MENGIRIM...</span>
+                </span>
+              ) : (
+                <span className="flex items-center justify-center gap-2">
+                  <MessageCircle className="w-5 h-5 text-green-400" />
+                  <span className="text-white">KIRIM KE TELEGRAM</span>
+                </span>
+              )}
+            </button>
+            <button 
+              onClick={onClose} 
+              className="w-full py-4 skeuo-panel-inner rounded-xl text-zinc-400 font-bold uppercase tracking-widest text-xs hover:text-white transition-colors active:scale-[0.98]"
+            >
+              BATALKAN / TUTUP
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -277,45 +289,44 @@ function SavingsTargetModal({ onClose, onSuccess, onCreate }: { onClose: () => v
   return (
     <div className="fixed inset-0 bg-black/80 backdrop-blur-xl z-50 flex items-center justify-center p-4" onClick={onClose}>
       <div className="w-full max-w-md" onClick={e => e.stopPropagation()}>
-        <div className="relative bg-gradient-to-br from-zinc-800/95 via-zinc-900/95 to-zinc-950/95 rounded-3xl border border-zinc-700/50 shadow-2xl shadow-black/50 overflow-hidden backdrop-blur-xl">
-          <div className="absolute inset-[1px] rounded-[22px] bg-gradient-to-br from-white/[0.03] to-transparent pointer-events-none" />
+        <div className="skeuo-card p-0 overflow-hidden relative">
           <div className="relative">
-            <div className="p-5 border-b border-zinc-800/60 flex items-center justify-between bg-gradient-to-r from-zinc-900/50 to-transparent">
+            <div className="p-5 border-b border-zinc-800/60 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-gradient-to-br from-green-600/30 to-green-800/30 rounded-xl border border-green-500/30 shadow-[inset_0_1px_2px_rgba(255,255,255,0.1)]">
-                  <PiggyBank className="w-5 h-5 text-green-400" />
+                <div className="p-2 skeuo-panel-inner rounded-xl">
+                  <PiggyBank className="w-5 h-5 text-green-400 drop-shadow-[0_0_5px_rgba(74,222,128,0.5)]" />
                 </div>
-                <h3 className="text-white font-bold text-lg">Tambah Target Tabungan</h3>
+                <h3 className="text-white font-bold text-lg tracking-wide uppercase text-shadow-glow">Tambah Target Tabungan</h3>
               </div>
-              <button onClick={onClose} className="p-2 bg-zinc-800/60 rounded-xl border border-zinc-700/40 hover:bg-zinc-700/60 transition-colors">
+              <button onClick={onClose} className="p-2 skeuo-panel-inner rounded-xl hover:brightness-110 active:scale-95 transition-all">
                 <X className="w-5 h-5 text-zinc-400" />
               </button>
             </div>
             <div className="p-5 space-y-4">
               <div>
-                <label className="text-zinc-400 text-sm font-medium mb-2 block">Nama Barang</label>
+                <label className="text-zinc-400 text-xs font-bold uppercase tracking-widest mb-2 block">Nama Barang</label>
                 <input
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Contoh: Sepatu Nike Air Max"
-                  className="w-full px-4 py-3 bg-zinc-950/80 border border-zinc-700/60 rounded-xl text-white placeholder-zinc-600 focus:outline-none focus:border-green-500/50 transition-all"
+                  className="w-full px-4 py-3 bg-zinc-950/80 border border-zinc-700/60 rounded-xl text-white placeholder-zinc-600 focus:outline-none focus:border-green-500/50 transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)]"
                 />
               </div>
               <div>
-                <label className="text-zinc-400 text-sm font-medium mb-2 block">Harga Target</label>
+                <label className="text-zinc-400 text-xs font-bold uppercase tracking-widest mb-2 block">Harga Target</label>
                 <input
                   type="number"
                   value={targetAmount}
                   onChange={(e) => setTargetAmount(e.target.value)}
                   placeholder="0"
-                  className="w-full px-4 py-3 bg-zinc-950/80 border border-zinc-700/60 rounded-xl text-white placeholder-zinc-600 focus:outline-none focus:border-green-500/50 transition-all"
+                  className="w-full px-4 py-3 bg-zinc-950/80 border border-zinc-700/60 rounded-xl text-white placeholder-zinc-600 focus:outline-none focus:border-green-500/50 transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)]"
                 />
               </div>
               <button
                 onClick={handleSubmit}
                 disabled={!name || !targetAmount || loading}
-                className="w-full py-4 bg-gradient-to-r from-green-600 to-green-700 rounded-xl text-white font-bold hover:from-green-700 hover:to-green-800 transition-all shadow-lg shadow-green-600/30 border border-green-500/30 disabled:opacity-50"
+                className="w-full btn-skeuo mt-2"
               >
                 {loading ? 'Menyimpan...' : 'Simpan Target'}
               </button>
@@ -640,7 +651,7 @@ export default function Dashboard() {
       id: crypto.randomUUID(),
       user_id: 'shared',
       type: formData.type,
-      category_id: formData.category_id || null,
+      category_id: formData.category_id || '',
       category_name: category?.name || 'Lainnya',
       category_group: category?.group_type || formData.type,
       amount: parseFloat(formData.amount),
@@ -845,6 +856,7 @@ export default function Dashboard() {
           category_id: category.id,
           description: result.data.description || 'Transaksi',
           date: result.data.date || new Date().toISOString().split('T')[0],
+          target_ids: [],
         })
         setShowReceiptModal(false)
         setShowAddModal(true)
@@ -874,27 +886,37 @@ export default function Dashboard() {
   )
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-white pb-24 lg:pb-0">
+    <div className="min-h-screen bg-[#0a0a0a] text-zinc-300 pb-24 lg:pb-0 font-sans">
       {toast && (
-        <div className={`fixed top-4 left-1/2 -translate-x-1/2 z-[100] px-4 py-3 rounded-xl shadow-lg backdrop-blur-xl flex items-center gap-3 animate-pulse ${
-          toast.type === 'success' ? 'bg-green-600/90 border border-green-500/30' : toast.type === 'error' ? 'bg-red-600/90 border border-red-500/30' : 'bg-blue-600/90 border border-blue-500/30'
-        }`}>
-          {toast.type === 'success' && <TrendingUp className="w-5 h-5 text-green-200" />}
-          {toast.type === 'error' && <X className="w-5 h-5 text-red-200" />}
-          {toast.type === 'info' && <Bell className="w-5 h-5 text-blue-200" />}
-          <span className="text-white text-sm font-medium">{toast.message}</span>
+        <div className="fixed top-6 left-1/2 -translate-x-1/2 z-[200] px-6 py-4 skeuo-card !rounded-2xl flex items-center gap-4 animate-in slide-in-from-top-10 duration-300">
+          <div className="skeuo-panel-inner p-2.5 rounded-xl">
+            {toast.type === 'success' && <TrendingUp className="w-5 h-5 text-green-400 drop-shadow-[0_0_5px_rgba(74,222,128,0.5)]" />}
+            {toast.type === 'error' && <X className="w-5 h-5 text-red-400 drop-shadow-[0_0_5px_rgba(239,68,68,0.5)]" />}
+            {toast.type === 'info' && <Bell className="w-5 h-5 text-blue-400 drop-shadow-[0_0_5px_rgba(59,130,246,0.5)]" />}
+          </div>
+          <span className="text-white font-bold uppercase tracking-widest text-xs drop-shadow-md">{toast.message}</span>
         </div>
       )}
 
       {isLoading && (
-        <div className="fixed inset-0 bg-black/80 z-[90] flex items-center justify-center">
-          <div className="flex flex-col items-center gap-3">
-            <Loader2 className="w-10 h-10 text-blue-500 animate-spin" />
-            <span className="text-white text-sm">Memuat data...</span>
+        <div className="fixed inset-0 bg-black/90 backdrop-blur-md z-[150] flex items-center justify-center">
+          <div className="flex flex-col items-center gap-6">
+            <div className="relative w-24 h-24">
+              <div className="absolute inset-0 rounded-full border-4 border-zinc-900 shadow-[0_0_20px_rgba(0,0,0,1),inset_0_0_10px_rgba(0,0,0,1)]" />
+              <div className="absolute inset-0 rounded-full border-t-4 border-green-500 animate-spin glow-border shadow-[0_0_15px_rgba(34,197,94,0.5)]" />
+              <div className="absolute inset-4 rounded-full border-b-2 border-green-400/30 animate-spin-slow opacity-50" />
+              <div className="absolute inset-x-0 top-0 flex justify-center -translate-y-1">
+                <div className="w-1.5 h-1.5 bg-green-500 rounded-full shadow-[0_0_10px_rgba(34,197,94,1)] animate-pulse" />
+              </div>
+            </div>
+            <div className="flex flex-col items-center gap-1">
+              <span className="text-green-500 font-mono text-sm uppercase tracking-[0.3em] animate-pulse drop-shadow-[0_0_8px_rgba(34,197,94,0.5)]">System Initializing</span>
+              <span className="text-zinc-600 font-mono text-[10px] uppercase tracking-tighter">Please Wait...</span>
+            </div>
           </div>
         </div>
       )}
-      <aside className="hidden lg:flex fixed left-0 top-0 h-full w-64 bg-zinc-900 border-r border-zinc-800 flex-col p-5 z-40">
+      <aside className="hidden lg:flex fixed left-0 top-0 h-full w-64 bg-[#111] border-r border-[#0f0f0f] shadow-[inset_-2px_0_10px_rgba(0,0,0,0.5)] flex-col p-5 z-40">
         <div className="flex items-center gap-3 mb-8 px-3">
           <div className="w-12 h-12 bg-zinc-800 rounded-xl flex items-center justify-center border border-zinc-700">
             <Wallet className="w-6 h-6 text-zinc-300" />
@@ -905,21 +927,26 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <nav className="flex-1 space-y-1">
+        <nav className="flex-1 space-y-2">
           {navItems.filter(item => item.id !== 'receipt').map((item) => (
             <button
               key={item.id}
               onClick={() => {
                 setActiveTab(item.id)
               }}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all relative overflow-hidden ${
                 activeTab === item.id
-                  ? 'bg-zinc-800 text-white border border-zinc-700'
-                  : 'text-zinc-400 hover:bg-zinc-800/50 hover:text-zinc-200'
+                  ? 'skeuo-card text-green-500 shadow-[0_0_15px_rgba(0,255,102,0.15)] border-green-500/30'
+                  : 'text-zinc-500 hover:text-zinc-300'
               }`}
             >
-              <item.icon className="w-5 h-5" />
-              <span className="font-medium">{item.label}</span>
+              <item.icon className={`w-5 h-5 transition-transform ${activeTab === item.id ? 'scale-110 drop-shadow-[0_0_5px_rgba(0,255,102,0.5)]' : ''}`} />
+              <span className={`font-mono text-sm tracking-wider uppercase ${activeTab === item.id ? 'drop-shadow-[0_0_8px_rgba(0,255,102,0.3)]' : ''}`}>
+                {item.label}
+              </span>
+              {activeTab === item.id && (
+                <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1 h-1/2 bg-green-500 rounded-l-full shadow-[0_0_10px_rgba(0,255,102,0.8)]" />
+              )}
             </button>
           ))}
         </nav>
@@ -941,9 +968,9 @@ export default function Dashboard() {
       </aside>
 
       <div className="lg:ml-60">
-        <header className="sticky top-0 bg-black/95 backdrop-blur-xl border-b border-zinc-800 px-4 py-4 z-30 lg:hidden">
+        <header className="sticky top-0 bg-[#111]/90 backdrop-blur-md border-b border-[#0f0f0f] px-4 py-4 z-30 lg:hidden shadow-lg">
           <div className="flex items-center justify-between">
-            <h1 className="text-white font-bold">
+            <h1 className="text-white font-bold tracking-wide">
               {activeTab === 'home' && 'Beranda'}
               {activeTab === 'targets' && 'Target'}
               {activeTab === 'transactions' && 'Transaksi'}
@@ -955,129 +982,84 @@ export default function Dashboard() {
         <main className="p-4 lg:p-6 max-w-3xl lg:mx-auto">
           {activeTab === 'home' && (
             <div className="space-y-4">
-              <div className="relative">
-                <div className="absolute -inset-1 bg-gradient-to-r from-zinc-600 via-zinc-500 to-zinc-600 rounded-[22px] opacity-40 blur-sm" />
-                <div className="relative bg-gradient-to-b from-zinc-750 via-zinc-800 to-zinc-850 rounded-2xl p-6 border border-zinc-600/50 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1),0_8px_25px_rgba(0,0,0,0.5)]">
-                  <div className="absolute inset-0 bg-gradient-to-br from-white/[0.03] via-transparent to-transparent rounded-2xl pointer-events-none" />
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-3">
-                      <div className="relative">
-                        <div className="absolute -inset-0.5 bg-blue-500/30 rounded-xl blur-md" />
-                        <div className="relative p-2 bg-gradient-to-br from-zinc-700 via-zinc-800 to-zinc-900 rounded-xl border-t border-l border-zinc-500/50 shadow-[inset_0_1px_1px_rgba(255,255,255,0.2),0_2px_4px_rgba(0,0,0,0.3)]">
-                          <Wallet className="w-5 h-5 text-blue-400" />
-                        </div>
-                      </div>
-                      <div>
-                        <p className="text-zinc-300 text-sm font-medium tracking-wide">SALDO</p>
-                        <p className="text-zinc-500 text-xs">Total Keseluruhan</p>
-                      </div>
+              <div className="skeuo-card p-6 mb-4">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 skeuo-panel-inner rounded-xl flex items-center justify-center">
+                      <Wallet className="w-5 h-5 text-gray-400" />
                     </div>
-                    <div className="w-10 h-10 bg-gradient-to-br from-green-500/20 to-green-600/20 rounded-xl flex items-center justify-center border border-green-500/30 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]">
-                      <TrendingUp className="w-5 h-5 text-green-400" />
+                    <div>
+                      <p className="text-zinc-300 text-sm font-medium tracking-wide font-mono uppercase">SALDO</p>
+                      <p className="text-zinc-500 text-xs">Total Keseluruhan</p>
                     </div>
                   </div>
-                  <div className="relative">
-                    <div className="absolute -inset-0.5 bg-gradient-to-r from-green-500/15 via-emerald-500/15 to-green-500/15 rounded-xl blur-sm" />
-                    <div className="relative bg-gradient-to-b from-zinc-950 via-zinc-900 to-zinc-950 rounded-xl p-5 border-t border-l border-zinc-700/60 shadow-[inset_0_3px_6px_rgba(0,0,0,0.7),inset_0_-1px_1px_rgba(255,255,255,0.03)]">
-                      <div className="flex items-baseline gap-2">
-                        <span className="text-zinc-500 text-xl font-mono">Rp</span>
-                        <span className="text-4xl font-bold font-mono text-white tracking-wider drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
-                          {balance.toLocaleString('id-ID')}
-                        </span>
-                      </div>
+                  <div className="p-2 skeuo-panel-inner rounded-xl flex items-center justify-center">
+                    <TrendingUp className="w-5 h-5 text-green-500" />
+                  </div>
+                </div>
+                
+                <div className="skeuo-panel-inner p-5 flex items-baseline gap-2">
+                  <span className="text-green-600 text-xl font-mono">Rp</span>
+                  <span className="text-4xl font-bold font-mono text-green-500 tracking-wider" style={{ textShadow: '0 0 5px rgba(0,255,102,0.3)' }}>
+                    {balance.toLocaleString('id-ID')}
+                  </span>
+                </div>
+              </div>
+
+              <button
+                onClick={() => setActiveTab('transactions')}
+                className="w-full btn-skeuo mb-4"
+              >
+                <TrendingUp className="w-6 h-6" />
+                <span>Lihat Ringkasan</span>
+              </button>
+
+              <div className="grid grid-cols-2 gap-4 mb-4">
+                <div className="skeuo-card p-4">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="p-2 skeuo-panel-inner rounded-xl flex items-center justify-center">
+                      <ArrowUpRight className="w-5 h-5 text-green-500" />
                     </div>
+                    <div>
+                      <p className="text-green-500 text-xs font-medium uppercase tracking-wider">PEMASUKAN</p>
+                      <p className="text-zinc-500 text-[10px]">Bulan ini</p>
+                    </div>
+                  </div>
+                  <div className="skeuo-panel-inner p-3">
+                    <p className="text-green-500 font-bold font-mono text-sm tracking-wide" style={{ textShadow: '0 0 5px rgba(0,255,102,0.3)' }}>
+                      {formatCurrency(totalIncome)}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="skeuo-card p-4">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="p-2 skeuo-panel-inner rounded-xl flex items-center justify-center">
+                      <ArrowDownRight className="w-5 h-5 text-red-500" />
+                    </div>
+                    <div>
+                      <p className="text-red-500 text-xs font-medium uppercase tracking-wider">PENGELUARAN</p>
+                      <p className="text-zinc-500 text-[10px]">Bulan ini</p>
+                    </div>
+                  </div>
+                  <div className="skeuo-panel-inner p-3">
+                    <p className="text-red-500 font-bold font-mono text-sm tracking-wide" style={{ textShadow: '0 0 5px rgba(255,0,0,0.3)' }}>
+                      {formatCurrency(totalExpense)}
+                    </p>
                   </div>
                 </div>
               </div>
 
-              <div className="relative">
-                <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 via-blue-500 to-purple-600 rounded-[18px] opacity-50 blur-sm" />
-                <button
-                  onClick={() => setActiveTab('transactions')}
-                  className="relative w-full bg-gradient-to-b from-blue-700 via-blue-800 to-blue-900 rounded-xl p-5 border-t border-l border-blue-400/40 shadow-[inset_0_1px_1px_rgba(255,255,255,0.2),inset_0_-1px_1px_rgba(0,0,0,0.4),0_4px_15px_rgba(59,130,246,0.3)] hover:shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),inset_0_-1px_1px_rgba(0,0,0,0.5),0_6px_20px_rgba(59,130,246,0.5)] transition-all active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)] active:translate-y-[1px]"
-                >
-                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-xl pointer-events-none" />
-                  <div className="relative flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <div className="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center shadow-[inset_0_1px_2px_rgba(255,255,255,0.3),0_2px_4px_rgba(0,0,0,0.3)] backdrop-blur-sm border border-white/20">
-                        <TrendingUp className="w-7 h-7 text-white" />
-                      </div>
-                      <div className="text-left">
-                        <span className="text-white font-bold text-lg block drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">Lihat Ringkasan</span>
-                        <span className="text-blue-200/80 text-sm">Semua transaksi kamu</span>
-                      </div>
-                    </div>
-                    <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center border border-white/20 shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)]">
-                      <ChevronRight className="w-6 h-6 text-white/80" />
-                    </div>
-                  </div>
-                </button>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div className="relative">
-                  <div className="absolute -inset-1 bg-gradient-to-b from-green-600/30 to-green-700/30 rounded-[16px] blur-sm" />
-                  <div className="relative bg-gradient-to-b from-zinc-750 via-zinc-800 to-zinc-850 rounded-xl p-4 border-t border-l border-zinc-600/40 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1),0_4px_10px_rgba(0,0,0,0.4)]">
-                    <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 via-transparent to-transparent rounded-xl pointer-events-none" />
-                    <div className="flex items-center gap-3 mb-3">
-                      <div className="w-11 h-11 bg-gradient-to-br from-green-600 via-green-700 to-green-800 rounded-xl flex items-center justify-center border-t border-l border-green-400/40 shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),0_2px_4px_rgba(0,0,0,0.3)]">
-                        <ArrowUpRight className="w-5 h-5 text-green-200" />
-                      </div>
-                      <div>
-                        <p className="text-green-400/80 text-xs font-medium">PEMASUKAN</p>
-                        <p className="text-green-500/60 text-[10px]">Bulan ini</p>
-                      </div>
-                    </div>
-                    <div className="relative">
-                      <div className="absolute -inset-0.5 bg-green-500/10 rounded-lg blur-sm" />
-                      <div className="relative bg-gradient-to-b from-zinc-950 via-zinc-900 to-zinc-950 rounded-lg p-3 border-t border-l border-green-700/50 shadow-[inset_0_2px_4px_rgba(0,0,0,0.6)]">
-                        <p className="text-green-400 font-bold font-mono text-lg tracking-wide drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">
-                          {formatCurrency(totalIncome)}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="relative">
-                  <div className="absolute -inset-1 bg-gradient-to-b from-red-600/30 to-red-700/30 rounded-[16px] blur-sm" />
-                  <div className="relative bg-gradient-to-b from-zinc-750 via-zinc-800 to-zinc-850 rounded-xl p-4 border-t border-l border-zinc-600/40 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1),0_4px_10px_rgba(0,0,0,0.4)]">
-                    <div className="absolute inset-0 bg-gradient-to-br from-red-500/5 via-transparent to-transparent rounded-xl pointer-events-none" />
-                    <div className="flex items-center gap-3 mb-3">
-                      <div className="w-11 h-11 bg-gradient-to-br from-red-600 via-red-700 to-red-800 rounded-xl flex items-center justify-center border-t border-l border-red-400/40 shadow-[inset_0_1px_1px_rgba(255,255,255,0.3),0_2px_4px_rgba(0,0,0,0.3)]">
-                        <ArrowDownRight className="w-5 h-5 text-red-200" />
-                      </div>
-                      <div>
-                        <p className="text-red-400/80 text-xs font-medium">PENGELUARAN</p>
-                        <p className="text-red-500/60 text-[10px]">Bulan ini</p>
-                      </div>
-                    </div>
-                    <div className="relative">
-                      <div className="absolute -inset-0.5 bg-red-500/10 rounded-lg blur-sm" />
-                      <div className="relative bg-gradient-to-b from-zinc-950 via-zinc-900 to-zinc-950 rounded-lg p-3 border-t border-l border-red-700/50 shadow-[inset_0_2px_4px_rgba(0,0,0,0.6)]">
-                        <p className="text-red-400 font-bold font-mono text-lg tracking-wide drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">
-                          {formatCurrency(totalExpense)}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-3 gap-2">
+              <div className="grid grid-cols-3 gap-3 mb-4">
                 <button 
                   onClick={() => {
                     setShowAddOptions(false)
                     setShowAddModal(true)
                   }}
-                  className="bg-zinc-800 rounded-xl p-3 border border-zinc-700 hover:bg-zinc-700 transition-colors"
+                  className="btn-skeuo flex flex-col py-4 gap-1 items-center"
                 >
-                  <div className="flex flex-col items-center gap-1.5">
-                    <div className="w-9 h-9 bg-zinc-700 rounded-lg flex items-center justify-center border border-zinc-600">
-                      <ArrowUpRight className="w-4 h-4 text-green-500" />
-                    </div>
-                    <span className="text-green-400 text-xs font-medium">Pemasukan</span>
-                  </div>
+                  <ArrowUpRight className="w-5 h-5" />
+                  <span className="text-[10px]">Pemasukan</span>
                 </button>
 
                 <button 
@@ -1086,38 +1068,30 @@ export default function Dashboard() {
                     setShowAddModal(true)
                     setFormData({...formData, type: 'expense'})
                   }}
-                  className="bg-zinc-800 rounded-xl p-3 border border-zinc-700 hover:bg-zinc-700 transition-colors"
+                  className="btn-skeuo flex flex-col py-4 gap-1 items-center"
                 >
-                  <div className="flex flex-col items-center gap-1.5">
-                    <div className="w-9 h-9 bg-zinc-700 rounded-lg flex items-center justify-center border border-zinc-600">
-                      <ArrowDownRight className="w-4 h-4 text-red-500" />
-                    </div>
-                    <span className="text-red-400 text-xs font-medium">Pengeluaran</span>
-                  </div>
+                  <ArrowDownRight className="w-5 h-5" />
+                  <span className="text-[10px]">Pengeluaran</span>
                 </button>
 
                 <button 
                   onClick={() => {
                     setShowReceiptModal(true)
                   }}
-                  className="bg-zinc-800 rounded-xl p-3 border border-zinc-700 hover:bg-zinc-700 transition-colors"
+                  className="btn-skeuo flex flex-col py-4 gap-1 items-center"
                 >
-                  <div className="flex flex-col items-center gap-1.5">
-                    <div className="w-9 h-9 bg-zinc-700 rounded-lg flex items-center justify-center border border-zinc-600">
-                      <Camera className="w-4 h-4 text-blue-400" />
-                    </div>
-                    <span className="text-blue-400 text-xs font-medium">Scan Struk</span>
-                  </div>
+                  <Camera className="w-5 h-5" />
+                  <span className="text-[10px]">Scan Struk</span>
                 </button>
               </div>
 
-              <div className="bg-zinc-900 rounded-xl border border-zinc-800">
-                <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-800">
+              <div className="skeuo-card mb-4">
+                <div className="flex items-center justify-between px-4 py-3 border-b border-[#0f0f0f]">
                   <div className="flex items-center gap-2">
-                    <div className="p-1.5 bg-zinc-800 rounded-lg border border-zinc-700">
+                    <div className="p-1.5 skeuo-panel-inner rounded-lg">
                       <Calendar className="w-4 h-4 text-zinc-400" />
                     </div>
-                    <span className="text-white text-sm font-medium">Ringkasan Minggu Ini</span>
+                    <span className="text-white text-sm font-medium tracking-wide">Ringkasan Minggu Ini</span>
                   </div>
                 </div>
                 <div className="p-4">
@@ -1138,18 +1112,18 @@ export default function Dashboard() {
                     return (
                       <div className="space-y-3">
                         <div className="flex gap-2">
-                          <div className="flex-1 bg-zinc-950 rounded-lg p-2.5 border border-zinc-800">
-                            <p className="text-green-400/70 text-xs mb-0.5">Masuk</p>
-                            <p className="text-green-400 font-bold font-mono text-sm">{formatCurrency(weekIncome)}</p>
+                          <div className="flex-1 skeuo-panel-inner rounded-lg p-2.5">
+                            <p className="text-green-500 text-xs mb-0.5 tracking-wider uppercase">Masuk</p>
+                            <p className="text-green-500 font-bold font-mono text-sm drop-shadow-[0_0_3px_rgba(0,255,102,0.3)]">{formatCurrency(weekIncome)}</p>
                           </div>
-                          <div className="flex-1 bg-zinc-950 rounded-lg p-2.5 border border-zinc-800">
-                            <p className="text-red-400/70 text-xs mb-0.5">Keluar</p>
-                            <p className="text-red-400 font-bold font-mono text-sm">{formatCurrency(weekExpense)}</p>
+                          <div className="flex-1 skeuo-panel-inner rounded-lg p-2.5">
+                            <p className="text-red-500 text-xs mb-0.5 tracking-wider uppercase">Keluar</p>
+                            <p className="text-red-500 font-bold font-mono text-sm drop-shadow-[0_0_3px_rgba(255,0,0,0.3)]">{formatCurrency(weekExpense)}</p>
                           </div>
                         </div>
                         <div className="flex items-center justify-between text-xs">
                           <span className="text-zinc-500">{weekTransactions.length} transaksi</span>
-                          <span className={`font-medium ${weekIncome - weekExpense >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                          <span className={`font-medium tracking-wider ${weekIncome - weekExpense >= 0 ? 'text-green-500' : 'text-red-500'}`}>
                             Sisa: {formatCurrency(weekIncome - weekExpense)}
                           </span>
                         </div>
@@ -1159,45 +1133,41 @@ export default function Dashboard() {
                 </div>
               </div>
 
-              <div className="bg-zinc-900 rounded-xl border border-zinc-800">
-                <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-800">
+              <div className="skeuo-card mb-4 overflow-hidden">
+                <div className="flex items-center justify-between px-4 py-3 border-b border-[#0f0f0f]">
                   <div className="flex items-center gap-2">
-                    <div className="p-1.5 bg-zinc-800 rounded-lg border border-zinc-700">
+                    <div className="p-1.5 skeuo-panel-inner rounded-lg">
                       <Receipt className="w-4 h-4 text-zinc-400" />
                     </div>
-                    <span className="text-white text-sm font-medium">Transaksi Hari Ini</span>
+                    <span className="text-white text-sm font-medium tracking-wide">Transaksi Hari Ini</span>
                   </div>
-                  <span className="text-zinc-400 text-xs font-medium px-2 py-1 bg-zinc-800 rounded-lg border border-zinc-700">{todayTransactions.length} items</span>
+                  <span className="text-zinc-400 text-xs font-medium px-2 py-1 skeuo-panel-inner rounded-lg">{todayTransactions.length} items</span>
                 </div>
                 {todayTransactions.length === 0 ? (
                   <div className="flex flex-col items-center justify-center py-10">
-                    <div className="w-14 h-14 bg-zinc-800 rounded-xl flex items-center justify-center mb-3 border border-zinc-700">
+                    <div className="w-14 h-14 skeuo-panel-inner rounded-xl flex items-center justify-center mb-3">
                       <Receipt className="w-7 h-7 text-zinc-600" />
                     </div>
                     <p className="text-zinc-500 text-sm">Belum ada transaksi hari ini</p>
                   </div>
                 ) : (
-                  <div className="divide-y divide-zinc-800">
+                  <div className="divide-y divide-[#0f0f0f] bg-[#111]">
                     {todayTransactions.slice(0, 5).map((t) => {
                       const category = categories.find(c => c.id === t.category_id)
                       const IconComponent = iconMap[category?.icon || 'Package'] || Package
                       return (
-                        <div key={t.id} className="px-4 py-3 flex items-center justify-between hover:bg-zinc-800/50 transition-colors group">
+                        <div key={t.id} className="px-4 py-3 flex items-center justify-between hover:bg-[#1a1a1a] transition-all group cursor-pointer border-l-2 border-transparent hover:border-green-500/50">
                           <div className="flex items-center gap-3">
-                            <div className={`w-10 h-10 rounded-lg flex items-center justify-center border ${
-                              t.type === 'income' 
-                                ? 'bg-zinc-800 border-zinc-700' 
-                                : 'bg-zinc-800 border-zinc-700'
-                            }`}>
-                              <IconComponent className={`w-5 h-5 ${t.type === 'income' ? 'text-green-400' : 'text-red-400'}`} />
+                            <div className="w-10 h-10 rounded-lg flex items-center justify-center skeuo-panel-inner group-hover:shadow-[inset_0_0_10px_rgba(0,0,0,0.8)]">
+                              <IconComponent className={`w-5 h-5 transition-transform group-hover:scale-110 ${t.type === 'income' ? 'text-green-500 drop-shadow-[0_0_5px_rgba(34,197,94,0.3)]' : 'text-red-500 drop-shadow-[0_0_5px_rgba(239,68,68,0.3)]'}`} />
                             </div>
                             <div>
-                              <p className="text-white text-sm font-medium">{t.description}</p>
-                              <p className="text-zinc-500 text-xs">{t.category_name}</p>
+                              <p className="text-zinc-100 text-sm font-bold tracking-wide group-hover:text-white">{t.description}</p>
+                              <p className="text-zinc-500 text-[10px] tracking-[0.1em] uppercase group-hover:text-zinc-400">{t.category_name}</p>
                             </div>
                           </div>
-                          <span className={`font-mono text-sm font-semibold ${
-                            t.type === 'income' ? 'text-green-400' : 'text-red-400'
+                          <span className={`font-mono text-sm font-bold tracking-wider ${
+                            t.type === 'income' ? 'text-green-500 drop-shadow-[0_0_8px_rgba(34,197,94,0.4)]' : 'text-red-500 drop-shadow-[0_0_8px_rgba(239,68,68,0.4)]'
                           }`}>
                             {t.type === 'income' ? '+' : '-'}
                             {formatCurrency(t.amount)}
@@ -1213,15 +1183,15 @@ export default function Dashboard() {
 
           {activeTab === 'transactions' && (
             <div className="space-y-3">
-              <div className="bg-zinc-900 rounded-xl border border-zinc-800 p-4">
+              <div className="skeuo-card p-4">
                 <div className="flex items-center justify-between mb-3">
-                  <h2 className="text-white font-bold flex items-center gap-2">
+                  <h2 className="text-white font-bold flex items-center gap-2 tracking-wide">
                     <Receipt className="w-5 h-5 text-zinc-400" />
                     Semua Transaksi
                   </h2>
                   <button
                     onClick={() => setShowAddModal(true)}
-                    className="bg-blue-600 hover:bg-blue-700 px-3 py-1.5 rounded-lg text-white text-sm font-medium border border-blue-500 transition-colors"
+                    className="btn-skeuo !px-3 !py-1.5 !text-xs"
                   >
                     + Tambah
                   </button>
@@ -1232,53 +1202,55 @@ export default function Dashboard() {
                   <input
                     type="text"
                     placeholder="Cari transaksi..."
-                    className="w-full pl-10 pr-4 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-white text-sm placeholder-zinc-500 focus:outline-none focus:border-zinc-700"
+                    className="w-full pl-10 pr-4 py-3 skeuo-input"
                   />
                 </div>
                 
                 <div className="flex gap-2">
-                  <button className="px-3 py-1.5 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-300 text-xs font-medium">
+                  <button className="px-3 py-1.5 skeuo-panel-inner rounded-lg text-green-500 text-xs font-medium border border-green-500/50">
                     Semua
                   </button>
-                  <button className="px-3 py-1.5 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-400 text-xs font-medium hover:bg-zinc-700 transition-colors">
+                  <button className="px-3 py-1.5 skeuo-panel-inner rounded-lg text-zinc-400 text-xs font-medium hover:text-green-500 transition-colors">
                     Masuk
                   </button>
-                  <button className="px-3 py-1.5 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-400 text-xs font-medium hover:bg-zinc-700 transition-colors">
+                  <button className="px-3 py-1.5 skeuo-panel-inner rounded-lg text-zinc-400 text-xs font-medium hover:text-red-500 transition-colors">
                     Keluar
                   </button>
                 </div>
               </div>
               
               {transactions.length === 0 ? (
-                <div className="bg-zinc-900 rounded-xl border border-zinc-800 p-8 text-center">
-                  <Receipt className="w-10 h-10 text-zinc-700 mx-auto mb-3" />
-                  <p className="text-zinc-500">Belum ada transaksi</p>
+                <div className="skeuo-card p-8 text-center">
+                  <div className="w-16 h-16 skeuo-panel-inner rounded-2xl mx-auto flex items-center justify-center mb-4">
+                    <Receipt className="w-8 h-8 text-zinc-600" />
+                  </div>
+                  <p className="text-zinc-500 font-medium">Belum ada transaksi</p>
                   <p className="text-zinc-600 text-sm mt-1">Tambah transaksi pertama kamu</p>
                 </div>
               ) : (
-                <div className="bg-zinc-900 rounded-xl border border-zinc-800 overflow-hidden">
-                  <div className="divide-y divide-zinc-800">
+                <div className="skeuo-card overflow-hidden">
+                  <div className="divide-y divide-[#0f0f0f] bg-[#111]">
                     {transactions.map((t) => {
                       const category = categories.find(c => c.id === t.category_id)
                       const IconComponent = iconMap[category?.icon || 'Package'] || Package
                       return (
-                        <div key={t.id} className="px-4 py-3 flex items-center justify-between hover:bg-zinc-800/50 transition-colors group">
+                        <div key={t.id} className="px-4 py-3 flex items-center justify-between hover:bg-[#1a1a1a] transition-colors group">
                           <div className="flex items-center gap-3">
-                            <div className="w-9 h-9 bg-zinc-800 rounded-lg flex items-center justify-center border border-zinc-700">
-                              <IconComponent className={`w-4 h-4 ${t.type === 'income' ? 'text-green-400' : 'text-red-400'}`} />
+                            <div className="w-10 h-10 skeuo-panel-inner rounded-lg flex items-center justify-center">
+                              <IconComponent className={`w-5 h-5 ${t.type === 'income' ? 'text-green-500' : 'text-red-500'}`} />
                             </div>
                             <div>
-                              <p className="text-white text-sm font-medium">{t.description}</p>
-                              <p className="text-zinc-500 text-xs">{t.category_name} • {new Date(t.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })}</p>
+                              <p className="text-white text-sm font-medium tracking-wide">{t.description}</p>
+                              <p className="text-zinc-500 text-xs tracking-wider">{t.category_name} • {new Date(t.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })}</p>
                             </div>
                           </div>
-                          <div className="flex items-center gap-2">
-                            <span className={`font-mono text-sm font-semibold ${t.type === 'income' ? 'text-green-400' : 'text-red-400'}`}>
+                          <div className="flex items-center gap-3">
+                            <span className={`font-mono text-sm font-semibold tracking-wider ${t.type === 'income' ? 'text-green-500' : 'text-red-500'}`}>
                               {t.type === 'income' ? '+' : '-'}{formatCurrency(t.amount)}
                             </span>
                             <button
                               onClick={() => handleDeleteTransaction(t.id)}
-                              className="text-zinc-600 hover:text-red-500 p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                              className="text-zinc-600 hover:text-red-500 p-2 skeuo-panel-inner rounded-md opacity-0 group-hover:opacity-100 transition-opacity"
                             >
                               <Trash2 className="w-4 h-4" />
                             </button>
@@ -1295,10 +1267,10 @@ export default function Dashboard() {
           {activeTab === 'targets' && (
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <h2 className="text-white font-bold text-lg">Target Checklist</h2>
+                <h2 className="text-white font-bold text-lg tracking-wide">Target Checklist</h2>
                 <button
                   onClick={() => setShowAddTargetModal(true)}
-                  className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-xl text-white text-sm font-medium flex items-center gap-2"
+                  className="btn-skeuo !px-4 !py-2 !text-xs"
                 >
                   <Plus className="w-4 h-4" />
                   Tambah
@@ -1306,36 +1278,38 @@ export default function Dashboard() {
               </div>
 
               {targets.length === 0 ? (
-                <div className="bg-zinc-900 rounded-xl p-8 border border-zinc-800 text-center">
-                  <Target className="w-12 h-12 text-zinc-700 mx-auto mb-3" />
-                  <p className="text-zinc-500 mb-2">Belum ada target</p>
+                <div className="skeuo-card p-8 text-center">
+                  <div className="w-16 h-16 skeuo-panel-inner rounded-2xl mx-auto flex items-center justify-center mb-4">
+                    <Target className="w-8 h-8 text-zinc-600" />
+                  </div>
+                  <p className="text-zinc-500 mb-2 font-medium">Belum ada target</p>
                   <p className="text-zinc-600 text-sm">Tambah target pengeluaran tetap</p>
                 </div>
               ) : (
                 <>
-                  <div className="bg-zinc-900 rounded-xl p-4 border border-zinc-800">
+                  <div className="skeuo-card p-4 mb-4">
                     <div className="flex items-center justify-between mb-3">
-                      <span className="text-zinc-400 text-sm">
+                      <span className="text-zinc-400 text-sm font-medium tracking-wide">
                         {new Date().toLocaleDateString('id-ID', { month: 'long', year: 'numeric' })}
                       </span>
-                      <span className="text-zinc-500 text-sm">
+                      <span className="text-zinc-500 text-sm font-mono">
                         {targetPayments.length}/{targets.length} selesai
                       </span>
                     </div>
-                    <div className="w-full h-2 bg-zinc-800 rounded-full overflow-hidden">
+                    <div className="w-full h-2 skeuo-panel-inner rounded-full overflow-hidden">
                       <div
-                        className="h-full bg-green-500 transition-all duration-300"
+                        className="h-full bg-green-500 transition-all duration-300 shadow-[0_0_8px_var(--neon-green-glow)]"
                         style={{ width: `${targets.length > 0 ? (targetPayments.length / targets.length) * 100 : 0}%` }}
                       />
                     </div>
-                    <div className="mt-2 text-right">
-                      <span className="text-green-400 font-bold">
+                    <div className="mt-3 text-right">
+                      <span className="text-green-500 font-bold font-mono text-sm tracking-wide" style={{ textShadow: '0 0 5px rgba(0,255,102,0.3)' }}>
                         Total: {formatCurrency(targets.reduce((sum, t) => sum + t.amount, 0))}
                       </span>
                     </div>
                   </div>
 
-                  <div className="space-y-2">
+                  <div className="space-y-3">
                     {targets.map((target) => {
                       const isPaid = targetPayments.some(
                         p => p.target_id === target.id &&
@@ -1344,31 +1318,31 @@ export default function Dashboard() {
                       return (
                         <div
                           key={target.id}
-                          className={`bg-zinc-900 rounded-xl p-4 border transition-all cursor-pointer ${
-                            isPaid ? 'border-green-600/50 bg-green-900/20' : 'border-zinc-800 hover:border-zinc-700'
+                          className={`p-4 skeuo-panel-inner transition-all cursor-pointer ${
+                            isPaid ? 'border-green-600/50 opacity-80' : 'hover:border-zinc-500'
                           }`}
                           onClick={() => handleToggleTargetPayment(target)}
                         >
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
-                              <div className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all ${
-                                isPaid ? 'bg-green-500 border-green-500' : 'border-zinc-600'
+                              <div className={`w-6 h-6 rounded-lg border flex items-center justify-center transition-all ${
+                                isPaid ? 'bg-green-500 border-green-400 shadow-[0_0_5px_rgba(0,255,102,0.5)]' : 'border-zinc-600 bg-[#0f0f0f]'
                               }`}>
                                 {isPaid && <Check className="w-4 h-4 text-white" />}
                               </div>
                               <div>
-                                <p className={`font-medium ${isPaid ? 'text-green-400 line-through' : 'text-white'}`}>
+                                <p className={`font-medium tracking-wide ${isPaid ? 'text-green-500 line-through' : 'text-white'}`}>
                                   {target.name}
                                 </p>
                                 {target.due_date && (
-                                  <p className="text-zinc-500 text-xs">
+                                  <p className="text-zinc-500 text-[10px] tracking-wider uppercase mt-0.5">
                                     Jatuh tempo: {new Date(target.due_date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })}
                                   </p>
                                 )}
                               </div>
                             </div>
                             <div className="flex items-center gap-3">
-                              <span className={`font-mono font-bold ${isPaid ? 'text-green-400' : 'text-red-400'}`}>
+                              <span className={`font-mono text-sm font-semibold tracking-wider ${isPaid ? 'text-green-500' : 'text-red-500'}`}>
                                 {formatCurrency(target.amount)}
                               </span>
                               <button
@@ -1376,9 +1350,9 @@ export default function Dashboard() {
                                   e.stopPropagation()
                                   handleDeleteTarget(target.id)
                                 }}
-                                className="p-2 text-zinc-500 hover:text-red-500 transition-colors"
+                                className="p-2 skeuo-panel-inner text-zinc-500 hover:text-red-500 transition-colors"
                               >
-                                <Trash className="w-4 h-4" />
+                                <Trash className="w-3 h-3" />
                               </button>
                             </div>
                           </div>
@@ -1388,34 +1362,34 @@ export default function Dashboard() {
                   </div>
 
                   {monthlyLogs.length > 0 && (
-                    <div className="bg-zinc-900/50 rounded-xl p-4 border border-zinc-800/50 mt-4">
-                      <h3 className="text-zinc-400 text-sm font-medium mb-3 flex items-center gap-2">
+                    <div className="skeuo-card p-4 mt-4">
+                      <h3 className="text-zinc-400 text-sm font-medium mb-4 flex items-center gap-2 tracking-wide">
                         <History className="w-4 h-4" />
                         Riwayat Bulanan
                       </h3>
-                      <div className="space-y-2">
+                      <div className="space-y-3">
                         {monthlyLogs.map((log, idx) => {
                           const percent = log.total > 0 ? Math.round((log.paid / log.total) * 100) : 0
                           const monthDate = new Date(log.month + '-01')
                           const monthLabel = monthDate.toLocaleDateString('id-ID', { month: 'short', year: 'numeric' })
                           return (
-                            <div key={log.month} className="flex items-center justify-between text-sm">
+                            <div key={log.month} className="skeuo-panel-inner p-3 flex items-center justify-between text-sm">
                               <div className="flex items-center gap-3">
-                                <span className="text-zinc-400 w-20">{monthLabel}</span>
+                                <span className="text-white font-medium w-20">{monthLabel}</span>
                                 <div className="flex items-center gap-2">
-                                  <span className={`font-bold ${percent === 100 ? 'text-green-400' : percent >= 50 ? 'text-yellow-400' : 'text-red-400'}`}>
+                                  <span className={`font-bold font-mono tracking-wider ${percent === 100 ? 'text-green-500' : percent >= 50 ? 'text-yellow-500' : 'text-red-500'}`}>
                                     {log.paid}/{log.total}
                                   </span>
-                                  <div className="w-16 h-1.5 bg-zinc-800 rounded-full overflow-hidden">
+                                  <div className="w-16 h-1.5 skeo-panel-inner bg-black rounded-full overflow-hidden border border-[#222]">
                                     <div 
                                       className={`h-full transition-all ${percent === 100 ? 'bg-green-500' : percent >= 50 ? 'bg-yellow-500' : 'bg-red-500'}`}
                                       style={{ width: `${percent}%` }}
                                     />
                                   </div>
-                                  <span className="text-zinc-500 text-xs">{percent}%</span>
+                                  <span className="text-zinc-500 text-xs font-mono">{percent}%</span>
                                 </div>
                               </div>
-                              <span className="text-zinc-500 font-mono text-xs">
+                              <span className="text-zinc-400 font-mono text-[10px] tracking-wider">
                                 {formatCurrency(log.amount_paid)}/{formatCurrency(log.amount_total)}
                               </span>
                             </div>
@@ -1431,26 +1405,26 @@ export default function Dashboard() {
 
           {activeTab === 'savings' && (
             <div className="space-y-3">
-              <div className="bg-zinc-900 rounded-xl p-5 border border-zinc-800">
-                <div className="flex items-center justify-between mb-3">
+              <div className="skeuo-card p-5">
+                <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-3">
-                    <div className="p-2 bg-zinc-800 rounded-lg border border-zinc-700">
-                      <PiggyBank className="w-5 h-5 text-green-500" />
+                    <div className="p-3 skeuo-panel-inner rounded-xl flex items-center justify-center">
+                      <PiggyBank className="w-6 h-6 text-green-500" />
                     </div>
                     <div>
-                      <p className="text-zinc-400 text-sm">Total Tabungan</p>
-                      <h2 className="text-2xl font-bold font-mono text-green-500">{formatCurrency(savings?.balance || 0)}</h2>
+                      <p className="text-zinc-400 text-[10px] tracking-wider uppercase">Total Tabungan</p>
+                      <h2 className="text-2xl font-bold font-mono text-green-500 drop-shadow-[0_0_5px_rgba(0,255,102,0.3)]">{formatCurrency(savings?.balance || 0)}</h2>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <p className="text-zinc-500 text-xs">Auto Save</p>
-                    <p className="text-yellow-400 text-sm font-bold">{savings?.auto_save_percent || 0}%</p>
+                  <div className="text-right p-2 skeuo-panel-inner rounded-lg">
+                    <p className="text-zinc-500 text-[10px] uppercase">Auto Save</p>
+                    <p className="text-yellow-500 text-sm font-bold drop-shadow-[0_0_5px_rgba(234,179,8,0.3)]">{savings?.auto_save_percent || 0}%</p>
                   </div>
                 </div>
                 <div className="flex gap-2">
                   <button 
                     onClick={() => setShowAddSavingsTargetModal(true)}
-                    className="flex-1 py-2 px-3 bg-green-600 hover:bg-green-700 rounded-lg text-white text-sm font-medium border border-green-500"
+                    className="flex-1 btn-skeuo !px-3 !py-3 !text-xs w-full"
                   >
                     + Tambah Target
                   </button>
@@ -1458,31 +1432,31 @@ export default function Dashboard() {
               </div>
 
               {savingsTargets.filter(t => !t.is_completed).length > 0 && (
-                <div className="bg-zinc-900 rounded-xl border border-zinc-800">
-                  <div className="px-4 py-3 border-b border-zinc-800">
-                    <h3 className="text-white font-semibold flex items-center gap-2">
-                      <div className="w-2 h-2 bg-yellow-500 rounded-full" />
+                <div className="skeuo-card overflow-hidden">
+                  <div className="px-4 py-3 border-b border-[#0f0f0f]">
+                    <h3 className="text-white font-semibold flex items-center gap-2 tracking-wide">
+                      <div className="w-2.5 h-2.5 bg-yellow-500 rounded-full shadow-[0_0_5px_rgba(234,179,8,0.5)]" />
                       Target Aktif ({savingsTargets.filter(t => !t.is_completed).length})
                     </h3>
                   </div>
-                  <div className="p-3 space-y-3">
+                  <div className="p-3 space-y-3 bg-[#111]">
                     {savingsTargets.filter(t => !t.is_completed).map((target) => {
                       const percent = Math.min(100, Math.round((target.current_amount / target.target_amount) * 100))
                       return (
-                        <div key={target.id} className="bg-zinc-800 rounded-lg p-3 border border-zinc-700">
+                        <div key={target.id} className="skeuo-panel-inner p-4">
                           <div className="flex items-center justify-between mb-2">
-                            <span className="text-white font-medium">{target.name}</span>
-                            <span className="text-xs text-zinc-400 font-mono">{percent}%</span>
+                            <span className="text-white font-medium tracking-wide">{target.name}</span>
+                            <span className="text-xs text-yellow-500 font-mono drop-shadow-[0_0_3px_rgba(234,179,8,0.3)]">{percent}%</span>
                           </div>
-                          <div className="h-2 bg-zinc-900 rounded-full overflow-hidden mb-2">
+                          <div className="h-2.5 bg-black rounded-full overflow-hidden mb-3 border border-[#222]">
                             <div 
                               className="h-full rounded-full transition-all"
                               style={{ width: `${percent}%`, backgroundColor: target.color }}
                             />
                           </div>
                           <div className="flex items-center justify-between text-xs">
-                            <span className="text-green-400 font-mono">{formatCurrency(target.current_amount)}</span>
-                            <span className="text-zinc-500 font-mono">{formatCurrency(target.target_amount)}</span>
+                            <span className="text-green-500 font-mono tracking-wider">{formatCurrency(target.current_amount)}</span>
+                            <span className="text-zinc-500 font-mono tracking-wider">{formatCurrency(target.target_amount)}</span>
                           </div>
                         </div>
                       )
@@ -1492,19 +1466,19 @@ export default function Dashboard() {
               )}
 
               {savingsTargets.filter(t => t.is_completed).length > 0 && (
-                <div className="bg-zinc-900 rounded-xl border border-zinc-800">
-                  <div className="px-4 py-3 border-b border-zinc-800">
-                    <h3 className="text-white font-semibold flex items-center gap-2">
+                <div className="skeuo-card overflow-hidden">
+                  <div className="px-4 py-3 border-b border-[#0f0f0f]">
+                    <h3 className="text-white font-semibold flex items-center gap-2 tracking-wide">
                       <Check className="w-4 h-4 text-green-500" />
                       Target Selesai ({savingsTargets.filter(t => t.is_completed).length})
                     </h3>
                   </div>
-                  <div className="p-3 space-y-2">
+                  <div className="p-3 space-y-3 bg-[#111]">
                     {savingsTargets.filter(t => t.is_completed).map((target) => (
-                      <div key={target.id} className="bg-zinc-800/50 rounded-lg p-3 border border-zinc-700/50 opacity-60">
+                      <div key={target.id} className="skeuo-panel-inner p-3 opacity-60 grayscale">
                         <div className="flex items-center justify-between">
-                          <span className="text-white font-medium line-through">{target.name}</span>
-                          <span className="text-green-400 text-xs font-mono">COMPLETED</span>
+                          <span className="text-white font-medium line-through tracking-wide">{target.name}</span>
+                          <span className="text-green-500 text-xs font-mono drop-shadow-[0_0_3px_rgba(0,255,102,0.3)]">COMPLETED</span>
                         </div>
                       </div>
                     ))}
@@ -1528,75 +1502,74 @@ export default function Dashboard() {
 
           {activeTab === 'account' && (
             <div className="space-y-3">
-              <div className="bg-zinc-900 rounded-xl border border-zinc-800 p-5">
+              <div className="skeuo-card p-5">
                 <div className="flex items-center gap-4 mb-4">
-                  <div className="w-14 h-14 bg-zinc-800 rounded-xl flex items-center justify-center border border-zinc-700">
+                  <div className="w-14 h-14 skeuo-panel-inner rounded-xl flex items-center justify-center">
                     <span className="text-white text-lg font-bold">FE</span>
                   </div>
                   <div>
-                    <h3 className="text-white font-bold">Pengguna</h3>
-                    <p className="text-zinc-500 text-sm">Kembuk Finance</p>
-                    <span className="inline-flex items-center gap-1 mt-1 px-2 py-0.5 bg-zinc-800 rounded-full border border-zinc-700">
-                      <span className="w-1.5 h-1.5 bg-blue-400 rounded-full"></span>
-                      <span className="text-zinc-400 text-xs font-medium">Premium</span>
+                    <h3 className="text-white font-bold tracking-wide">Pengguna</h3>
+                    <p className="text-zinc-500 text-xs">Kembuk Finance</p>
+                    <span className="inline-flex items-center gap-1 mt-1 px-2 py-0.5 skeuo-panel-inner rounded-full">
+                      <span className="w-1.5 h-1.5 bg-green-500 rounded-full shadow-[0_0_5px_var(--neon-green-glow)]"></span>
+                      <span className="text-green-500 text-[10px] font-bold tracking-widest uppercase">Premium</span>
                     </span>
                   </div>
                 </div>
                 <div className="grid grid-cols-3 gap-2">
-                  <div className="bg-zinc-950 rounded-lg p-2.5 border border-zinc-800 text-center">
+                  <div className="skeuo-panel-inner p-3 text-center">
                     <p className="text-xl font-bold text-white font-mono">{transactions.length}</p>
-                    <p className="text-zinc-500 text-xs">Total</p>
+                    <p className="text-zinc-500 text-[10px] tracking-wider uppercase mt-1">Total</p>
                   </div>
-                  <div className="bg-zinc-950 rounded-lg p-2.5 border border-zinc-800 text-center">
-                    <p className="text-lg font-bold text-green-400 font-mono">{transactions.filter(t => t.type === 'income').length}</p>
-                    <p className="text-green-400/70 text-xs">Masuk</p>
+                  <div className="skeuo-panel-inner p-3 text-center">
+                    <p className="text-lg font-bold text-green-500 font-mono drop-shadow-[0_0_3px_rgba(0,255,102,0.3)]">{transactions.filter(t => t.type === 'income').length}</p>
+                    <p className="text-green-500/70 text-[10px] tracking-wider uppercase mt-1">Masuk</p>
                   </div>
-                  <div className="bg-zinc-950 rounded-lg p-2.5 border border-zinc-800 text-center">
-                    <p className="text-lg font-bold text-red-400 font-mono">{transactions.filter(t => t.type === 'expense').length}</p>
-                    <p className="text-red-400/70 text-xs">Keluar</p>
+                  <div className="skeuo-panel-inner p-3 text-center">
+                    <p className="text-lg font-bold text-red-500 font-mono drop-shadow-[0_0_3px_rgba(239,68,68,0.3)]">{transactions.filter(t => t.type === 'expense').length}</p>
+                    <p className="text-red-500/70 text-[10px] tracking-wider uppercase mt-1">Keluar</p>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-zinc-900 rounded-xl border border-zinc-800 p-5">
-                <h4 className="text-white font-semibold mb-4 flex items-center gap-2">
+              <div className="skeuo-card p-5">
+                <h4 className="text-white font-semibold mb-4 flex items-center gap-2 tracking-wide">
                   <TrendingUp className="w-4 h-4 text-zinc-400" />
                   Ringkasan Keuangan
                 </h4>
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between p-3 bg-zinc-950 rounded-lg border border-zinc-800">
-                    <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 bg-zinc-800 rounded-lg flex items-center justify-center border border-zinc-700">
-                        <ArrowUpRight className="w-4 h-4 text-green-500" />
+                <div className="space-y-3 bg-[#111]">
+                  <div className="flex items-center justify-between p-3 skeuo-panel-inner">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-lg flex items-center justify-center skeuo-card p-1">
+                        <ArrowUpRight className="w-4 h-4 text-green-500 drop-shadow-[0_0_3px_rgba(0,255,102,0.5)]" />
                       </div>
-                      <span className="text-zinc-300 text-sm">Total Pemasukan</span>
+                      <span className="text-white font-medium tracking-wide">Total Pemasukan</span>
                     </div>
-                    <span className="text-green-400 font-bold font-mono text-sm">{formatCurrency(totalIncome)}</span>
+                    <span className="text-green-500 font-bold font-mono text-sm drop-shadow-[0_0_3px_rgba(0,255,102,0.3)]">{formatCurrency(totalIncome)}</span>
                   </div>
-                  <div className="flex items-center justify-between p-3 bg-zinc-950 rounded-lg border border-zinc-800">
-                    <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 bg-zinc-800 rounded-lg flex items-center justify-center border border-zinc-700">
-                        <ArrowDownRight className="w-4 h-4 text-red-500" />
+                  <div className="flex items-center justify-between p-3 skeuo-panel-inner">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-lg flex items-center justify-center skeuo-card p-1">
+                        <ArrowDownRight className="w-4 h-4 text-red-500 drop-shadow-[0_0_3px_rgba(239,68,68,0.5)]" />
                       </div>
-                      <span className="text-zinc-300 text-sm">Total Pengeluaran</span>
+                      <span className="text-white font-medium tracking-wide">Total Pengeluaran</span>
                     </div>
-                    <span className="text-red-400 font-bold font-mono text-sm">{formatCurrency(totalExpense)}</span>
+                    <span className="text-red-500 font-bold font-mono text-sm drop-shadow-[0_0_3px_rgba(239,68,68,0.3)]">{formatCurrency(totalExpense)}</span>
                   </div>
-                  <div className="border-t border-zinc-800 my-1" />
-                  <div className="flex items-center justify-between p-3 bg-zinc-950 rounded-lg border border-zinc-800">
-                    <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 bg-zinc-800 rounded-lg flex items-center justify-center border border-zinc-700">
+                  <div className="flex items-center justify-between p-3 skeuo-panel-inner">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-lg flex items-center justify-center skeuo-card p-1">
                         <Wallet className="w-4 h-4 text-zinc-400" />
                       </div>
-                      <span className="text-white text-sm font-medium">Saldo</span>
+                      <span className="text-white font-medium tracking-wide">Saldo</span>
                     </div>
-                    <span className={`font-bold font-mono text-sm ${balance >= 0 ? 'text-zinc-300' : 'text-red-400'}`}>{formatCurrency(balance)}</span>
+                    <span className={`font-bold font-mono text-sm ${balance >= 0 ? 'text-zinc-300' : 'text-red-500 drop-shadow-[0_0_3px_rgba(239,68,68,0.3)]'}`}>{formatCurrency(balance)}</span>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-zinc-900 rounded-xl border border-zinc-800 p-5">
-                <h4 className="text-white font-semibold mb-4 flex items-center gap-2">
+              <div className="skeuo-card p-5">
+                <h4 className="text-white font-semibold mb-4 flex items-center gap-2 tracking-wide">
                   <PieChart className="w-4 h-4 text-zinc-400" />
                   Kategori Pengeluaran Terbesar
                 </h4>
@@ -1614,8 +1587,8 @@ export default function Dashboard() {
                   
                   if (sortedCategories.length === 0) {
                     return (
-                      <div className="text-center py-4">
-                        <Receipt className="w-8 h-8 text-zinc-700 mx-auto mb-2" />
+                      <div className="text-center py-4 opacity-50 grayscale">
+                        <Receipt className="w-8 h-8 text-zinc-600 mx-auto mb-2" />
                         <p className="text-zinc-500 text-sm">Belum ada data pengeluaran</p>
                       </div>
                     )
@@ -1624,16 +1597,16 @@ export default function Dashboard() {
                   const maxAmount = sortedCategories[0][1]
                   
                   return (
-                    <div className="space-y-2">
+                    <div className="space-y-4">
                       {sortedCategories.map(([category, amount], i) => (
-                        <div key={category} className="space-y-1">
+                        <div key={category} className="space-y-2">
                           <div className="flex items-center justify-between text-sm">
-                            <span className="text-zinc-300">{category}</span>
+                            <span className="text-white font-medium tracking-wide">{category}</span>
                             <span className="text-zinc-400 font-mono text-xs">{formatCurrency(amount)}</span>
                           </div>
-                          <div className="h-1.5 bg-zinc-950 rounded-full overflow-hidden border border-zinc-800">
+                          <div className="h-2 skeuo-panel-inner rounded-full bg-black overflow-hidden border border-[#222]">
                             <div 
-                              className="h-full bg-zinc-500 rounded-full"
+                              className="h-full bg-red-500 rounded-full"
                               style={{ width: `${(amount / maxAmount) * 100}%` }}
                             />
                           </div>
@@ -1648,83 +1621,91 @@ export default function Dashboard() {
         </main>
       </div>
 
-      <nav className="fixed bottom-0 left-0 right-0 bg-zinc-900 border-t border-zinc-800 flex items-center justify-around py-2 pb-6 z-50 lg:hidden">
-        <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-32 h-6 bg-zinc-800 rounded-b-3xl" />
+      <nav className="fixed bottom-0 left-0 right-0 bg-[#0c0c0c] border-t border-[#000] shadow-[0_-10px_30px_rgba(0,0,0,0.9)] flex items-center justify-around py-3 pb-8 z-50 lg:hidden">
         {navItems.map((item) => (
           item.id === 'receipt' ? (
             <button
               key={item.id}
               onClick={() => setShowAddOptions(true)}
-              className="flex flex-col items-center -mt-8 relative"
+              className="flex flex-col items-center relative -mt-10 group"
             >
-              <div className="w-14 h-14 bg-blue-600 rounded-full flex items-center justify-center border-4 border-zinc-900">
-                <Plus className="w-6 h-6 text-white" />
+              <div className="w-16 h-16 rounded-full flex items-center justify-center skeuo-card p-1.5 bg-[#111] transition-transform active:scale-95">
+                <div className="w-full h-full bg-gradient-to-br from-green-400 via-green-500 to-green-600 rounded-full flex items-center justify-center shadow-[inset_0_2px_8px_rgba(255,255,255,0.4),0_0_20px_rgba(34,197,94,0.3)]">
+                  <Plus className="w-8 h-8 text-black drop-shadow-[0_1px_1px_rgba(255,255,255,0.3)]" />
+                </div>
               </div>
             </button>
           ) : (
             <button
               key={item.id}
               onClick={() => setActiveTab(item.id)}
-              className={`flex flex-col items-center gap-1 p-2 ${
-                activeTab === item.id ? 'text-blue-400' : 'text-zinc-500'
+              className={`flex flex-col items-center gap-1.5 p-2 transition-all duration-300 relative ${
+                activeTab === item.id 
+                  ? 'text-green-500 scale-110' 
+                  : 'text-zinc-600 hover:text-zinc-400'
               }`}
             >
-              <item.icon className="w-5 h-5" />
-              <span className="text-[10px] font-medium">{item.label}</span>
+              <item.icon className={`w-5 h-5 transition-all ${activeTab === item.id ? 'drop-shadow-[0_0_8px_rgba(0,255,102,0.6)]' : ''}`} />
+              <span className={`text-[9px] font-mono font-bold tracking-[0.15em] uppercase transition-all ${activeTab === item.id ? 'drop-shadow-[0_0_5px_rgba(0,255,102,0.4)]' : ''}`}>
+                {item.label}
+              </span>
+              {activeTab === item.id && (
+                <div className="absolute -bottom-1 w-1 h-1 bg-green-500 rounded-full shadow-[0_0_8px_rgba(0,255,102,1)]" />
+              )}
             </button>
           )
         ))}
       </nav>
 
       {showAddModal && (
-        <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4" onClick={() => setShowAddModal(false)}>
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-xl z-50 flex items-center justify-center p-4" onClick={() => setShowAddModal(false)}>
           <div className="w-full max-w-md max-h-[90vh] flex flex-col" onClick={e => e.stopPropagation()}>
-            <div className="bg-zinc-900 rounded-2xl border border-zinc-800 flex flex-col max-h-full overflow-hidden">
-              <div className="p-4 border-b border-zinc-800 flex items-center justify-between flex-shrink-0">
-                <div className="flex items-center gap-2">
-                  <div className="p-1.5 bg-zinc-800 rounded-lg border border-zinc-700">
-                    <Plus className="w-4 h-4 text-blue-400" />
+            <div className="skeuo-card p-0 flex flex-col max-h-[90vh] overflow-hidden relative">
+              <div className="p-5 border-b border-zinc-800/60 flex items-center justify-between flex-shrink-0">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 skeuo-panel-inner rounded-xl">
+                    <Plus className="w-5 h-5 text-green-400 drop-shadow-[0_0_5px_rgba(74,222,128,0.5)]" />
                   </div>
-                  <h3 className="text-white font-bold">Tambah Transaksi</h3>
+                  <h3 className="text-white font-bold text-lg tracking-wide uppercase text-shadow-glow">Tambah Transaksi</h3>
                 </div>
-                <button onClick={() => setShowAddModal(false)} className="p-1.5 bg-zinc-800 rounded-lg border border-zinc-700 hover:bg-zinc-700">
-                  <X className="w-4 h-4 text-zinc-400" />
+                <button onClick={() => setShowAddModal(false)} className="p-2 skeuo-panel-inner rounded-xl hover:brightness-110 active:scale-95 transition-all">
+                  <X className="w-5 h-5 text-zinc-400" />
                 </button>
               </div>
 
               <div className="p-4 space-y-4 overflow-y-auto flex-1">
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-2 gap-3">
                   <button
                     onClick={() => setFormData({ ...formData, type: 'income', category_id: '' })}
-                    className={`py-3 px-4 rounded-lg border ${
+                    className={`py-3 px-4 rounded-xl transition-all ${
                       formData.type === 'income'
-                        ? 'bg-zinc-800 border-green-500 text-green-400'
-                        : 'bg-zinc-950 border-zinc-700 text-zinc-400 hover:border-zinc-600'
+                        ? 'skeuo-panel-inner border-green-500/50 shadow-[0_0_10px_rgba(74,222,128,0.2)]'
+                        : 'bg-zinc-950/50 border border-zinc-800 hover:border-zinc-700'
                     }`}
                   >
                     <div className="flex items-center justify-center gap-2">
-                      <ArrowUpRight className="w-4 h-4" />
-                      <span className="font-medium text-sm">Masuk</span>
+                      <ArrowUpRight className={`w-4 h-4 ${formData.type === 'income' ? 'text-green-400' : 'text-zinc-500'}`} />
+                      <span className={`font-bold tracking-wide uppercase text-sm ${formData.type === 'income' ? 'text-green-400' : 'text-zinc-500'}`}>Masuk</span>
                     </div>
                   </button>
                   <button
                     onClick={() => setFormData({ ...formData, type: 'expense', category_id: '' })}
-                    className={`py-3 px-4 rounded-lg border ${
+                    className={`py-3 px-4 rounded-xl transition-all ${
                       formData.type === 'expense'
-                        ? 'bg-zinc-800 border-red-500 text-red-400'
-                        : 'bg-zinc-950 border-zinc-700 text-zinc-400 hover:border-zinc-600'
+                        ? 'skeuo-panel-inner border-red-500/50 shadow-[0_0_10px_rgba(248,113,113,0.2)]'
+                        : 'bg-zinc-950/50 border border-zinc-800 hover:border-zinc-700'
                     }`}
                   >
                     <div className="flex items-center justify-center gap-2">
-                      <ArrowDownRight className="w-4 h-4" />
-                      <span className="font-medium text-sm">Keluar</span>
+                      <ArrowDownRight className={`w-4 h-4 ${formData.type === 'expense' ? 'text-red-400' : 'text-zinc-500'}`} />
+                      <span className={`font-bold tracking-wide uppercase text-sm ${formData.type === 'expense' ? 'text-red-400' : 'text-zinc-500'}`}>Keluar</span>
                     </div>
                   </button>
                 </div>
 
                 <div>
-                  <label className="text-zinc-400 text-xs font-medium mb-1.5 block">Kategori</label>
-                  <div className="grid grid-cols-3 gap-2 max-h-48 overflow-y-auto p-1">
+                  <label className="text-zinc-400 text-xs font-bold uppercase tracking-widest mb-2 block">Kategori</label>
+                  <div className="grid grid-cols-3 gap-2 max-h-48 overflow-y-auto p-1 custom-scrollbar">
                     {categories
                       .filter(cat => cat.group_type === formData.type)
                       .map((cat) => {
@@ -1734,16 +1715,16 @@ export default function Dashboard() {
                           <button
                             key={cat.id}
                             onClick={() => setFormData({ ...formData, category_id: cat.id })}
-                            className={`p-2 rounded-lg border flex flex-col items-center gap-1 transition-colors ${
+                            className={`p-3 rounded-xl flex flex-col items-center gap-2 transition-all ${
                               isSelected
                                 ? formData.type === 'income'
-                                  ? 'bg-green-900/30 border-green-500'
-                                  : 'bg-red-900/30 border-red-500'
-                                : 'bg-zinc-950 border-zinc-700 hover:border-zinc-600'
+                                  ? 'skeuo-panel-inner border-green-500/30'
+                                  : 'skeuo-panel-inner border-red-500/30'
+                                : 'bg-zinc-950/50 border border-zinc-800 hover:border-zinc-700 shadow-[inset_0_2px_4px_rgba(0,0,0,0.2)]'
                             }`}
                           >
-                            <IconComponent className={`w-5 h-5 ${isSelected ? (formData.type === 'income' ? 'text-green-400' : 'text-red-400') : 'text-zinc-400'}`} />
-                            <span className={`text-xs ${isSelected ? 'text-white' : 'text-zinc-400'}`}>{cat.name}</span>
+                            <IconComponent className={`w-6 h-6 ${isSelected ? (formData.type === 'income' ? 'text-green-400 drop-shadow-[0_0_5px_rgba(74,222,128,0.5)]' : 'text-red-400 drop-shadow-[0_0_5px_rgba(248,113,113,0.5)]') : 'text-zinc-500'}`} />
+                            <span className={`text-xs font-medium tracking-wide text-center ${isSelected ? 'text-white' : 'text-zinc-500'}`}>{cat.name}</span>
                           </button>
                         )
                       })}
@@ -1754,34 +1735,34 @@ export default function Dashboard() {
                 </div>
 
                 <div>
-                  <label className="text-zinc-400 text-xs font-medium mb-1.5 block">Jumlah</label>
+                  <label className="text-zinc-400 text-xs font-bold uppercase tracking-widest mb-2 block">Jumlah</label>
                   <div className="relative">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 font-mono text-sm">Rp</span>
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 font-mono text-sm tracking-widest">Rp</span>
                     <input
                       type="number"
                       value={formData.amount}
                       onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
                       placeholder="0"
-                      className="w-full pl-10 pr-4 py-3 bg-zinc-950 border border-zinc-700 rounded-lg text-white font-mono placeholder-zinc-600 focus:outline-none focus:border-zinc-600"
+                      className="w-full pl-12 pr-4 py-3 bg-zinc-950/80 border border-zinc-700/60 rounded-xl text-white font-mono tracking-wider placeholder-zinc-600 focus:outline-none focus:border-green-500/50 shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)] transition-colors"
                     />
                   </div>
                 </div>
 
                 {formData.type === 'expense' && (
-                  <div>
-                    <label className="text-zinc-400 text-xs font-medium mb-1.5 block">Target (opsional)</label>
-                    <div className="border border-zinc-700 rounded-lg overflow-hidden bg-zinc-950">
-                      <div className="p-2 max-h-40 overflow-y-auto space-y-1">
+                  <div className="mt-2">
+                    <label className="text-zinc-400 text-xs font-bold uppercase tracking-widest mb-2 block">Target (opsional)</label>
+                    <div className="border border-zinc-700/60 rounded-xl overflow-hidden bg-zinc-950/80 shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)]">
+                      <div className="p-2 max-h-40 overflow-y-auto space-y-1 custom-scrollbar">
                         {targets.length === 0 ? (
-                          <p className="text-zinc-500 text-sm p-2">Belum ada target. Tambah di tab Target.</p>
+                          <p className="text-zinc-500 text-sm p-3 text-center">Belum ada target. Tambah di tab Target.</p>
                         ) : (
                           targets.map((target) => {
                             const isSelected = formData.target_ids.includes(target.id)
                             return (
                               <label
                                 key={target.id}
-                                className={`flex items-center gap-3 p-2 rounded-lg cursor-pointer transition-colors ${
-                                  isSelected ? 'bg-green-900/30' : 'hover:bg-zinc-800/50'
+                                className={`flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all ${
+                                  isSelected ? 'skeuo-panel-inner border-green-500/30' : 'bg-transparent hover:bg-zinc-900'
                                 }`}
                               >
                                 <input
@@ -1802,12 +1783,12 @@ export default function Dashboard() {
                                       })
                                     }
                                   }}
-                                  className="w-4 h-4 rounded border-zinc-600 text-green-500 focus:ring-green-500"
+                                  className="w-4 h-4 rounded bg-zinc-900 border-zinc-700 text-green-500 focus:ring-green-500 focus:ring-offset-zinc-900"
                                 />
                                 <div className="flex-1">
-                                  <span className="text-white text-sm">{target.name}</span>
+                                  <span className={`text-sm ${isSelected ? 'text-white drop-shadow-[0_0_5px_rgba(255,255,255,0.3)]' : 'text-zinc-400'}`}>{target.name}</span>
                                 </div>
-                                <span className="text-zinc-400 text-xs font-mono">
+                                <span className={`text-xs font-mono tracking-wide ${isSelected ? 'text-green-400' : 'text-zinc-500'}`}>
                                   {formatCurrency(target.amount)}
                                 </span>
                               </label>
@@ -1820,23 +1801,23 @@ export default function Dashboard() {
                 )}
 
                 <div>
-                  <label className="text-zinc-400 text-xs font-medium mb-1.5 block">Keterangan</label>
+                  <label className="text-zinc-400 text-xs font-bold uppercase tracking-widest mb-2 block">Keterangan</label>
                   <input
                     type="text"
                     value={formData.description}
                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                     placeholder="Deskripsi transaksi"
-                    className="w-full px-3 py-3 bg-zinc-950 border border-zinc-700 rounded-lg text-white placeholder-zinc-600 focus:outline-none focus:border-zinc-600"
+                    className="w-full px-4 py-3 bg-zinc-950/80 border border-zinc-700/60 rounded-xl text-white placeholder-zinc-600 focus:outline-none focus:border-green-500/50 shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)] transition-colors"
                   />
                 </div>
 
                 <div>
-                  <label className="text-zinc-400 text-xs font-medium mb-1.5 block">Tanggal</label>
+                  <label className="text-zinc-400 text-xs font-bold uppercase tracking-widest mb-2 block">Tanggal</label>
                   <input
                     type="date"
                     value={formData.date}
                     onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                    className="w-full px-3 py-3 bg-zinc-950 border border-zinc-700 rounded-lg text-white text-sm focus:outline-none focus:border-zinc-600 appearance-none [&::-webkit-calendar-picker-indicator]:invert"
+                    className="w-full px-4 py-3 bg-zinc-950/80 border border-zinc-700/60 rounded-xl text-white text-sm focus:outline-none focus:border-green-500/50 shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)] transition-colors appearance-none [&::-webkit-calendar-picker-indicator]:invert"
                     style={{ colorScheme: 'dark' }}
                   />
                 </div>
@@ -1844,7 +1825,7 @@ export default function Dashboard() {
                 <button
                   onClick={handleAddTransaction}
                   disabled={!formData.amount || !formData.category_id}
-                  className="w-full py-3 bg-blue-600 rounded-lg text-white font-bold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-blue-700 transition-colors border border-blue-500"
+                  className="w-full btn-skeuo mt-2"
                 >
                   Simpan Transaksi
                 </button>
@@ -1855,25 +1836,25 @@ export default function Dashboard() {
       )}
 
       {showReceiptModal && (
-        <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-xl z-50 flex items-center justify-center p-4">
           <div className="w-full max-w-md">
-            <div className="bg-zinc-900 rounded-2xl border border-zinc-800">
-              <div className="p-4 border-b border-zinc-800 flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="p-1.5 bg-zinc-800 rounded-lg border border-zinc-700">
-                    <Camera className="w-4 h-4 text-green-500" />
+            <div className="skeuo-card p-0 overflow-hidden relative">
+              <div className="p-5 border-b border-zinc-800/60 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 skeuo-panel-inner rounded-xl">
+                    <Camera className="w-5 h-5 text-green-400 drop-shadow-[0_0_5px_rgba(74,222,128,0.5)]" />
                   </div>
                   <div>
-                    <h3 className="text-white font-bold">Scan Struk</h3>
-                    <p className="text-zinc-500 text-xs">AI akan membaca struk kamu</p>
+                    <h3 className="text-white font-bold text-lg tracking-wide uppercase text-shadow-glow">Scan Struk</h3>
+                    <p className="text-green-500/80 text-xs tracking-wider uppercase font-bold mt-1">AI Pembaca Struk</p>
                   </div>
                 </div>
-                <button onClick={() => setShowReceiptModal(false)} className="p-1.5 bg-zinc-800 rounded-lg border border-zinc-700 hover:bg-zinc-700">
-                  <X className="w-4 h-4 text-zinc-400" />
+                <button onClick={() => setShowReceiptModal(false)} className="p-2 skeuo-panel-inner rounded-xl hover:brightness-110 active:scale-95 transition-all">
+                  <X className="w-5 h-5 text-zinc-400" />
                 </button>
               </div>
 
-              <div className="p-4">
+              <div className="p-5">
                 <label className="block">
                   <input
                     type="file"
@@ -1883,34 +1864,34 @@ export default function Dashboard() {
                     disabled={analyzing}
                     className="hidden"
                   />
-                  <div className="border-2 border-dashed border-zinc-600 rounded-xl p-6 text-center hover:border-zinc-500 cursor-pointer">
+                  <div className="border-2 border-dashed border-zinc-600/50 rounded-2xl p-6 text-center hover:border-green-500/50 cursor-pointer transition-all bg-zinc-950/50 shadow-[inset_0_2px_4px_rgba(0,0,0,0.2)]">
                     {analyzing ? (
                       <div className="space-y-3">
-                        <div className="w-12 h-12 mx-auto bg-zinc-800 rounded-xl flex items-center justify-center border border-zinc-700">
-                          <Sparkles className="w-6 h-6 text-green-500" />
+                        <div className="w-14 h-14 mx-auto skeuo-panel-inner rounded-xl flex items-center justify-center">
+                          <Sparkles className="w-7 h-7 text-green-400 drop-shadow-[0_0_5px_rgba(74,222,128,0.5)] animate-pulse" />
                         </div>
                         <div>
-                          <p className="text-green-500 font-medium text-sm">Menganalisis struk...</p>
-                          <p className="text-zinc-500 text-xs mt-1">Gemini AI</p>
+                          <p className="text-green-400 font-bold uppercase tracking-widest text-sm text-shadow-glow">Menganalisis struk...</p>
+                          <p className="text-zinc-500 font-mono text-xs mt-1">GEMINI AI ENGINE</p>
                         </div>
                       </div>
                     ) : (
                       <div className="space-y-3">
-                        <div className="w-12 h-12 mx-auto bg-zinc-800 rounded-xl flex items-center justify-center border border-zinc-700">
-                          <Printer className="w-6 h-6 text-green-500" />
+                        <div className="w-14 h-14 mx-auto skeuo-panel-inner rounded-xl flex items-center justify-center">
+                          <Printer className="w-7 h-7 text-green-400 drop-shadow-[0_0_5px_rgba(74,222,128,0.5)]" />
                         </div>
                         <div>
-                          <p className="text-zinc-300 font-medium text-sm">Ambil foto struk</p>
-                          <p className="text-zinc-500 text-xs mt-1">ATAU pilih dari galeri</p>
+                          <p className="text-zinc-300 font-bold uppercase tracking-wider text-sm">Ambil foto struk</p>
+                          <p className="text-zinc-500 text-xs mt-1 uppercase tracking-widest">ATAU pilih dari galeri</p>
                         </div>
                       </div>
                     )}
                   </div>
                 </label>
 
-                <div className="mt-3 flex items-center gap-2 p-2 bg-zinc-800 rounded-lg border border-zinc-700">
-                  <Sparkles className="w-4 h-4 text-zinc-400" />
-                  <p className="text-zinc-400 text-xs">AI akan otomatis isi jumlah, kategori, dan tanggal</p>
+                <div className="mt-4 flex items-center gap-3 p-3 skeuo-panel-inner rounded-xl border border-green-500/20">
+                  <Sparkles className="w-5 h-5 text-green-400 shrink-0" />
+                  <p className="text-zinc-400 text-xs leading-relaxed">AI akan otomatis isi <span className="text-white font-medium">jumlah</span>, <span className="text-white font-medium">kategori</span>, dan <span className="text-white font-medium">tanggal</span></p>
                 </div>
               </div>
             </div>
@@ -1941,70 +1922,70 @@ export default function Dashboard() {
       {showAddTargetModal && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-xl z-50 flex items-center justify-center p-4">
           <div className="w-full max-w-md" onClick={() => setShowAddTargetModal(false)}>
-            <div className="relative bg-gradient-to-br from-zinc-800/95 via-zinc-900/95 to-zinc-950/95 rounded-3xl border border-zinc-700/50 shadow-2xl shadow-black/50 overflow-hidden backdrop-blur-xl" onClick={e => e.stopPropagation()}>
-              <div className="absolute inset-[1px] rounded-[22px] bg-gradient-to-br from-white/[0.03] to-transparent pointer-events-none" />
+            <div className="skeuo-card p-0 overflow-hidden relative" onClick={e => e.stopPropagation()}>
               <div className="relative">
-                <div className="p-5 border-b border-zinc-800/60 flex items-center justify-between bg-gradient-to-r from-zinc-900/50 to-transparent">
+                <div className="p-5 border-b border-zinc-800/60 flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="p-2 bg-gradient-to-br from-green-600/30 to-green-800/30 rounded-xl border border-green-500/30 shadow-[inset_0_1px_2px_rgba(255,255,255,0.1)]">
-                      <Target className="w-5 h-5 text-green-400" />
+                    <div className="p-2 skeuo-panel-inner rounded-xl">
+                      <Target className="w-5 h-5 text-green-400 drop-shadow-[0_0_5px_rgba(74,222,128,0.5)]" />
                     </div>
-                    <h3 className="text-white font-bold text-lg">Tambah Target</h3>
+                    <h3 className="text-white font-bold text-lg tracking-wide uppercase text-shadow-glow">Tambah Target</h3>
                   </div>
-                  <button onClick={() => setShowAddTargetModal(false)} className="p-2 bg-zinc-800/60 rounded-xl border border-zinc-700/40 hover:bg-zinc-700/60 transition-colors">
+                  <button onClick={() => setShowAddTargetModal(false)} className="p-2 skeuo-panel-inner rounded-xl hover:brightness-110 active:scale-95 transition-all">
                     <X className="w-5 h-5 text-zinc-400" />
                   </button>
                 </div>
 
                 <div className="p-5 space-y-4">
                   <div>
-                    <label className="text-zinc-400 text-sm font-medium mb-2 block">Nama Target</label>
+                    <label className="text-zinc-400 text-xs font-bold uppercase tracking-widest mb-2 block">Nama Target</label>
                     <input
                       type="text"
                       value={newTarget.name}
                       onChange={(e) => setNewTarget({ ...newTarget, name: e.target.value })}
                       placeholder="Contoh: Listrik PLN"
-                      className="w-full px-4 py-3 bg-zinc-950/80 border border-zinc-700/60 rounded-xl text-white placeholder-zinc-600 focus:outline-none focus:border-green-500/50 transition-all"
+                      className="w-full px-4 py-3 bg-zinc-950/80 border border-zinc-700/60 rounded-xl text-white placeholder-zinc-600 focus:outline-none focus:border-green-500/50 transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)]"
                     />
                   </div>
 
                   <div>
-                    <label className="text-zinc-400 text-sm font-medium mb-2 block">Jumlah</label>
+                    <label className="text-zinc-400 text-xs font-bold uppercase tracking-widest mb-2 block">Jumlah</label>
                     <input
                       type="number"
                       value={newTarget.amount}
                       onChange={(e) => setNewTarget({ ...newTarget, amount: e.target.value })}
                       placeholder="0"
-                      className="w-full px-4 py-3 bg-zinc-950/80 border border-zinc-700/60 rounded-xl text-white placeholder-zinc-600 focus:outline-none focus:border-green-500/50 transition-all"
+                      className="w-full px-4 py-3 bg-zinc-950/80 border border-zinc-700/60 rounded-xl text-white font-mono tracking-wider placeholder-zinc-600 focus:outline-none focus:border-green-500/50 transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)]"
                     />
                   </div>
 
                   <div>
-                    <label className="text-zinc-400 text-sm font-medium mb-2 block">Tanggal Jatuh Tempo (opsional)</label>
+                    <label className="text-zinc-400 text-xs font-bold uppercase tracking-widest mb-2 block">Tanggal Jatuh Tempo (opsional)</label>
                     <input
                       type="date"
                       value={newTarget.due_date}
                       onChange={(e) => setNewTarget({ ...newTarget, due_date: e.target.value })}
-                      className="w-full px-4 py-3 bg-zinc-950/80 border border-zinc-700/60 rounded-xl text-white focus:outline-none focus:border-green-500/50 transition-all"
+                      className="w-full px-4 py-3 bg-zinc-950/80 border border-zinc-700/60 rounded-xl text-white focus:outline-none focus:border-green-500/50 transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)] appearance-none [&::-webkit-calendar-picker-indicator]:invert"
+                      style={{ colorScheme: 'dark' }}
                     />
                   </div>
 
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-3 p-2">
                     <input
                       type="checkbox"
                       id="is_recurring"
                       checked={newTarget.is_recurring}
                       onChange={(e) => setNewTarget({ ...newTarget, is_recurring: e.target.checked })}
-                      className="w-5 h-5 rounded bg-zinc-950 border-zinc-700 text-green-500 focus:ring-green-500"
+                      className="w-5 h-5 rounded bg-zinc-900 border-zinc-700 text-green-500 focus:ring-green-500 focus:ring-offset-zinc-900"
                     />
-                    <label htmlFor="is_recurring" className="text-zinc-400 text-sm">
+                    <label htmlFor="is_recurring" className="text-zinc-300 font-medium text-sm tracking-wide">
                       Berulang setiap bulan
                     </label>
                   </div>
 
                   <button
                     onClick={handleAddTarget}
-                    className="w-full py-4 bg-gradient-to-r from-green-600 to-green-700 rounded-xl text-white font-bold hover:from-green-700 hover:to-green-800 transition-all shadow-lg shadow-green-600/30 border border-green-500/30"
+                    className="w-full btn-skeuo mt-2"
                   >
                     Simpan Target
                   </button>
@@ -2026,72 +2007,69 @@ export default function Dashboard() {
 
       {/* Add Options Modal */}
       {showAddOptions && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-xl z-50 flex items-end lg:items-center justify-center p-4" onClick={() => setShowAddOptions(false)}>
-          <div className="w-full max-w-md" onClick={e => e.stopPropagation()}>
-            <div className="relative bg-gradient-to-br from-zinc-800/95 via-zinc-900/95 to-zinc-950/95 rounded-3xl border border-zinc-700/50 shadow-2xl shadow-black/50 overflow-hidden backdrop-blur-xl">
-              <div className="absolute inset-[1px] rounded-[22px] bg-gradient-to-br from-white/[0.03] to-transparent pointer-events-none" />
-              <div className="relative">
-                <div className="p-5 border-b border-zinc-800/60 flex items-center justify-between bg-gradient-to-r from-zinc-900/50 to-transparent">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 bg-gradient-to-br from-blue-600/30 to-blue-800/30 rounded-xl border border-blue-500/30 shadow-[inset_0_1px_2px_rgba(255,255,255,0.1)]">
-                      <Plus className="w-5 h-5 text-blue-400" />
-                    </div>
-                    <h3 className="text-white font-bold text-lg">Tambah Transaksi</h3>
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-xl z-[60] flex items-center justify-center p-4" onClick={() => setShowAddOptions(false)}>
+          <div className="w-full max-w-md animate-in zoom-in-95 duration-200" onClick={e => e.stopPropagation()}>
+            <div className="skeuo-card p-0 flex flex-col max-h-[90vh] overflow-hidden relative">
+              <div className="p-5 border-b border-zinc-800/60 flex items-center justify-between flex-shrink-0">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 skeuo-panel-inner rounded-xl">
+                    <Plus className="w-5 h-5 text-green-400 drop-shadow-[0_0_5px_rgba(74,222,128,0.5)]" />
                   </div>
-                  <button onClick={() => setShowAddOptions(false)} className="p-2 bg-zinc-800/60 rounded-xl border border-zinc-700/40 hover:bg-zinc-700/60 transition-colors">
-                    <X className="w-5 h-5 text-zinc-400" />
-                  </button>
+                  <h3 className="text-white font-bold text-lg tracking-wide uppercase text-shadow-glow">Tambah Transaksi</h3>
                 </div>
-                
-                <div className="p-5 space-y-3">
-                  <button
-                    onClick={() => {
-                      setShowAddOptions(false)
-                      setShowAddModal(true)
-                    }}
-                    className="w-full flex items-center gap-4 p-4 bg-gradient-to-br from-zinc-800/60 to-zinc-900/60 hover:from-zinc-800 hover:to-zinc-900 rounded-xl transition-all border border-zinc-700/40 shadow-[inset_0_1px_2px_rgba(255,255,255,0.05)]"
-                  >
-                    <div className="w-12 h-12 bg-gradient-to-br from-blue-600/30 to-blue-800/30 rounded-xl flex items-center justify-center border border-blue-500/30 shadow-[inset_0_1px_2px_rgba(255,255,255,0.1)]">
-                      <Plus className="w-6 h-6 text-blue-400" />
-                    </div>
-                    <div className="text-left">
-                      <p className="text-white font-medium">Input Manual</p>
-                      <p className="text-zinc-400 text-sm">Masukkan transaksi secara manual</p>
-                    </div>
-                  </button>
+                <button onClick={() => setShowAddOptions(false)} className="p-2 skeuo-panel-inner rounded-xl hover:brightness-110 active:scale-95 transition-all">
+                  <X className="w-5 h-5 text-zinc-400" />
+                </button>
+              </div>
+              
+              <div className="p-5 space-y-3">
+                <button
+                  onClick={() => {
+                    setShowAddOptions(false);
+                    setShowAddModal(true);
+                  }}
+                  className="w-full flex items-center gap-4 p-4 skeuo-panel-inner hover:brightness-110 active:scale-[0.98] transition-all rounded-xl border border-zinc-700/50 group"
+                >
+                  <div className="w-12 h-12 flex items-center justify-center shrink-0">
+                    <Plus className="w-6 h-6 text-green-400 drop-shadow-[0_0_8px_rgba(74,222,128,0.5)] group-hover:scale-110 transition-transform" />
+                  </div>
+                  <div className="text-left flex-1 border-l border-zinc-700/50 pl-4">
+                    <p className="text-white font-bold uppercase tracking-wider text-sm drop-shadow-md">Input Manual</p>
+                    <p className="text-zinc-400 text-xs mt-1">Masukkan transaksi secara manual</p>
+                  </div>
+                </button>
 
-                  <button
-                    onClick={() => {
-                      setShowAddOptions(false)
-                      setShowReceiptModal(true)
-                    }}
-                    className="w-full flex items-center gap-4 p-4 bg-gradient-to-br from-zinc-800/60 to-zinc-900/60 hover:from-zinc-800 hover:to-zinc-900 rounded-xl transition-all border border-zinc-700/40 shadow-[inset_0_1px_2px_rgba(255,255,255,0.05)]"
-                  >
-                    <div className="w-12 h-12 bg-gradient-to-br from-green-600/30 to-green-800/30 rounded-xl flex items-center justify-center border border-green-500/30 shadow-[inset_0_1px_2px_rgba(255,255,255,0.1)]">
-                      <Camera className="w-6 h-6 text-green-400" />
-                    </div>
-                    <div className="text-left">
-                      <p className="text-white font-medium">Scan Struk</p>
-                      <p className="text-zinc-400 text-sm">Ambil foto struk dari kamera</p>
-                    </div>
-                  </button>
+                <button
+                  onClick={() => {
+                    setShowAddOptions(false);
+                    setShowReceiptModal(true);
+                  }}
+                  className="w-full flex items-center gap-4 p-4 skeuo-panel-inner hover:brightness-110 active:scale-[0.98] transition-all rounded-xl border border-zinc-700/50 group"
+                >
+                  <div className="w-12 h-12 flex items-center justify-center shrink-0">
+                    <Camera className="w-6 h-6 text-green-400 drop-shadow-[0_0_8px_rgba(74,222,128,0.5)] group-hover:scale-110 transition-transform" />
+                  </div>
+                  <div className="text-left flex-1 border-l border-zinc-700/50 pl-4">
+                    <p className="text-white font-bold uppercase tracking-wider text-sm drop-shadow-md">Scan Struk</p>
+                    <p className="text-zinc-400 text-xs mt-1">Ambil foto struk dari kamera</p>
+                  </div>
+                </button>
 
-                  <button
-                    onClick={() => {
-                      setShowAddOptions(false)
-                      fileInputRef.current?.click()
-                    }}
-                    className="w-full flex items-center gap-4 p-4 bg-gradient-to-br from-zinc-800/60 to-zinc-900/60 hover:from-zinc-800 hover:to-zinc-900 rounded-xl transition-all border border-zinc-700/40 shadow-[inset_0_1px_2px_rgba(255,255,255,0.05)]"
-                  >
-                    <div className="w-12 h-12 bg-gradient-to-br from-purple-600/30 to-purple-800/30 rounded-xl flex items-center justify-center border border-purple-500/30 shadow-[inset_0_1px_2px_rgba(255,255,255,0.1)]">
-                      <Upload className="w-6 h-6 text-purple-400" />
-                    </div>
-                    <div className="text-left">
-                      <p className="text-white font-medium">Pilih dari Galeri</p>
-                      <p className="text-zinc-400 text-sm">Upload gambar struk dari galeri</p>
-                    </div>
-                  </button>
-                </div>
+                <button
+                  onClick={() => {
+                    setShowAddOptions(false);
+                    fileInputRef.current?.click();
+                  }}
+                  className="w-full flex items-center gap-4 p-4 skeuo-panel-inner hover:brightness-110 active:scale-[0.98] transition-all rounded-xl border border-zinc-700/50 group"
+                >
+                  <div className="w-12 h-12 flex items-center justify-center shrink-0">
+                    <Upload className="w-6 h-6 text-green-400 drop-shadow-[0_0_8px_rgba(74,222,128,0.5)] group-hover:scale-110 transition-transform" />
+                  </div>
+                  <div className="text-left flex-1 border-l border-zinc-700/50 pl-4">
+                    <p className="text-white font-bold uppercase tracking-wider text-sm drop-shadow-md">Pilih dari Galeri</p>
+                    <p className="text-zinc-400 text-xs mt-1">Upload gambar struk dari galeri</p>
+                  </div>
+                </button>
               </div>
             </div>
           </div>
@@ -2099,75 +2077,87 @@ export default function Dashboard() {
       )}
 
       {editingTransaction && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-zinc-900 rounded-2xl w-full max-w-md border border-zinc-800">
-            <div className="p-4 border-b border-zinc-800 flex items-center justify-between">
-              <h3 className="text-white font-bold">Edit Transaksi</h3>
-              <button onClick={() => setEditingTransaction(null)} className="text-zinc-400">
-                <X className="w-6 h-6" />
-              </button>
-            </div>
-            <div className="p-4 space-y-4">
-              <div>
-                <label className="text-zinc-400 text-sm">Deskripsi</label>
-                <input
-                  type="text"
-                  value={editingTransaction.description}
-                  onChange={(e) => setEditingTransaction({ ...editingTransaction, description: e.target.value })}
-                  className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-3 text-white mt-1"
-                />
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-xl z-[60] flex items-center justify-center p-4" onClick={() => setEditingTransaction(null)}>
+          <div className="w-full max-w-md animate-in zoom-in-95 duration-200" onClick={e => e.stopPropagation()}>
+            <div className="skeuo-card p-0 flex flex-col max-h-[90vh] overflow-hidden relative">
+              <div className="p-5 border-b border-zinc-800/60 flex items-center justify-between flex-shrink-0">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 skeuo-panel-inner rounded-xl">
+                    <Wallet className="w-5 h-5 text-green-400 drop-shadow-[0_0_5px_rgba(74,222,128,0.5)]" />
+                  </div>
+                  <h3 className="text-white font-bold text-lg tracking-wide uppercase text-shadow-glow">Edit Transaksi</h3>
+                </div>
+                <button onClick={() => setEditingTransaction(null)} className="p-2 skeuo-panel-inner rounded-xl hover:brightness-110 active:scale-95 transition-all">
+                  <X className="w-5 h-5 text-zinc-400" />
+                </button>
               </div>
-              <div>
-                <label className="text-zinc-400 text-sm">Jumlah</label>
-                <input
-                  type="number"
-                  value={editingTransaction.amount}
-                  onChange={(e) => setEditingTransaction({ ...editingTransaction, amount: parseFloat(e.target.value) || 0 })}
-                  className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-3 text-white font-mono mt-1"
-                />
+              <div className="p-5 space-y-4 overflow-y-auto flex-1">
+                <div>
+                  <label className="text-zinc-400 text-xs font-bold uppercase tracking-wider drop-shadow-md block mb-2">Deskripsi</label>
+                  <input
+                    type="text"
+                    value={editingTransaction.description}
+                    onChange={(e) => setEditingTransaction({ ...editingTransaction, description: e.target.value })}
+                    className="w-full bg-zinc-900/50 border border-zinc-700 rounded-xl px-4 py-3 text-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)] focus:outline-none focus:border-green-500/50 focus:ring-1 focus:ring-green-500/50 transition-all font-mono"
+                  />
+                </div>
+                <div>
+                  <label className="text-zinc-400 text-xs font-bold uppercase tracking-wider drop-shadow-md block mb-2">Jumlah</label>
+                  <input
+                    type="number"
+                    value={editingTransaction.amount}
+                    onChange={(e) => setEditingTransaction({ ...editingTransaction, amount: parseFloat(e.target.value) || 0 })}
+                    className="w-full bg-zinc-900/50 border border-zinc-700 rounded-xl px-4 py-3 text-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)] focus:outline-none focus:border-green-500/50 focus:ring-1 focus:ring-green-500/50 transition-all font-mono font-bold text-lg"
+                  />
+                </div>
+                <div>
+                  <label className="text-zinc-400 text-xs font-bold uppercase tracking-wider drop-shadow-md block mb-2">Tanggal</label>
+                  <input
+                    type="date"
+                    value={editingTransaction.date}
+                    onChange={(e) => setEditingTransaction({ ...editingTransaction, date: e.target.value })}
+                    className="w-full bg-zinc-900/50 border border-zinc-700 rounded-xl px-4 py-3 text-white shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)] focus:outline-none focus:border-green-500/50 focus:ring-1 focus:ring-green-500/50 transition-all font-mono appearance-none [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-4 [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-100 [&::-webkit-calendar-picker-indicator]:invert"
+                    style={{ colorScheme: 'dark' }}
+                  />
+                  <p className="text-zinc-500 text-xs mt-2 font-mono ml-1">
+                    {new Date(editingTransaction.date + 'T00:00:00').toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
+                  </p>
+                </div>
               </div>
-              <div>
-                <label className="text-zinc-400 text-sm">Tanggal</label>
-                <input
-                  type="date"
-                  value={editingTransaction.date}
-                  onChange={(e) => setEditingTransaction({ ...editingTransaction, date: e.target.value })}
-                  className="w-full max-w-full mt-1 px-3 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white text-sm focus:outline-none focus:border-blue-500 appearance-none [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:right-2 [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-100 [&::-webkit-calendar-picker-indicator]:invert"
-                  style={{ colorScheme: 'dark' }}
-                />
-                <p className="text-zinc-500 text-xs mt-1">
-                  {new Date(editingTransaction.date + 'T00:00:00').toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
-                </p>
-              </div>
-              <button
-                onClick={async () => {
-                  try {
-                    await supabase.from('kf_transactions').update({
-                      description: editingTransaction.description,
-                      amount: editingTransaction.amount,
-                      date: editingTransaction.date,
-                    }).eq('id', editingTransaction.id)
-                    
-                    setTransactions(prev => prev.map(t => t.id === editingTransaction.id ? editingTransaction : t))
-                    calculateStats(transactions.map(t => t.id === editingTransaction.id ? editingTransaction : t))
+              <div className="p-5 border-t border-zinc-800/60 flex flex-col gap-3 flex-shrink-0">
+                <button
+                  onClick={async () => {
+                    try {
+                      await supabase.from('kf_transactions').update({
+                        description: editingTransaction.description,
+                        amount: editingTransaction.amount,
+                        date: editingTransaction.date,
+                      }).eq('id', editingTransaction.id)
+                      
+                      setTransactions(prev => prev.map(t => t.id === editingTransaction.id ? editingTransaction : t))
+                      calculateStats(transactions.map(t => t.id === editingTransaction.id ? editingTransaction : t))
+                      setEditingTransaction(null)
+                    } catch (error) {
+                      console.error('Error updating:', error)
+                    }
+                  }}
+                  className="w-full btn-skeuo rounded-xl py-4 active:scale-[0.98] transition-transform"
+                >
+                  <span className="flex items-center justify-center gap-2">
+                    <Check className="w-5 h-5 text-green-400 drop-shadow-[0_0_8px_rgba(74,222,128,0.8)]" />
+                    <span className="text-white font-bold uppercase tracking-wider text-sm drop-shadow-md">Simpan Perubahan</span>
+                  </span>
+                </button>
+                <button
+                  onClick={() => {
+                    handleDeleteTransaction(editingTransaction.id)
                     setEditingTransaction(null)
-                  } catch (error) {
-                    console.error('Error updating:', error)
-                  }
-                }}
-                className="w-full py-3 bg-blue-600 hover:bg-blue-700 rounded-xl text-white font-bold"
-              >
-                Simpan
-              </button>
-              <button
-                onClick={() => {
-                  handleDeleteTransaction(editingTransaction.id)
-                  setEditingTransaction(null)
-                }}
-                className="w-full py-3 bg-red-600/20 hover:bg-red-600/30 rounded-xl text-red-500 font-medium"
-              >
-                Hapus Transaksi
-              </button>
+                  }}
+                  className="w-full py-4 skeuo-panel-inner rounded-xl border border-red-500/30 text-red-500 font-bold uppercase tracking-wider text-sm hover:brightness-110 active:scale-[0.98] transition-all shadow-[inset_0_0_15px_rgba(239,68,68,0.1)]"
+                >
+                  Hapus Transaksi
+                </button>
+              </div>
             </div>
           </div>
         </div>

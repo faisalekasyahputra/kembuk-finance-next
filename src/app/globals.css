@@ -6,12 +6,104 @@
 }
 
 :root {
-  background: #000;
-  color: #fff;
+  --bg-dark: #1a1a1a;
+  --bg-darker: #111;
+  --metal-top: #4f4f4f;
+  --metal-bottom: #2b2b2b;
+  --metal-pressed-top: #1e1e1e;
+  --metal-pressed-bottom: #262626;
+  --neon-green: #00ff66;
+  --neon-green-glow: rgba(0, 255, 102, 0.4);
+  --highlight: rgba(255, 255, 255, 0.15);
+  --shadow: rgba(0, 0, 0, 0.8);
+  --text-dim: #1a1a1a;
 }
 
 body {
-  background: #000;
-  color: #fff;
+  margin: 0;
+  background-color: #2a2a2a;
+  background-image: 
+    radial-gradient(circle at 50% 0%, #3b3b3b, #151515),
+    repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(0,0,0,0.05) 2px, rgba(0,0,0,0.05) 4px);
+  color: white;
   min-height: 100vh;
+}
+
+/* 1. BUTTONS */
+.btn-skeuo {
+  padding: 15px 30px;
+  background: linear-gradient(to bottom, var(--metal-top), var(--metal-bottom));
+  border-radius: 12px;
+  color: var(--text-dim);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  border: none;
+  box-shadow:
+    inset 0 1px 1px var(--highlight),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.4),
+    0 6px 8px rgba(0, 0, 0, 0.6),
+    0 2px 3px rgba(0, 0, 0, 0.4);
+  border-top: 1px solid #6b6b6b;
+  border-bottom: 1px solid #0f0f0f;
+  text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.6), 0 1px 1px rgba(255, 255, 255, 0.15);
+  transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.btn-skeuo:active {
+  background: linear-gradient(to bottom, var(--metal-pressed-top), var(--metal-pressed-bottom));
+  box-shadow:
+    inset 0 4px 8px rgba(0, 0, 0, 0.9),
+    inset 0 1px 3px rgba(0, 0, 0, 1),
+    0 1px 0 rgba(255, 255, 255, 0.1); 
+  transform: translateY(4px);
+  color: var(--neon-green);
+  text-shadow: 0 0 8px var(--neon-green-glow);
+}
+.btn-skeuo:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* 4. CARDS */
+.skeuo-card {
+  background: linear-gradient(135deg, var(--metal-top), var(--metal-bottom));
+  border-radius: 16px;
+  box-shadow:
+    inset 0 1px 2px rgba(255, 255, 255, 0.3),
+    inset 0 -1px 3px rgba(0, 0, 0, 0.6),
+    0 8px 15px rgba(0, 0, 0, 0.8);
+  border-top: 1px solid #777;
+  border-left: 1px solid #555;
+}
+
+/* 6. INPUTS */
+.skeuo-input {
+  background: #0f1a12;
+  border: 2px solid #000;
+  border-radius: 8px;
+  color: var(--neon-green);
+  font-family: monospace;
+  box-shadow: inset 0 3px 8px rgba(0,0,0,0.9), 0 1px 1px var(--highlight);
+  text-shadow: 0 0 5px rgba(0,255,102,0.3);
+  transition: all 0.2s;
+}
+.skeuo-input:focus {
+  background: #15261a;
+  box-shadow: inset 0 3px 8px rgba(0,0,0,0.9), 0 0 10px rgba(0,255,102,0.2);
+  outline: none;
+}
+.skeuo-input::placeholder { color: #004d1f; }
+
+/* PANEL CONTENT (for putting stuff inside cards) */
+.skeuo-panel-inner {
+  background: #111;
+  border-radius: 8px;
+  box-shadow: inset 0 4px 10px rgba(0,0,0,0.9), 0 1px 1px var(--highlight);
+  border: 1px solid #000;
 }
