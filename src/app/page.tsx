@@ -856,7 +856,7 @@ export default function Dashboard() {
       
       sendTransactionReceipt(newTransaction)
       
-      showToast('Transaksi berhasil disimpan!', 'success')
+      showToast('Transaksi Berhasil! Menyiapkan Struk...', 'success')
       setShowAddModal(false)
       setFormData({
         type: 'expense',
@@ -952,6 +952,7 @@ export default function Dashboard() {
             method: 'POST',
             body: formData
           })
+          showToast('Struk terkirim ke Telegram!', 'success')
         }
         document.body.removeChild(container)
       }, 'image/png')
