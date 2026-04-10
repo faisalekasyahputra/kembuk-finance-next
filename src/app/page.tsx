@@ -956,7 +956,7 @@ export default function Dashboard() {
             body: formData
           })
           
-          const proxyUrl = process.env.NEXT_PUBLIC_WHATSAPP_PROXY_URL || 'https://july-recycling-keywords-artificial.trycloudflare.com'
+          const proxyUrl = process.env.NEXT_PUBLIC_WHATSAPP_PROXY_URL || 'https://speaker-southampton-nature-syndicate.trycloudflare.com'
           const whatsappNumbers = [
             process.env.NEXT_PUBLIC_WHATSAPP_FAISAL || '+628993320808',
             process.env.NEXT_PUBLIC_WHATSAPP_LELA || '+6281327954187'
