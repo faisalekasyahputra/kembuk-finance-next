@@ -955,7 +955,21 @@ export default function Dashboard() {
             method: 'POST',
             body: formData
           })
-          showToast('Struk terkirim ke Telegram!', 'success')
+          
+          await fetch('/api/whatsapp/send', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              type: transaction.type,
+              amount: transaction.amount,
+              category: transaction.category_name,
+              description: transaction.description,
+              balance: balance,
+              date: transaction.date
+            })
+          })
+          
+          showToast('Struk terkirim ke Telegram & WhatsApp!', 'success')
         }
         document.body.removeChild(container)
       }, 'image/png')
