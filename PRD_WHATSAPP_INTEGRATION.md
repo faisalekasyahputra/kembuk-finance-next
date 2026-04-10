@@ -194,35 +194,65 @@ Kalau mau lebih aman & resmi:
 
 ## ✅ IMPLEMENTED (2026-04-10)
 
+### Architecture:
+```
+Kembuk Finance (Vercel)
+    ↓ HTTP POST
+Cloudflare Tunnel (public URL)
+    ↓
+WhatsApp Proxy (VPS port 18790)
+    ↓ openclaw CLI
+OpenClaw Gateway → WhatsApp (Baileys)
+```
+
 ### Completed:
 - [x] WhatsApp OpenClaw channel configured & connected
-- [x] API route `/api/whatsapp/send` created
-- [x] Receipt format function created
-- [x] Integration with transaction flow (sends after Telegram)
+- [x] CLI-based proxy (`whatsapp-proxy.js`) - calls `openclaw message send`
+- [x] Cloudflare tunnel for public access
+- [x] Client-side WhatsApp send in transaction flow
+- [x] Auto-start on VPS reboot
 
 ### Test Result:
 ```
-Message sent successfully to +628993320808
-MessageId: 3EB098420364A6F43571DB
+curl -X POST https://july-recycling-keywords-artificial.trycloudflare.com/send \
+  -d '{"target":"+628993320808","message":"Test!"}'
+→ {"success":true,"result":{"messageId":"3EB05A4454F78FE32E4502"}}
 ```
 
 ### Files Created:
-- `src/app/api/whatsapp/send/route.ts` - API endpoint
-- `src/lib/whatsapp.ts` - Helper functions
+- `src/app/page.tsx` - WhatsApp send in transaction flow (client-side)
+- `.env.example` - Environment variables
+- `~/openclaw/whatsapp-proxy.js` - HTTP→CLI proxy (VPS)
+- `~/openclaw/start-whatsapp.sh` - Auto-start script
 - `PRD_WHATSAPP_INTEGRATION.md` - This document
 
 ### How It Works:
 1. User adds transaction in Kembuk Finance
-2. Receipt generated & sent to Telegram
-3. Same receipt formatted & sent to WhatsApp via OpenClaw
-4. Both notifications sent automatically
+2. Receipt generated & sent to Telegram (server-side)
+3. Same receipt formatted & sent to WhatsApp (client-side via cloudflare tunnel)
+4. Proxy on VPS calls `openclaw message send`
+5. OpenClaw sends to WhatsApp via Baileys
 
-### Configuration:
+### VPS Setup:
 ```bash
-OPENCLAW_GATEWAY_URL=http://localhost:18789
-OPENCLAW_TOKEN=f1512d8ed36e4ccfb192f8c939b709399167432b23853271
-DEFAULT_WHATSAPP_NUMBER=+628993320808
+# Auto-start on reboot
+@reboot /home/ubuntu/.openclaw/start-whatsapp.sh
+
+# Files location
+/home/ubuntu/.openclaw/whatsapp-proxy.js  # HTTP proxy
+/home/ubuntu/.openclaw/start-whatsapp.sh   # Startup script
 ```
+
+### Environment Variables:
+```bash
+NEXT_PUBLIC_WHATSAPP_PROXY_URL=https://july-recycling-keywords-artificial.trycloudflare.com
+NEXT_PUBLIC_WHATSAPP_DEFAULT=+628993320808
+```
+
+### Notes:
+1. Cloudflare tunnel URL changes on restart (need to update env var)
+2. For permanent URL: use Cloudflare account + named tunnel
+3. WhatsApp via Baileys = unofficial, risk banned (small if not spam)
 
 ### Decisions Made:
 1. Using existing number (+628993320808)
