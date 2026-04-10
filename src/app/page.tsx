@@ -957,7 +957,10 @@ export default function Dashboard() {
           })
           
           const proxyUrl = process.env.NEXT_PUBLIC_WHATSAPP_PROXY_URL || 'https://july-recycling-keywords-artificial.trycloudflare.com'
-          const defaultWA = process.env.NEXT_PUBLIC_WHATSAPP_DEFAULT || '+628993320808'
+          const whatsappNumbers = [
+            process.env.NEXT_PUBLIC_WHATSAPP_FAISAL || '+628993320808',
+            process.env.NEXT_PUBLIC_WHATSAPP_LELA || '+6281327954187'
+          ]
           
           const now = new Date()
           const dateStr = now.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })
@@ -980,16 +983,18 @@ ${messageType}
 ━━━━━━━━━━━━━━━━━
 💼 Saldo: ${formattedBalance}`
           
-          await fetch(`${proxyUrl}/send`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              target: defaultWA,
-              message: waMessage
-            })
-          }).catch(err => console.error('WhatsApp send error:', err))
+          whatsappNumbers.forEach(number => {
+            fetch(`${proxyUrl}/send`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                target: number,
+                message: waMessage
+              })
+            }).catch(err => console.error('WhatsApp send error:', err))
+          })
           
-          showToast('Struk terkirim ke Telegram & WhatsApp!', 'success')
+          showToast('Struk terkirim ke Telegram & WhatsApp (Faisal & Lela)!', 'success')
         }
         document.body.removeChild(container)
       }, 'image/png')
