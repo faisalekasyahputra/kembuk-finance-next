@@ -956,18 +956,38 @@ export default function Dashboard() {
             body: formData
           })
           
-          await fetch('/api/whatsapp/send', {
+          const proxyUrl = process.env.NEXT_PUBLIC_WHATSAPP_PROXY_URL || 'https://july-recycling-keywords-artificial.trycloudflare.com'
+          const defaultWA = process.env.NEXT_PUBLIC_WHATSAPP_DEFAULT || '+628993320808'
+          
+          const now = new Date()
+          const dateStr = now.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })
+          const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })
+          const formattedAmount = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(transaction.amount)
+          const formattedBalance = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(balance)
+          const messageType = transaction.type === 'income' ? '💰 Pendapatan' : '💸 Pengeluaran'
+          
+          const waMessage = `🧾 *Struk Baru!*
+
+━━━━━━━━━━━━━━━━━
+📅 ${dateStr}, ${timeStr}
+━━━━━━━━━━━━━━━━━
+
+${messageType}
+💰 *${formattedAmount}*
+
+📂 Kategori: ${transaction.category_name}
+📝 ${transaction.description}
+━━━━━━━━━━━━━━━━━
+💼 Saldo: ${formattedBalance}`
+          
+          await fetch(`${proxyUrl}/send`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              type: transaction.type,
-              amount: transaction.amount,
-              category: transaction.category_name,
-              description: transaction.description,
-              balance: balance,
-              date: transaction.date
+              target: defaultWA,
+              message: waMessage
             })
-          })
+          }).catch(err => console.error('WhatsApp send error:', err))
           
           showToast('Struk terkirim ke Telegram & WhatsApp!', 'success')
         }

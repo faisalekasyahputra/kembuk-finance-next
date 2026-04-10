@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-const OPENCLAW_GATEWAY_URL = process.env.OPENCLAW_GATEWAY_URL || 'http://localhost:18789'
+const OPENCLAW_GATEWAY_URL = process.env.OPENCLAW_GATEWAY_URL || 'https://necessary-election-mount-sussex.trycloudflare.com'
 const OPENCLAW_TOKEN = process.env.OPENCLAW_TOKEN || 'f1512d8ed36e4ccfb192f8c939b709399167432b23853271'
 const DEFAULT_WHATSAPP = process.env.DEFAULT_WHATSAPP_NUMBER || '+628993320808'
 
