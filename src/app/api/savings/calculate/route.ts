@@ -28,8 +28,9 @@ export async function POST() {
 
     if (totalIncome !== (savings.last_total_income || 0) || totalExpense !== (savings.last_total_expense || 0)) {
       const autoSavePercent = savings.auto_save_percent || 0
-      const autoSave = sisa * (autoSavePercent / 100)
-      const balanceBefore = savings.balance || 0
+      const newTotalAutoSave = sisa * (autoSavePercent / 100)
+      const oldTotalAutoSave = savings.balance || 0
+      const diff = newTotalAutoSave - oldTotalAutoSave
 
       const { data: activeTargets, error: targetsError } = await supabase
         .from('kf_savings_targets')
@@ -43,10 +44,9 @@ export async function POST() {
       }
 
       const activeTargetsCount = activeTargets?.length || 0
-      let amountPerTarget = 0
 
-      if (activeTargetsCount > 0 && autoSave > 0) {
-        amountPerTarget = autoSave / activeTargetsCount
+      if (activeTargetsCount > 0 && Math.abs(diff) > 0.01) {
+        const amountPerTarget = diff / activeTargetsCount
 
         for (const target of activeTargets || []) {
           const newCurrent = Number(target.current_amount) + amountPerTarget
@@ -68,17 +68,17 @@ export async function POST() {
           .insert({
             user_id: 'shared',
             type: 'auto_save',
-            amount: autoSave,
-            balance_before: balanceBefore,
-            balance_after: autoSave,
-            description: `Auto-save dari ${activeTargetsCount} target aktif`
+            amount: diff,
+            balance_before: oldTotalAutoSave,
+            balance_after: newTotalAutoSave,
+            description: `Auto-save ${diff >= 0 ? 'masuk' : 'keluar'} dari ${activeTargetsCount} target aktif`
           })
       }
 
       await supabase
         .from('kf_savings')
         .update({
-          balance: autoSave,
+          balance: newTotalAutoSave,
           last_total_income: totalIncome,
           last_total_expense: totalExpense,
           updated_at: new Date().toISOString()
