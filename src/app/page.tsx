@@ -60,8 +60,21 @@ const iconMap: Record<string, React.ComponentType<{className?: string, size?: nu
   Fuel, Cigarette, Zap, Wifi, Wrench, CreditCard, Smartphone, HardDrive, Cloud,
   Tv, Shirt, Sparkles, Bird, Package, Briefcase, DollarSign, Plane, Building2, Gift,
   Utensils, Car, Heart, ShoppingBag, Gamepad2, GraduationCap, Baby, TrendingDown,
-  ArrowLeftRight, Home, TrendingUp, Wallet
+  ArrowLeftRight, Home, TrendingUp, Wallet, Receipt, Printer, PiggyBank, Target,
+  Camera, Upload, Film, Bell, Check, Edit3, Trash2
 }
+
+const CATEGORY_ICONS = [
+  'Home', 'Car', 'Utensils', 'Shirt', 'Heart',
+  'Smartphone', 'Plane', 'ShoppingBag', 'Gift', 'Wallet',
+  'Briefcase', 'GraduationCap', 'Baby', 'Film',
+  'Sparkles', 'Zap', 'Wifi', 'Camera', 'Printer',
+  'Wrench', 'Fuel', 'Building2', 'Package', 'HardDrive', 'CreditCard'
+]
+
+const CATEGORY_COLORS = [
+  '#EF4444', '#F97316', '#F59E0B', '#84CC16', '#22C55E', '#14B8A6', '#06B6D4', '#3B82F6', '#6366F1', '#8B5CF6', '#A855F7', '#EC4899', '#000000', '#52525B'
+]
 
 function ReceiptExportView({ transactions, balance, totalIncome, totalExpense, onClose }: {
   transactions: Transaction[]
@@ -485,6 +498,13 @@ export default function Dashboard() {
   const [isLoading, setIsLoading] = useState(true)
   const [editingSavingsTarget, setEditingSavingsTarget] = useState<{ id: string; name: string; target_amount: number; current_amount: number; icon: string; color: string; is_completed: boolean } | null>(null)
   const [showEditAutoSaveModal, setShowEditAutoSaveModal] = useState(false)
+  const [showQuickAddCategory, setShowQuickAddCategory] = useState(false)
+  const [quickAddCategoryData, setQuickAddCategoryData] = useState({
+    name: '',
+    icon: 'Package',
+    color: '#3B82F6',
+    group_type: 'expense'
+  })
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [formData, setFormData] = useState({
@@ -505,6 +525,55 @@ export default function Dashboard() {
   const showToast = (message: string, type: 'success' | 'error' | 'info' = 'info') => {
     setToast({ message, type })
     setTimeout(() => setToast(null), 3000)
+  }
+
+  const handleQuickAddCategory = async () => {
+    if (!quickAddCategoryData.name.trim()) {
+      showToast('Nama kategori harus diisi', 'error')
+      return
+    }
+
+    try {
+      const nameId = quickAddCategoryData.name.toLowerCase().replace(/[^a-z0-9]/g, '-')
+      const newCategory = {
+        name: quickAddCategoryData.name.trim(),
+        name_id: nameId,
+        icon: quickAddCategoryData.icon,
+        color: quickAddCategoryData.color,
+        group_type: quickAddCategoryData.group_type,
+      }
+
+      const res = await fetch('/api/categories', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newCategory),
+      })
+
+      if (!res.ok) {
+        throw new Error('Failed to create category')
+      }
+
+      const createdCat = await res.json()
+      
+      setCategories(prev => [...prev, createdCat])
+      
+      if (editingTransaction !== null) {
+        setEditingTransaction({ ...editingTransaction, category_id: createdCat.id, type: quickAddCategoryData.group_type as 'income' | 'expense' })
+      } 
+      if (showAddModal) {
+        setFormData(prev => ({ ...prev, category_id: createdCat.id, type: quickAddCategoryData.group_type as 'income' | 'expense' }))
+      }
+      
+      setShowQuickAddCategory(false)
+      setQuickAddCategoryData({ name: '', icon: 'Package', color: '#3B82F6', group_type: 'expense' })
+      showToast('Kategori berhasil ditambahkan', 'success')
+      
+      // Update data immediately
+      fetchCategories()
+    } catch (error) {
+      console.error('Error adding category:', error)
+      showToast('Gagal menambahkan kategori', 'error')
+    }
   }
 
   useEffect(() => {
@@ -2014,6 +2083,16 @@ ${messageType}
                           </button>
                         )
                       })}
+                    <button
+                      onClick={() => {
+                        setQuickAddCategoryData(prev => ({ ...prev, group_type: formData.type }))
+                        setShowQuickAddCategory(true)
+                      }}
+                      className="p-3 rounded-xl flex flex-col items-center justify-center gap-2 transition-all bg-zinc-950/50 border border-dashed border-zinc-700 hover:border-zinc-500 hover:bg-zinc-900/50"
+                    >
+                      <Plus className="w-6 h-6 text-zinc-500" />
+                      <span className="text-[10px] font-medium tracking-wide text-center leading-tight text-zinc-500">Tambah</span>
+                    </button>
                   </div>
                 </div>
 
@@ -2452,6 +2531,16 @@ ${messageType}
                           </button>
                         )
                       })}
+                    <button
+                      onClick={() => {
+                        setQuickAddCategoryData(prev => ({ ...prev, group_type: editingTransaction.type }))
+                        setShowQuickAddCategory(true)
+                      }}
+                      className="p-3 rounded-xl flex flex-col items-center justify-center gap-2 transition-all bg-zinc-950/50 border border-dashed border-zinc-700 hover:border-zinc-500 hover:bg-zinc-900/50"
+                    >
+                      <Plus className="w-6 h-6 text-zinc-500" />
+                      <span className="text-[10px] font-medium tracking-wide text-center leading-tight text-zinc-500">Tambah</span>
+                    </button>
                   </div>
                 </div>
 
@@ -2535,6 +2624,103 @@ ${messageType}
           </div>
         </div>
       )}
+
+      {/* QUICK ADD CATEGORY MODAL */}
+      {showQuickAddCategory && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-xl z-[80] flex items-center justify-center p-4">
+          <div className="w-full max-w-sm animate-in zoom-in-95 duration-200">
+            <div className="skeuo-card p-6 flex flex-col relative overflow-hidden">
+              <div className="absolute inset-x-0 -top-2 h-4 flex justify-around pointer-events-none">
+                {[...Array(6)].map((_, i) => (
+                  <div key={i} className="w-8 h-8 rounded-full bg-zinc-900 border border-zinc-700/50 shadow-inner" />
+                ))}
+              </div>
+
+              <div className="p-3 lg:p-5 border-b border-zinc-800/60 flex items-center justify-between flex-shrink-0">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 skeuo-panel-inner rounded-xl">
+                    <Plus className="w-5 h-5 text-blue-400 drop-shadow-[0_0_5px_rgba(59,130,246,0.5)]" />
+                  </div>
+                  <h3 className="text-white font-bold text-base lg:text-lg tracking-wide uppercase text-shadow-glow">Tambah Kategori</h3>
+                </div>
+                <button onClick={() => setShowQuickAddCategory(false)} className="p-2 skeuo-panel-inner rounded-xl hover:brightness-110 active:scale-95 transition-all">
+                  <X className="w-5 h-5 text-zinc-400" />
+                </button>
+              </div>
+
+              <div className="p-4 space-y-5 overflow-y-auto max-h-[60vh] custom-scrollbar">
+                <div>
+                  <label className="text-zinc-400 text-[10px] font-bold uppercase tracking-wider block mb-2 ml-1">Nama Kategori</label>
+                  <input
+                    type="text"
+                    value={quickAddCategoryData.name}
+                    onChange={(e) => setQuickAddCategoryData({ ...quickAddCategoryData, name: e.target.value })}
+                    placeholder="Contoh: Makanan, Transport..."
+                    className="w-full bg-zinc-950/80 border border-zinc-700/60 rounded-xl px-4 py-3 text-white text-sm shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)] focus:outline-none focus:border-blue-500/50 transition-all font-mono"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-zinc-400 text-[10px] font-bold uppercase tracking-wider block mb-2 ml-1">Icon</label>
+                  <div className="grid grid-cols-5 gap-2 p-2 bg-zinc-950/50 border border-zinc-800 rounded-xl max-h-40 overflow-y-auto custom-scrollbar">
+                    {CATEGORY_ICONS.map(iconName => {
+                      const IconComp = iconMap[iconName] || Package
+                      const isSelected = quickAddCategoryData.icon === iconName
+                      return (
+                        <button
+                          key={iconName}
+                          onClick={() => setQuickAddCategoryData({ ...quickAddCategoryData, icon: iconName })}
+                          className={`p-2 flex justify-center items-center rounded-lg transition-all ${
+                            isSelected 
+                              ? 'bg-blue-500/20 border border-blue-500/50 shadow-[inset_0_0_10px_rgba(59,130,246,0.2)]'
+                              : 'hover:bg-zinc-800 border border-transparent'
+                          }`}
+                        >
+                          <IconComp className={`w-5 h-5 ${isSelected ? 'text-blue-400 drop-shadow-[0_0_5px_rgba(59,130,246,0.5)]' : 'text-zinc-400'}`} />
+                        </button>
+                      )
+                    })}
+                  </div>
+                </div>
+
+                <div>
+                  <label className="text-zinc-400 text-[10px] font-bold uppercase tracking-wider block mb-2 ml-1">Warna</label>
+                  <div className="flex flex-wrap gap-2 p-2 bg-zinc-950/50 border border-zinc-800 rounded-xl">
+                    {CATEGORY_COLORS.map(colorHex => {
+                      const isSelected = quickAddCategoryData.color === colorHex
+                      return (
+                        <button
+                          key={colorHex}
+                          onClick={() => setQuickAddCategoryData({ ...quickAddCategoryData, color: colorHex })}
+                          className={`w-6 h-6 rounded-full transition-all flex items-center justify-center ${
+                            isSelected ? 'ring-2 ring-white ring-offset-2 ring-offset-zinc-900 scale-110' : 'hover:scale-110'
+                          }`}
+                          style={{ backgroundColor: colorHex }}
+                        >
+                          {isSelected && <Check className="w-3 h-3 text-white drop-shadow-md" />}
+                        </button>
+                      )
+                    })}
+                  </div>
+                </div>
+
+              </div>
+
+              <div className="p-4 lg:p-5 border-t border-zinc-800/60 flex flex-col gap-3 flex-shrink-0">
+                <button
+                  onClick={handleQuickAddCategory}
+                  disabled={!quickAddCategoryData.name.trim()}
+                  className="w-full btn-skeuo py-4 shadow-[0_4px_20px_rgba(59,130,246,0.2)] !bg-blue-500/10 !border-blue-500/50 hover:!bg-blue-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <span className="text-blue-400 font-bold tracking-wider">Simpan Kategori</span>
+                </button>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   )
 }
